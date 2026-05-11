@@ -50,6 +50,9 @@ public class CuestionarioEntity {
 	private String nombre; // Nombre del cuestionario
 
 	private String objetivo; // Finalidad u objetivo
+	
+	@Column(name = "instrucciones", columnDefinition = "TEXT")
+	private String instrucciones;
 
 	@CreationTimestamp
 	@Column(name = "fecha_Creacion")
@@ -76,6 +79,9 @@ public class CuestionarioEntity {
 	@UpdateTimestamp
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
+	
+	@Column(name = "creado_por", nullable = false, updatable = false, length = 100)
+	private String creadoPor;
 
 	// --- RELACIONES ---
 

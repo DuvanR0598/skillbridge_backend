@@ -19,6 +19,7 @@ import com.udea.skillbridge.persistence.entity.CuestionarioEntity;
 public interface ICuestionarioMapper {
 	
 	@Mapping(target = "idCuestionario", ignore = true)  // El ID se genera automáticamente
+	@Mapping(target = "creadoPor", ignore = true) // Lo setea el service, no el mapper
 	CuestionarioEntity toEntity (Cuestionario cuestionario);
 	
 	Cuestionario toDto (CuestionarioEntity cuestionarioEnt);

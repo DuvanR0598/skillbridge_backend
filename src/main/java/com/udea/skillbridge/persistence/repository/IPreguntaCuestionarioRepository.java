@@ -9,9 +9,9 @@ import com.udea.skillbridge.persistence.entity.PreguntaCuestionarioEntity.IdPreg
 @Repository
 public interface IPreguntaCuestionarioRepository extends JpaRepository<PreguntaCuestionarioEntity, IdPreguntaCuestionario> {
 
+	boolean existsByIdIdCuestionarioAndIdIdPregunta(Long idCuestionario, Long idPregunta);
+	
+	int countByIdIdCuestionario(Long cuestionarioId);
+	
 	//List<PreguntaCuestionarioEntity> findByIdCuestionarioEntityId(Long cuestionarioId);
-	
-	//boolean existsByIdCuestionarioIdAndIdPreguntaId(Long cuestionarioId, Long preguntaId);
-	
-	//int countByIdCuestionarioId(Long cuestionarioId);
 }

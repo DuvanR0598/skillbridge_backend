@@ -3,10 +3,14 @@ package com.udea.skillbridge.service.impl;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.udea.skillbridge.dto.ActualizarPesoOpcionesRequest;
 import com.udea.skillbridge.dto.OpcionPregunta;
 import com.udea.skillbridge.dto.Pregunta;
+import com.udea.skillbridge.enums.TipoPregunta;
+import com.udea.skillbridge.exception.CuestionarioException;
 import com.udea.skillbridge.mapper.IPreguntaMapper;
 import com.udea.skillbridge.persistence.entity.OpcionPreguntaEntity;
 import com.udea.skillbridge.persistence.entity.PreguntaEntity;
@@ -28,9 +32,9 @@ public class PreguntaServiceImpl implements IPreguntaService {
 	private final OpcionOrdenValidador opcionOrdenValidador;
 	private final IPreguntaMapper preguntaMapper;
 	
-	// ─────────────────────────────────────────
+	// *****************************************
     //  CREAR PREGUNTA
-    // ─────────────────────────────────────────
+    // *****************************************
 
 	@Override
 	public Pregunta crearPregunta(Pregunta pregunta) {
@@ -107,6 +111,105 @@ public class PreguntaServiceImpl implements IPreguntaService {
 				.build();
 	}
 	
+	// *****************************************
+    //  OBTENER POR ID
+    // *****************************************
+	
+	@Override
+	public Pregunta getById(Long idPregunta) {
+		return toResponse(findById(idPregunta));
+	}
+	
+	private PreguntaEntity findById (Long id) {
+		return preguntaRepository.findById(id)
+		.orElseThrow(() -> new CuestionarioException(
+				"Pregunta no encontrada: " + id, HttpStatus.NOT_FOUND
+		));
+	}
+	
+	// *****************************************
+    //  LISTAR POR TIPO
+    // *****************************************
+	
+	@Override
+	public List<Pregunta> listarPorTipo(TipoPregunta tipoPregunta) {
+		return preguntaRepository.findByTipoPregunta(tipoPregunta)
+				.stream()
+				.map(this::toResponse)
+				.toList();
+	}
+	
+	// *****************************************
+    //  LISTAR TODAS
+    // *****************************************
+	
+	@Override
+	public List<Pregunta> listarTodo() {
+		return preguntaRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+	}
+	
+	// **************************************************
+    //  ELIMINAR PREGUNTA
+    //  Solo si NO está asociada a ningún cuestionario
+    // **************************************************
+	
+	@Override
+	public void eliminarPregunta(Long preguntaId) {
+		PreguntaEntity preguntaEnt = findById(preguntaId);
+		
+		// Verificar que la pregunta no esté en uso en ningún cuestionario
+        // (la relación inversa en PreguntaCuestionario nos lo indica)
+        boolean isEnUso = !preguntaEnt.getPreguntaCuestionarioEnt().isEmpty();
 
+        if (isEnUso) {
+            throw new CuestionarioException(
+                "No se puede eliminar la pregunta. Está asociada a " +
+                preguntaEnt.getPreguntaCuestionarioEnt().size() + " cuestionario(s). " +
+                "Primero desvincúlela de todos los cuestionarios."
+            );
+        }
 
+        preguntaRepository.delete(preguntaEnt);
+        log.info("Pregunta {} eliminada", preguntaId);
+		
+	}
+	
+    // **************************************************
+    //  ACTUALIZAR PESOS DE OPCIONES
+    //  (permitido aunque el cuestionario esté COMPLETO)
+    // **************************************************
+
+	@Override
+	public Pregunta actualizarPesosOpciones(Long idPregunta, ActualizarPesoOpcionesRequest request) {
+		PreguntaEntity preguntaEnt = findById(idPregunta);
+
+        request.getPesos().forEach((idOpcion, newPeso) -> {
+        	preguntaEnt.getOpcionPregunta().stream()
+                    .filter(opt -> opt.getIdOpcPregunta().equals(idOpcion))
+                    .findFirst()
+                    .ifPresentOrElse(
+                        opt -> {
+                            if (newPeso < 0) {
+                                throw new CuestionarioException(
+                                    "El peso no puede ser negativo. Opción: " + idOpcion
+                                );
+                            }
+                            opt.setPeso(newPeso);
+                            log.debug("Peso actualizado -> opción {}: {}", idOpcion, newPeso);
+                        },
+                        () -> {
+                            throw new CuestionarioException(
+                                "Opción no encontrada: " + idOpcion +
+                                " en la pregunta: " + idPregunta,
+                                HttpStatus.NOT_FOUND
+                            );
+                        }
+                    );
+        });
+
+        return toResponse(preguntaRepository.save(preguntaEnt));
+	}
 }

@@ -70,7 +70,7 @@ public class PreguntaEntity {
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
-    @OrderBy("displayOrder ASC")  // Orden de visualización
+    @OrderBy("mostrar_orden ASC")  // Orden de visualización
     @Builder.Default
     private List<OpcionPreguntaEntity> opcionPregunta = new ArrayList<>();
     
@@ -85,5 +85,9 @@ public class PreguntaEntity {
     )
     @Builder.Default
     private List<PuntuacionMatrixEntity> puntuacionMatrices = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "preguntaEnt", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<PreguntaCuestionarioEntity> preguntaCuestionarioEnt = new ArrayList<>();
 
 }

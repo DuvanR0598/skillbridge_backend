@@ -1,8 +1,10 @@
 package com.udea.skillbridge.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.udea.skillbridge.persistence.entity.CuestionarioEntity;
@@ -12,6 +14,9 @@ public interface ICuestionarioRepository extends JpaRepository<CuestionarioEntit
 	
 	// Solo los no borrados lógicamente
     List<CuestionarioEntity> findByIsDeletedFalse();
+    
+    // Buscar por ID solo si no esta borrado lógicamente
+    Optional<CuestionarioEntity> findByidCuestionarioAndIsDeletedFalse(Long isCuestionario);
     
     // Por estado, excluyendo borrados
     //List<CuestionarioEntity> findByStatusAndIsDeletedFalse(EstadoCuestionario estado);
@@ -24,9 +29,9 @@ public interface ICuestionarioRepository extends JpaRepository<CuestionarioEntit
      * Nota: la tabla 'respuestas_cuestionario' se implementará en el módulo
      * de respuestas. Por ahora retorna false (query comentada).
      */
-//    @Query("SELECT COUNT(r) > 0 FROM RespuestaCuestionario r WHERE r.cuestionario.id = :id")
-//    // boolean hasResponses(Long id);
-//    // Temporalmente:
-//    default boolean hasResponses(Long id) { return false; }
+    @Query("SELECT COUNT(r) > 0 FROM RespuestaCuestionario r WHERE r.cuestionario.id = :id")
+    // boolean hasResponses(Long id);
+    // Temporalmente:
+    default boolean hasResponses(Long id) { return false; }
 
 }

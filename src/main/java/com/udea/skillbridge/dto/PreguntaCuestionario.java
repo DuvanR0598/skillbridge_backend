@@ -16,7 +16,7 @@ import lombok.Setter;
 public class PreguntaCuestionario {
 	
 	@NotNull
-    private Long idpreguntaCuestionario;
+    private Long idpregunta;
 
     @NotNull
     private Boolean obligatoria;
