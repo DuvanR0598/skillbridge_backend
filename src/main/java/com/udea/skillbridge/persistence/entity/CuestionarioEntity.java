@@ -62,15 +62,10 @@ public class CuestionarioEntity {
 	@Column(name = "estado_cuestionario", nullable = false, length = 20)
 	@Builder.Default
 	private EstadoCuestionario estadoCuestionario = EstadoCuestionario.BORRADOR;
-
-	/**
-     * Borrado lógico: true cuando el cuestionario se "elimina".
-     * REGLA: Solo se puede borrar lógicamente si NO tiene respuestas.
-     */
 	
-	@Column(name = "is_deleted")
+	@Column(name = "orden_aleatorio")
 	@Builder.Default
-	private Boolean isDeleted = false;
+	private Boolean ordenAleatorio = false; // El docente lo activa al crear
 
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
@@ -80,8 +75,8 @@ public class CuestionarioEntity {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 	
-	@Column(name = "creado_por", nullable = false, updatable = false, length = 100)
-	private String creadoPor;
+//	@Column(name = "creado_por", nullable = false, updatable = false, length = 100)
+//	private String creadoPor;
 
 	// --- RELACIONES ---
 
@@ -108,8 +103,13 @@ public class CuestionarioEntity {
      */
 	
 	public boolean isEditable() {
-        return EstadoCuestionario.BORRADOR.equals(this.estadoCuestionario) && !Boolean.TRUE.equals(this.isDeleted);
+        return EstadoCuestionario.BORRADOR.equals(this.estadoCuestionario);
     }
+	
+	// Método que reemplaza el chequeo de isDeleted — semántica clara
+	public boolean isDeleted() {
+	    return EstadoCuestionario.ELIMINADO.equals(this.estadoCuestionario);
+	}
 	
 	/**
      * Verifica si cumple el mínimo de preguntas para pasar a COMPLETE.

@@ -52,7 +52,6 @@ public class PreguntaCuestionarioEntity {
     private PreguntaEntity preguntaEnt;
     
     // ¿La pregunta es obligatoria en este cuestionario?
-    
     @Column(nullable = false)
     @Builder.Default
     private Boolean obligatoria = true;
@@ -61,9 +60,9 @@ public class PreguntaCuestionarioEntity {
     @Column(nullable = false)
     @Builder.Default
     private Integer peso = 1;
+
 	
 	// --- Clase interna para la clave compuesta ---
-	
     @Embeddable
     @Getter
     @Setter

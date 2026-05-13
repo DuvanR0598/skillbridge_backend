@@ -94,7 +94,6 @@ public class PreguntaServiceImpl implements IPreguntaService {
 				.tipoPregunta(preguntaEnt.getTipoPregunta())
 				.texto(preguntaEnt.getTexto())
 				.imagenUrl(preguntaEnt.getImagenUrl())
-				.descripcion(preguntaEnt.getDescripcion())
 				.ayuda(preguntaEnt.getAyuda())
 				.maxOpciones(preguntaEnt.getMaxOpciones())
 				.createdAt(preguntaEnt.getCreatedAt())

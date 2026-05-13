@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.udea.skillbridge.dto.Cuestionario;
+import com.udea.skillbridge.dto.CuestionarioEntregaResponse;
 import com.udea.skillbridge.dto.PreguntaCuestionario;
 import com.udea.skillbridge.service.ICuestionarioService;
 
@@ -68,11 +69,34 @@ public class CuestionarioController {
         return ResponseEntity.ok(cuestionarioService.cuestionarioCompleto(id));
     }
 	
+	// Marcar un cuestionario como PUBLICADO
+	@PatchMapping("/{id}/publicar")
+	public ResponseEntity<Cuestionario> cuestionarioPublicado(@PathVariable Long id) {
+	    return ResponseEntity.ok(cuestionarioService.cuestionarioPublicado(id));
+	}
+	
+	// Marcar un cuestionario como ARCHIVADO
+	@PatchMapping("/{id}/archivar")
+	public ResponseEntity<Cuestionario> cuestionarioArchivado(@PathVariable Long id) {
+	    return ResponseEntity.ok(cuestionarioService.cuestionarioArchivado(id));
+	}
+	
 	// Borrado Logico
 	@DeleteMapping("/borrado_logico/{idCuestionario}")
     public ResponseEntity<Void> borradoLogico(@PathVariable Long idCuestionario) {
         cuestionarioService.borradoLogico(idCuestionario);
         return ResponseEntity.noContent().build();
+    }
+	
+	/**
+     * Endpoint que consume el estudiante para obtener el cuestionario
+     * listo para responder. Cada llamada puede producir un orden diferente
+     * si randomOrder = true.
+     *
+     */
+    @GetMapping("/{id}/entregar_cuestionario")
+    public ResponseEntity<CuestionarioEntregaResponse> entregarCuestionario(@PathVariable Long id) {
+        return ResponseEntity.ok(cuestionarioService.entregarCuestionario(id));
     }
 
 }

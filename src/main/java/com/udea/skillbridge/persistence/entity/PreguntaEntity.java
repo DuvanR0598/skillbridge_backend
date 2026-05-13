@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.udea.skillbridge.enums.TipoPregunta;
 
@@ -44,12 +45,10 @@ public class PreguntaEntity {
     private TipoPregunta tipoPregunta;
 	
 	@Column(name = "texto", nullable = false)
-    private String texto;                    // Texto de la pregunta
+    private String texto;                     // Texto de la pregunta
 	
 	@Column(name = "imagen_url")
     private String imagenUrl;                // URL de imagen opcional
-	
-    private String descripcion;             // Descripción adicional
     
     private String ayuda;                  // Texto de ayuda para el estudiante
     
@@ -59,6 +58,10 @@ public class PreguntaEntity {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
     
     /**
      * Las opciones de respuesta de esta pregunta.

@@ -16,16 +16,21 @@ import lombok.Setter;
 @Builder
 public class OpcionPregunta {
 	
+	@NotNull
 	@NotBlank
     private String texto;
 
+	@NotNull
+	@NotBlank
     private Boolean isCorrecta;
 
     @NotNull
+    @NotBlank
     @Min(0)
     private Integer peso;
 
     @NotNull
+    @NotBlank
     @Min(1)
     private Integer ordenVisualizacion;
 }

@@ -27,9 +27,8 @@ public class Pregunta {
     private String texto;
 
     private String imagenUrl;
-    private String descripcion;
     private String ayuda;
-    private Integer maxOpciones;
+    private Integer maxOpciones;  // Para MULTIPLE_CHOICE: cuántas puede elegir
     private LocalDateTime createdAt;
 
     // Lista de opciones de respuesta (opcional para DESCRIPTION)

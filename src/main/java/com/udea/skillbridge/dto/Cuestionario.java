@@ -2,8 +2,6 @@ package com.udea.skillbridge.dto;
 
 import java.time.LocalDate;
 
-import com.udea.skillbridge.enums.EstadoCuestionario;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +16,6 @@ public class Cuestionario {
 	private String objetivo;
 	private String instrucciones;
 	private LocalDate fechaCreacion;
-	private Boolean isDeleted = false;
-	private EstadoCuestionario estadoCuestionario;
+	private Boolean ordenAleatorio = false;
+
 }

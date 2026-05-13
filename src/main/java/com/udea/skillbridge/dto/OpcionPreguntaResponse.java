@@ -1,0 +1,25 @@
+package com.udea.skillbridge.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * Opción tal como la ve el estudiante.
+ * SIN isCorrecta ni peso — esos son datos de evaluación, no de presentación.
+ */
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class OpcionPreguntaResponse {
+	
+	private Long idOpcion;
+    private String texto;
+    private Integer ordenVisualizacion;  // El orden en esta entrega específica
+
+}

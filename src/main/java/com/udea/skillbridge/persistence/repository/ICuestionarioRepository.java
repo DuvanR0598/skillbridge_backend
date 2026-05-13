@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.udea.skillbridge.persistence.entity.CuestionarioEntity;
@@ -12,14 +13,15 @@ import com.udea.skillbridge.persistence.entity.CuestionarioEntity;
 @Repository
 public interface ICuestionarioRepository extends JpaRepository<CuestionarioEntity, Long>{
 	
-	// Solo los no borrados lógicamente
-    List<CuestionarioEntity> findByIsDeletedFalse();
+	// Todos los no eliminados
+	@Query("SELECT c FROM CuestionarioEntity c WHERE c.estadoCuestionario != 'ELIMINADO'")
+	List<CuestionarioEntity> findAllActivos();
     
-    // Buscar por ID solo si no esta borrado lógicamente
-    Optional<CuestionarioEntity> findByidCuestionarioAndIsDeletedFalse(Long isCuestionario);
-    
-    // Por estado, excluyendo borrados
-    //List<CuestionarioEntity> findByStatusAndIsDeletedFalse(EstadoCuestionario estado);
+    // Por ID solo si no está eliminado
+	@Query("SELECT c FROM CuestionarioEntity c WHERE c.idCuestionario = :id " +
+		       "AND c.estadoCuestionario != 'ELIMINADO'")
+		Optional<CuestionarioEntity> findActivoById(@Param("id") Long id);
+   
     
     /**
      * Verifica si un cuestionario ya tiene respuestas asociadas.
