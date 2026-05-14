@@ -236,6 +236,31 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	}
 	
 	// *****************************************
+	// ACTUALIZAR CUESTIONARIO
+	// *****************************************
+	
+	@Override
+	public Cuestionario actualizarCuestionario(Long id, Cuestionario request) {
+		CuestionarioEntity cuestionarioEnt = findActivoById(id);
+
+	    // Solo editable en BORRADOR
+	    if (!cuestionarioEnt.isEditable()) {
+	        throw new CuestionarioException(
+	            "La configuración solo se puede modificar mientras el cuestionario está en BORRADOR."
+	        );
+	    }
+
+	    // Actualiza solo los campos que llegaron con valor (patrón patch parcial)
+	    if (request.getNombre() != null)            cuestionarioEnt.setNombre(request.getNombre());
+	    if (request.getObjetivo() != null)         cuestionarioEnt.setObjetivo(request.getObjetivo());
+	    if (request.getInstrucciones() != null)  cuestionarioEnt.setInstrucciones(request.getInstrucciones());
+	    if (request.getFechaCreacion() != null)    cuestionarioEnt.setFechaCreacion(request.getFechaCreacion());
+	    if (request.getOrdenAleatorio() != null) cuestionarioEnt.setOrdenAleatorio(request.getOrdenAleatorio());
+
+	    return cuestionarioMapper.toDto(cuestionarioRepository.save(cuestionarioEnt));
+	}
+	
+	// *****************************************
 	// ENTREGAR CUESTIONARIO AL ESTUDIANTE
 	// *****************************************
 

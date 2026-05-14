@@ -26,5 +26,7 @@ public interface ICuestionarioService {
 	void borradoLogico(Long idCuestionario);
 	
 	CuestionarioEntregaResponse entregarCuestionario (Long idCuestionario);
+	
+	Cuestionario actualizarCuestionario(Long id, Cuestionario request);
 
 }

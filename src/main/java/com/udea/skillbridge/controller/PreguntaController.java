@@ -51,7 +51,7 @@ public class PreguntaController {
     /**
      * Listar todas las preguntas.
      * Opcional: filtrar por tipo con query param.
-     * Ejemplo: GET /api/v1/questions?type=LIKERT
+     * Ejemplo: GET /preguntas/listar?tipoPregunta=VERDADERO_FALSO
      */
     @GetMapping("/listar")
     public ResponseEntity<List<Pregunta>> listarTodo(@RequestParam(required = false) TipoPregunta tipoPregunta){

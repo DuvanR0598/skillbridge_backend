@@ -36,21 +36,6 @@ public class CuestionarioController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(cuestionarioService.crearCuestionario(cuestionario));
 	}
 	
-	// Añadir preguntas al cuestionario
-	@PostMapping("/{idCuestionario}/pregunta")
-    public ResponseEntity<Void> addPreguntaToCuestionario(
-            @PathVariable Long idCuestionario,
-            @Valid @RequestBody PreguntaCuestionario pq) {
-        cuestionarioService.addPretuntaToCuestinario(idCuestionario, pq);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-	
-	// Obtener cuestionario por ID
-	@GetMapping("/buscar_cuestionario_id/{idCuestionario}")
-	public ResponseEntity<Cuestionario> getById(@PathVariable Long idCuestionario) {
-		return ResponseEntity.ok().body(cuestionarioService.getById(idCuestionario));
-	}
-	
 	// Listar todos los cuestionarios
 	@GetMapping("/listar_cuestionarios")
     public ResponseEntity<List<Cuestionario>> listarAllCuestionarios() {
@@ -61,6 +46,19 @@ public class CuestionarioController {
 	@GetMapping("/listar_cuestionarios_activos")
     public ResponseEntity<List<Cuestionario>> listaCuestionariosActivos() {
         return ResponseEntity.ok(cuestionarioService.listarCuestionariosActivos());
+    }
+	
+	// Obtener cuestionario por ID
+	@GetMapping("/buscar_cuestionario_id/{idCuestionario}")
+	public ResponseEntity<Cuestionario> getById(@PathVariable Long idCuestionario) {
+		return ResponseEntity.ok().body(cuestionarioService.getById(idCuestionario));
+	}
+	
+	// Borrado Logico
+	@DeleteMapping("/borrado_logico/{idCuestionario}")
+    public ResponseEntity<Void> borradoLogico(@PathVariable Long idCuestionario) {
+        cuestionarioService.borradoLogico(idCuestionario);
+        return ResponseEntity.noContent().build();
     }
 	
 	// Marcar un cuestionario como COMPLETO
@@ -81,11 +79,13 @@ public class CuestionarioController {
 	    return ResponseEntity.ok(cuestionarioService.cuestionarioArchivado(id));
 	}
 	
-	// Borrado Logico
-	@DeleteMapping("/borrado_logico/{idCuestionario}")
-    public ResponseEntity<Void> borradoLogico(@PathVariable Long idCuestionario) {
-        cuestionarioService.borradoLogico(idCuestionario);
-        return ResponseEntity.noContent().build();
+	// Añadir preguntas al cuestionario
+	@PostMapping("/{idCuestionario}/pregunta")
+    public ResponseEntity<Void> addPreguntaToCuestionario(
+            @PathVariable Long idCuestionario,
+            @Valid @RequestBody PreguntaCuestionario pq) {
+        cuestionarioService.addPretuntaToCuestinario(idCuestionario, pq);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 	
 	/**
@@ -97,6 +97,14 @@ public class CuestionarioController {
     @GetMapping("/{id}/entregar_cuestionario")
     public ResponseEntity<CuestionarioEntregaResponse> entregarCuestionario(@PathVariable Long id) {
         return ResponseEntity.ok(cuestionarioService.entregarCuestionario(id));
+    }
+
+    // Actualizar cuestionario, solo permitido en estado BORRADOR.
+    @PatchMapping("/{id}/actualizar")
+    public ResponseEntity<Cuestionario> actualizarCuestionario(
+            @PathVariable Long id,
+            @Valid @RequestBody Cuestionario request) {
+        return ResponseEntity.ok(cuestionarioService.actualizarCuestionario(id, request));
     }
 
 }
