@@ -1,4 +1,4 @@
-package com.udea.skillbridge.service.impl;
+ package com.udea.skillbridge.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,13 +14,16 @@ import com.udea.skillbridge.dto.CuestionarioEntregaResponse;
 import com.udea.skillbridge.dto.OpcionPreguntaResponse;
 import com.udea.skillbridge.dto.PreguntaCuestionario;
 import com.udea.skillbridge.dto.PreguntaEntregaResponse;
+import com.udea.skillbridge.dto.response.ActivarCondicionPreguntaResponse;
 import com.udea.skillbridge.enums.EstadoCuestionario;
 import com.udea.skillbridge.exception.CuestionarioException;
 import com.udea.skillbridge.mapper.ICuestionarioMapper;
+import com.udea.skillbridge.persistence.entity.CondicionPreguntaEntity;
 import com.udea.skillbridge.persistence.entity.CuestionarioEntity;
 import com.udea.skillbridge.persistence.entity.OpcionPreguntaEntity;
 import com.udea.skillbridge.persistence.entity.PreguntaCuestionarioEntity;
 import com.udea.skillbridge.persistence.entity.PreguntaEntity;
+import com.udea.skillbridge.persistence.repository.ICondicionPreguntaRepository;
 import com.udea.skillbridge.persistence.repository.ICuestionarioRepository;
 import com.udea.skillbridge.persistence.repository.IPreguntaCuestionarioRepository;
 import com.udea.skillbridge.persistence.repository.IPreguntaRepository;
@@ -38,6 +41,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	private final ICuestionarioMapper cuestionarioMapper;
 	private final IPreguntaRepository preguntaRepository;
 	private final IPreguntaCuestionarioRepository pqRepository;
+	private final ICondicionPreguntaRepository condicionPreguntaRepository;
 
 	// *****************************************
 	// CREAR CUESTIONARIO
@@ -271,8 +275,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         CuestionarioEntity cuestionarioEnt = cuestionarioRepository
                 .findActivoById(idCuestionario)
                 .orElseThrow(() -> new CuestionarioException(
-                    "Cuestionario no encontrado: " + idCuestionario,
-                    HttpStatus.NOT_FOUND
+                    "Cuestionario no encontrado: " + idCuestionario, HttpStatus.NOT_FOUND
                 ));
 
         // 2. Solo se pueden responder cuestionarios en estado PUBLICADO
@@ -286,24 +289,46 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         // 3. Obtener las preguntas del cuestionario
         List<PreguntaCuestionarioEntity> pqListaEnt =
                 new ArrayList<>(cuestionarioEnt.getPreguntasCuestionario());
-
-        // 4. Aplicar aleatorización si está habilitada
-        //    Collections.shuffle() usa SecureRandom internamente — suficiente para este caso
+        
+        // 4. Separar preguntas base (siempre visibles) de las condicionales (visibles según respuesta)
+        List<PreguntaCuestionarioEntity> preguntasBase = pqListaEnt.stream()
+                .filter(pq -> !Boolean.TRUE.equals(pq.getIsCondicional()))
+                .toList();
+        
+        List<PreguntaCuestionarioEntity> preguntasCondicionales = pqListaEnt.stream()
+                .filter(pq -> Boolean.TRUE.equals(pq.getIsCondicional()))
+                .toList();
+        
+        // 5. Solo las preguntas BASE se aleatorizan
+        // Las condicionales no se mezclan porque su visibilidad depende de la respuesta anterior
         if (Boolean.TRUE.equals(cuestionarioEnt.getOrdenAleatorio())) {
-            Collections.shuffle(pqListaEnt);
-            log.debug("Cuestionario {} entregado en orden aleatorio", idCuestionario);
-        } else {
-            log.debug("Cuestionario {} entregado en orden fijo", idCuestionario);
+            Collections.shuffle(preguntasBase);
         }
+        
+        // 6. Cargar todas las condiciones del cuestionario de una sola consulta
+        List<CondicionPreguntaEntity> condiciones =
+        		condicionPreguntaRepository.findByCuestionarioEntIdCuestionario(idCuestionario);
 
-        // 5. Construir las preguntas entregadas numeradas desde 1
+        // 7. Construir las preguntas entregadas numeradas desde 1
+        // Construir preguntas base 
         AtomicInteger numeroPregunta = new AtomicInteger(1);
 
-        List<PreguntaEntregaResponse> preguntasEntregadas = pqListaEnt.stream()
-                .map(qq -> buildDeliveredQuestion(
-                        qq,
+        List<PreguntaEntregaResponse> preguntasBaseEntregadas = preguntasBase.stream()
+                .map(pq -> buildDeliveredQuestion(
+                        pq,
                         numeroPregunta.getAndIncrement(),
-                        cuestionarioEnt.getOrdenAleatorio()
+                        cuestionarioEnt.getOrdenAleatorio(),
+                        condiciones
+                ))
+                .toList();
+        
+        // Construir preguntas condicionales (sin número fijo — lo asigna el frontend al activarse)
+        List<PreguntaEntregaResponse> preguntasCondicionalesEntregadas = preguntasCondicionales.stream()
+                .map(pq -> buildDeliveredQuestion(
+                        pq,
+                        null,   // sin número: el frontend lo calcula cuando se activa
+                        false,  // las condicionales nunca se re-aleatorizan
+                        condiciones
                 ))
                 .toList();
 
@@ -312,15 +337,17 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
                 .nombre(cuestionarioEnt.getNombre())
                 .objetivo(cuestionarioEnt.getObjetivo())
                 .ordenAleatorio(cuestionarioEnt.getOrdenAleatorio())
-                .totalPreguntas(preguntasEntregadas.size())
-                .preguntas(preguntasEntregadas)
+                .totalPreguntas(preguntasBaseEntregadas.size())      // solo las base son "totales" para el progreso
+                .preguntas(preguntasBaseEntregadas)
+                .preguntasCondicionales(preguntasCondicionalesEntregadas)
                 .build();
 	}
 	
 	private PreguntaEntregaResponse buildDeliveredQuestion(
             PreguntaCuestionarioEntity pqEnt,
-            int numeroPregunta,
-            Boolean randomOrder) {
+            Integer numeroPregunta,
+            Boolean randomOrder,
+            List<CondicionPreguntaEntity> AllCondiciones) {
 
         PreguntaEntity preguntaEnt = pqEnt.getPreguntaEnt();
 
@@ -329,6 +356,16 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         List<OpcionPreguntaResponse> opciones = buildDeliveredOptions(
                 preguntaEnt.getOpcionPregunta(), randomOrder
         );
+        
+        // Filtrar las condiciones que activan ESTA pregunta específica
+        List<ActivarCondicionPreguntaResponse> activaciones = AllCondiciones.stream()
+                .filter(c -> c.getTargetPregunta().getIdPregunta().equals(preguntaEnt.getIdPregunta()))
+                .map(c -> ActivarCondicionPreguntaResponse.builder()
+                        .idCondicion(c.getId())
+                        .triggerIdPregunta(c.getTriggerPregunta().getIdPregunta())
+                        .triggerIdOpcion(c.getTriggerOpcion().getIdOpcPregunta())
+                        .build())
+                .toList();
 
         return PreguntaEntregaResponse.builder()
                 .idPregunta(preguntaEnt.getIdPregunta())
@@ -340,6 +377,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
                 .obligatoria(pqEnt.getObligatoria())
                 .maxOpciones(preguntaEnt.getMaxOpciones())
                 .opciones(opciones)
+                .activarCondiciones(activaciones)
                 .build();
     }
 	

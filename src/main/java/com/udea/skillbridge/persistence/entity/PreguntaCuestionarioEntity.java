@@ -60,6 +60,19 @@ public class PreguntaCuestionarioEntity {
     @Column(nullable = false)
     @Builder.Default
     private Integer peso = 1;
+    
+    /**
+     * Indica si esta pregunta es condicional dentro de este cuestionario.
+     *
+     * false (default) → siempre visible, se muestra a todos los estudiantes.
+     * true            → solo visible si se cumple una CondicionPregunta.
+     *
+     * Las preguntas condicionales NUNCA son obligatorias (obligatoria = false forzado),
+     * porque no todos los estudiantes las verán.
+     */
+    @Column(name = "is_condicional")
+    @Builder.Default
+    private Boolean isCondicional = false;
 
 	
 	// --- Clase interna para la clave compuesta ---

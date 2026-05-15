@@ -36,7 +36,7 @@ public class CuestionarioController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(cuestionarioService.crearCuestionario(cuestionario));
 	}
 	
-	// Listar todos los cuestionarios
+	// Listar todos los cuestionarios 
 	@GetMapping("/listar_cuestionarios")
     public ResponseEntity<List<Cuestionario>> listarAllCuestionarios() {
         return ResponseEntity.ok(cuestionarioService.listarAllCuestionarios());
@@ -105,6 +105,6 @@ public class CuestionarioController {
             @PathVariable Long id,
             @Valid @RequestBody Cuestionario request) {
         return ResponseEntity.ok(cuestionarioService.actualizarCuestionario(id, request));
-    }
+    } 
 
 }

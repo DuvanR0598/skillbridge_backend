@@ -30,5 +30,6 @@ public class CuestionarioEntregaResponse {
 	private Boolean ordenAleatorio;
 	private Integer totalPreguntas;
 	private List<PreguntaEntregaResponse> preguntas;
+	private List<PreguntaEntregaResponse> preguntasCondicionales;
 
 }

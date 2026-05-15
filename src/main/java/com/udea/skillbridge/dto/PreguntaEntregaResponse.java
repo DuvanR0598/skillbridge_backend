@@ -2,6 +2,7 @@ package com.udea.skillbridge.dto;
 
 import java.util.List;
 
+import com.udea.skillbridge.dto.response.ActivarCondicionPreguntaResponse;
 import com.udea.skillbridge.enums.TipoPregunta;
 
 import lombok.AllArgsConstructor;
@@ -33,5 +34,11 @@ public class PreguntaEntregaResponse {
     private Boolean obligatoria;
     private Integer maxOpciones;
     private List<OpcionPreguntaResponse> opciones;
+    /**
+     * Condiciones de activación de esta pregunta.
+     * Vacío → siempre visible.
+     * Con datos → visible solo si se cumple la condición.
+     */
+    private List<ActivarCondicionPreguntaResponse> activarCondiciones;
 
 }
