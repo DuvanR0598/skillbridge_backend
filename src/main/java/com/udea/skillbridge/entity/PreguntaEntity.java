@@ -1,4 +1,4 @@
-package com.udea.skillbridge.persistence.entity;
+package com.udea.skillbridge.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.udea.skillbridge.dto;
+package com.udea.skillbridge.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PreguntaCuestionario {
+public class PreguntaCuestionarioRequest {
 	
 	@NotNull
     private Long idpregunta;

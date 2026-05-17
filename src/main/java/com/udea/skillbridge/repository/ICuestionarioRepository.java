@@ -1,4 +1,4 @@
-package com.udea.skillbridge.persistence.repository;
+package com.udea.skillbridge.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.udea.skillbridge.persistence.entity.CuestionarioEntity;
+import com.udea.skillbridge.entity.CuestionarioEntity;
 
 @Repository
 public interface ICuestionarioRepository extends JpaRepository<CuestionarioEntity, Long>{

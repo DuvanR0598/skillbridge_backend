@@ -5,18 +5,21 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.udea.skillbridge.dto.request.CrearCondicionPreguntaRequest;
+import com.udea.skillbridge.common.exception.BusinessException;
+import com.udea.skillbridge.common.exception.ResourceNotFoundException;
+import com.udea.skillbridge.dto.request.CondicionPreguntaRequest;
 import com.udea.skillbridge.dto.response.CondicionPreguntaResponse;
+import com.udea.skillbridge.entity.CondicionPreguntaEntity;
+import com.udea.skillbridge.entity.CuestionarioEntity;
+import com.udea.skillbridge.entity.OpcionPreguntaEntity;
+import com.udea.skillbridge.entity.PreguntaEntity;
 import com.udea.skillbridge.enums.TipoPregunta;
 import com.udea.skillbridge.exception.CuestionarioException;
-import com.udea.skillbridge.persistence.entity.CondicionPreguntaEntity;
-import com.udea.skillbridge.persistence.entity.CuestionarioEntity;
-import com.udea.skillbridge.persistence.entity.OpcionPreguntaEntity;
-import com.udea.skillbridge.persistence.entity.PreguntaEntity;
-import com.udea.skillbridge.persistence.repository.ICondicionPreguntaRepository;
-import com.udea.skillbridge.persistence.repository.ICuestionarioRepository;
-import com.udea.skillbridge.persistence.repository.IPreguntaCuestionarioRepository;
-import com.udea.skillbridge.persistence.repository.IPreguntaRepository;
+import com.udea.skillbridge.mapper.ICondicionPreguntaMapper;
+import com.udea.skillbridge.repository.ICondicionPreguntaRepository;
+import com.udea.skillbridge.repository.ICuestionarioRepository;
+import com.udea.skillbridge.repository.IPreguntaCuestionarioRepository;
+import com.udea.skillbridge.repository.IPreguntaRepository;
 import com.udea.skillbridge.service.ICondicionPreguntaService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,7 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
 	private final IPreguntaRepository preguntaRepository;
 	private final IPreguntaCuestionarioRepository pqRepository;
 	private final ICondicionPreguntaRepository condicionRepository;
+	private final ICondicionPreguntaMapper condicionMapper;
 	
 	// Tipos que NO pueden ser trigger (no tienen opciones seleccionables)
     private static final List<TipoPregunta> INVALIDAR_TIPO_TRIGGER =
@@ -40,27 +44,27 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
     //  CREAR CONDICION
     // *****************************************
 
-	@Override
-	public CondicionPreguntaResponse crearCondicion(Long idCuestionario, CrearCondicionPreguntaRequest request) {
+    @Override
+	public CondicionPreguntaResponse crearCondicion(Long idCuestionario, CondicionPreguntaRequest request) {
+		log.info("Creando condición para el cuestionario: {}", idCuestionario);
+		
 		// 1. Cuestionario existe y está en BORRADOR
         CuestionarioEntity cuestionarioEnt = cuestionarioRepository
                 .findActivoById(idCuestionario)
-                .orElseThrow(() -> new CuestionarioException(
-                    "Cuestionario no encontrado: " + idCuestionario, HttpStatus.NOT_FOUND
-                ));
+                .orElseThrow(() -> new ResourceNotFoundException("Cuestionario", idCuestionario));
+        
+        // Validar trigger pregunta
+        PreguntaEntity triggerPregunta = buscarPregunta(request.getTriggerIdPregunta());
 
         if (!cuestionarioEnt.isEditable()) {
-            throw new CuestionarioException(
+            throw new BusinessException(
                 "Solo se pueden agregar condiciones a cuestionarios en estado BORRADOR."
             );
         }
 
-        // 2. Cargar la pregunta trigger
-        PreguntaEntity triggerPregunta = buscarPregunta(request.getTriggerIdPregunta());
-
         // 3. REGLA: DESCRIPTION no puede ser trigger
         if (INVALIDAR_TIPO_TRIGGER.contains(triggerPregunta.getTipoPregunta())) {
-            throw new CuestionarioException(
+            throw new BusinessException(
                 "Las preguntas de tipo DESCRIPCION no pueden ser disparadoras " +
                 "porque no tienen opciones seleccionables."
             );
@@ -68,19 +72,28 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
 
         // 4. REGLA: trigger y target no pueden ser la misma pregunta
         if (request.getTriggerIdPregunta().equals(request.getTargetIdPreguta())) {
-            throw new CuestionarioException(
+            throw new BusinessException(
                 "La pregunta disparadora y la pregunta destino no pueden ser la misma."
             );
         }
 
         // 5. La opción trigger debe pertenecer a la pregunta trigger
         OpcionPreguntaEntity triggerOpcion = triggerPregunta.getOpcionPregunta().stream()
-                .filter(o -> o.getIdOpcPregunta().equals(request.getTriggerIdOpcion()))
+                .filter(o -> o.getId().equals(request.getTriggerIdOpcion()))
                 .findFirst()
-                .orElseThrow(() -> new CuestionarioException(
+                .orElseThrow(() -> new BusinessException(
                     "La opción " + request.getTriggerIdOpcion() +
                     " no pertenece a la pregunta " + request.getTriggerIdPregunta()
                 ));
+        
+        // Validar que no exista duplicado (misma opción → misma pregunta)
+        if (condicionRepository.existsByTriggerOpcionIdAndTargetPreguntaIdPregunta(
+                request.getTriggerIdOpcion(), request.getTargetIdPreguta())) {
+            throw new BusinessException(
+                "Ya existe una condición con esta opción para esta pregunta destino",
+                "DUPLICATE_CONDITION"
+            );
+        }
 
         // 6. Cargar la pregunta destino
         PreguntaEntity targetPregunta = buscarPregunta(request.getTargetIdPreguta());
@@ -90,9 +103,9 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
         validarPreguntaInCuestionario(request.getTargetIdPreguta(), idCuestionario);
 
         // 8. REGLA: la condición no puede existir ya (unicidad opción → pregunta)
-        if (condicionRepository.existsByTriggerOpcionIdOpcPreguntaAndTargetPreguntaIdPregunta (
+        if (condicionRepository.existsByTriggerOpcionIdAndTargetPreguntaIdPregunta (
                 request.getTriggerIdOpcion(), request.getTargetIdPreguta())) {
-            throw new CuestionarioException(
+            throw new BusinessException(
                 "Ya existe una condición que conecta esta opción con la pregunta destino."
             );
         }
@@ -102,7 +115,7 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
                 request.getTargetIdPreguta(), idCuestionario);
 
         if (condicionEntrada >= 1) {
-            throw new CuestionarioException(
+            throw new BusinessException(
                 "La pregunta destino ya tiene una condición de entrada. " +
                 "Una pregunta condicional solo puede tener un disparador."
             );
@@ -113,7 +126,7 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
                 request.getTriggerIdPregunta(),
                 request.getTargetIdPreguta(),
                 idCuestionario)) {
-            throw new CuestionarioException(
+            throw new BusinessException(
                 "Se detectó un ciclo: la pregunta destino ya es disparadora " +
                 "de la pregunta origen. Los ciclos no están permitidos."
             );
@@ -133,9 +146,9 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
         marcarAsCondicional(request.getTargetIdPreguta(), idCuestionario);
 
         log.info("Condición creada: opción [{}] → pregunta [{}] en cuestionario [{}]",
-                triggerOpcion.getIdOpcPregunta(), targetPregunta.getIdPregunta(), idCuestionario);
+                triggerOpcion.getId(), targetPregunta.getIdPregunta(), idCuestionario);
 
-        return toResponse(guardar);
+        return condicionMapper.toResponse(guardar);
 	}
 	
 	// *****************************************
@@ -144,9 +157,16 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
 	
 	@Override
 	public List<CondicionPreguntaResponse> listarCondiciones(Long idCuestionario) {
-        return condicionRepository.findByCuestionarioEntIdCuestionario(idCuestionario)
-                .stream()
-                .map(this::toResponse)
+		// Validar que el cuestionario existe
+        if (!cuestionarioRepository.existsById(idCuestionario)) {
+            throw new ResourceNotFoundException("Cuestionario", idCuestionario);
+        }
+        
+        List<CondicionPreguntaEntity> condiciones = condicionRepository
+                .findByCuestionarioEntIdCuestionario(idCuestionario);
+        
+        return condiciones.stream()
+                .map(condicionMapper::toResponse)
                 .toList();
 	}
 	
@@ -156,15 +176,24 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
 
 	@Override
 	public void eliminarCondicion(Long idCuestionario, Long idCondicion) {
+		log.info("Eliminando condición [{}] del cuestionario [{}]", idCondicion, idCuestionario);
+		
+		// Validar que la condición existe
 		CondicionPreguntaEntity condicion = condicionRepository.findById(idCondicion)
-                .orElseThrow(() -> new CuestionarioException(
-                    "Condición no encontrada: " + idCondicion, HttpStatus.NOT_FOUND
-                ));
+                .orElseThrow(() -> new ResourceNotFoundException("Condición", idCondicion));
 
         // Solo en cuestionarios con estado BORRADOR
         if (!condicion.getCuestionarioEnt().isEditable()) {
-            throw new CuestionarioException(
+            throw new BusinessException(
                 "Solo se pueden eliminar condiciones de cuestionarios en estado BORRADOR."
+            );
+        }
+        
+        // Validar que pertenezca al cuestionario
+        if (!condicion.getCuestionarioEnt().getIdCuestionario().equals(idCuestionario)) {
+            throw new BusinessException(
+                String.format("La condición %d no pertenece al cuestionario %d", idCondicion, idCuestionario),
+                "CONDICION_NOT_IN_CUESTIONARIO"
             );
         }
 
@@ -189,16 +218,14 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
 	
 	private PreguntaEntity buscarPregunta(Long idPregunta) {
         return preguntaRepository.findById(idPregunta)
-                .orElseThrow(() -> new CuestionarioException(
-                    "Pregunta no encontrada: " + idPregunta, HttpStatus.NOT_FOUND
-                ));
+        		.orElseThrow(() -> new ResourceNotFoundException("Pregunta", idPregunta));
     }
 	
 	private void validarPreguntaInCuestionario(Long idPregunta, Long idCuestionario) {
         boolean existe = pqRepository.existsByIdIdCuestionarioAndIdIdPregunta(
                 idCuestionario, idPregunta);
         if (!existe) {
-            throw new CuestionarioException(
+            throw new BusinessException(
                 "La pregunta " + idPregunta +
                 " no está asociada al cuestionario " + idCuestionario +
                 ". Agrégala primero."
@@ -221,19 +248,5 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
                     pq.setIsCondicional(false);
                     pqRepository.save(pq);
                 });
-    }
-	
-	private CondicionPreguntaResponse toResponse(CondicionPreguntaEntity c) {
-        return CondicionPreguntaResponse.builder()
-                .id(c.getId())
-                .idCuestionario(c.getCuestionarioEnt().getIdCuestionario())
-                .triggerIdPregunta(c.getTriggerPregunta().getIdPregunta())
-                .triggerTextoPregunta(c.getTriggerPregunta().getTexto())
-                .triggerIdOpcion(c.getTriggerOpcion().getIdOpcPregunta())
-                .triggerTextoOpcion(c.getTriggerOpcion().getTexto())
-                .targetIdPregunta(c.getTargetPregunta().getIdPregunta())
-                .targetTextopregunta(c.getTargetPregunta().getTexto())
-                .createdAt(c.getCreatedAt())
-                .build();
     }
 }

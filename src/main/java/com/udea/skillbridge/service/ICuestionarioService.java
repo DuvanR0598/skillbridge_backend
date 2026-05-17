@@ -1,32 +1,35 @@
 package com.udea.skillbridge.service;
 
 import java.util.List;
-import com.udea.skillbridge.dto.Cuestionario;
-import com.udea.skillbridge.dto.CuestionarioEntregaResponse;
-import com.udea.skillbridge.dto.PreguntaCuestionario;
+
+import com.udea.skillbridge.dto.request.ActualizarCuestionarioRequest;
+import com.udea.skillbridge.dto.request.CuestionarioRequest;
+import com.udea.skillbridge.dto.request.PreguntaCuestionarioRequest;
+import com.udea.skillbridge.dto.response.CuestionarioEntregaResponse;
+import com.udea.skillbridge.dto.response.CuestionarioResponse;
 
 public interface ICuestionarioService {
 	
-	Cuestionario crearCuestionario (Cuestionario cuestionario);
+	CuestionarioResponse crearCuestionario (CuestionarioRequest cuestionarioRequest);
 	
-	Cuestionario getById (Long idCuestionario);
+	CuestionarioResponse findById (Long idCuestionario);
 	
-	List<Cuestionario> listarAllCuestionarios();
+	List<CuestionarioResponse> listarAllCuestionarios();
 	
-	List<Cuestionario> listarCuestionariosActivos();
+	List<CuestionarioResponse> listarCuestionariosActivos();
 	
-	void addPretuntaToCuestinario(Long idCuestionario, PreguntaCuestionario preguntaCuestionario);
+	CuestionarioResponse actualizarCuestionario(Long id, ActualizarCuestionarioRequest request);
 	
-	Cuestionario cuestionarioCompleto(Long idCuestionario);
+	void addPretuntaToCuestinario(Long idCuestionario, PreguntaCuestionarioRequest request);
 	
-	Cuestionario cuestionarioPublicado(Long idCuestionario);
+	CuestionarioResponse cuestionarioCompleto(Long idCuestionario);
 	
-	Cuestionario cuestionarioArchivado(Long idCuestionario);
+	CuestionarioResponse cuestionarioPublicado(Long idCuestionario);
+	
+	CuestionarioResponse cuestionarioArchivado(Long idCuestionario);
 	
 	void borradoLogico(Long idCuestionario);
 	
 	CuestionarioEntregaResponse entregarCuestionario (Long idCuestionario);
-	
-	Cuestionario actualizarCuestionario(Long id, Cuestionario request);
 
 }

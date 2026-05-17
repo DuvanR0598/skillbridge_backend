@@ -1,4 +1,4 @@
-package com.udea.skillbridge.persistence.entity;
+package com.udea.skillbridge.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

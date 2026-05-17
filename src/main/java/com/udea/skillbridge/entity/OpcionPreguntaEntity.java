@@ -1,4 +1,4 @@
-package com.udea.skillbridge.persistence.entity;
+package com.udea.skillbridge.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ public class OpcionPreguntaEntity {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOpcPregunta;
+    private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pregunta", nullable = false)

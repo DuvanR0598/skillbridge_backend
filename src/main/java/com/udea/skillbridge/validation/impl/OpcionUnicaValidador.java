@@ -2,7 +2,7 @@ package com.udea.skillbridge.validation.impl;
 
 import org.springframework.stereotype.Component;
 
-import com.udea.skillbridge.dto.Pregunta;
+import com.udea.skillbridge.dto.request.PreguntaRequest;
 import com.udea.skillbridge.exception.CuestionarioException;
 import com.udea.skillbridge.validation.PreguntaValidador;
 
@@ -10,8 +10,8 @@ import com.udea.skillbridge.validation.PreguntaValidador;
 public class OpcionUnicaValidador implements PreguntaValidador {
 
 	@Override
-	public void validador(Pregunta pregunta) {
-		var opciones = pregunta.getOpcionPregunta();
+	public void validador(PreguntaRequest preguntaRequest) {
+		var opciones = preguntaRequest.getOpcionPreguntaRequest();
 		
 		// REGLA 1: Mínimo 2 opciones (si solo hay 1 no tiene sentido)
         if (opciones == null || opciones.size() < 2) {

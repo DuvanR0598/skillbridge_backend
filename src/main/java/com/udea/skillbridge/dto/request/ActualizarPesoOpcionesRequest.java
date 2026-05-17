@@ -1,4 +1,4 @@
-package com.udea.skillbridge.dto;
+package com.udea.skillbridge.dto.request;
 
 import java.util.Map;
 

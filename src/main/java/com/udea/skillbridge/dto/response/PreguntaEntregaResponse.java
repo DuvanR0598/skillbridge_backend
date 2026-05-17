@@ -1,8 +1,7 @@
-package com.udea.skillbridge.dto;
+package com.udea.skillbridge.dto.response;
 
 import java.util.List;
 
-import com.udea.skillbridge.dto.response.ActivarCondicionPreguntaResponse;
 import com.udea.skillbridge.enums.TipoPregunta;
 
 import lombok.AllArgsConstructor;

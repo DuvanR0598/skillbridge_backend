@@ -1,6 +1,6 @@
 package com.udea.skillbridge.validation;
 
-import com.udea.skillbridge.dto.Pregunta;
+import com.udea.skillbridge.dto.request.PreguntaRequest;
 
 /**
  * Interfaz Strategy para validar preguntas según su tipo.
@@ -12,6 +12,6 @@ import com.udea.skillbridge.dto.Pregunta;
  */
 public interface PreguntaValidador {
 	
-	void validador (Pregunta pregunta);
+	void validador (PreguntaRequest preguntaRequest);
 
 }

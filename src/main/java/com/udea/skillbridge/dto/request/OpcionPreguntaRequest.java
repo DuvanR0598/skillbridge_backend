@@ -1,4 +1,4 @@
-package com.udea.skillbridge.dto;
+package com.udea.skillbridge.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OpcionPregunta {
+public class OpcionPreguntaRequest {
 	
 	@NotNull
 	@NotBlank

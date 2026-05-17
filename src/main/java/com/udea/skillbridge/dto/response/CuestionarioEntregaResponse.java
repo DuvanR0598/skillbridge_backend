@@ -1,4 +1,4 @@
-package com.udea.skillbridge.dto;
+package com.udea.skillbridge.dto.response;
 
 import java.util.List;
 

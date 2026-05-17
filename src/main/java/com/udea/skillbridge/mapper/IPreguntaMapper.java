@@ -4,8 +4,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-import com.udea.skillbridge.dto.Pregunta;
-import com.udea.skillbridge.persistence.entity.PreguntaEntity;
+import com.udea.skillbridge.dto.request.OpcionPreguntaRequest;
+import com.udea.skillbridge.dto.request.PreguntaRequest;
+import com.udea.skillbridge.dto.response.PreguntaResponse;
+import com.udea.skillbridge.entity.OpcionPreguntaEntity;
+import com.udea.skillbridge.entity.PreguntaEntity;
 
 @Mapper(
 	    componentModel = "spring",                    // Genera un bean de Spring
@@ -13,10 +16,18 @@ import com.udea.skillbridge.persistence.entity.PreguntaEntity;
 )
 public interface IPreguntaMapper {
 	
-	@Mapping(target = "idPregunta", ignore = true)  // El ID se genera automáticamente
-	@Mapping(target = "opcionPregunta", ignore = true)
-	PreguntaEntity toEntity (Pregunta pregunta);
+	@Mapping(target = "idPregunta",              ignore = true)
+	@Mapping(target = "opcionPregunta",          ignore = true)
+	@Mapping(target = "createdAt",               ignore = true)
+	@Mapping(target = "updatedAt",               ignore = true)
+	@Mapping(target = "preguntaCuestionarioEnt", ignore = true)
+	@Mapping(target = "puntuacionMatrices",      ignore = true)
+	PreguntaEntity toEntity (PreguntaRequest preguntaRequest);
 	
-	Pregunta toDto (PreguntaEntity preguntaEnt);
+	@Mapping(target = "id",          ignore = true)
+    @Mapping(target = "preguntaEnt", ignore = true)
+    OpcionPreguntaEntity toOpcionPreguntaEntity(OpcionPreguntaRequest request);
+	
+	PreguntaResponse toResponse(PreguntaEntity response); 
 
 }

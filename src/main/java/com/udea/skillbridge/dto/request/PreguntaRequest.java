@@ -1,6 +1,5 @@
-package com.udea.skillbridge.dto;
+package com.udea.skillbridge.dto.request;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.udea.skillbridge.enums.TipoPregunta;
@@ -18,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Pregunta {
+public class PreguntaRequest {
 
 	@NotNull(message = "El tipo de pregunta es obligatorio")
     private TipoPregunta tipoPregunta;
@@ -29,8 +28,7 @@ public class Pregunta {
     private String imagenUrl;
     private String ayuda;
     private Integer maxOpciones;  // Para MULTIPLE_CHOICE: cuántas puede elegir
-    private LocalDateTime createdAt;
 
     // Lista de opciones de respuesta (opcional para DESCRIPTION)
-    private List<OpcionPregunta> opcionPregunta;
+    private List<OpcionPreguntaRequest> opcionPreguntaRequest;
 }

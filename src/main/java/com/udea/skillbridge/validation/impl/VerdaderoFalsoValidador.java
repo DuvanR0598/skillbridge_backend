@@ -2,7 +2,7 @@ package com.udea.skillbridge.validation.impl;
 
 import org.springframework.stereotype.Component;
 
-import com.udea.skillbridge.dto.Pregunta;
+import com.udea.skillbridge.dto.request.PreguntaRequest;
 import com.udea.skillbridge.exception.CuestionarioException;
 import com.udea.skillbridge.validation.PreguntaValidador;
 
@@ -10,8 +10,8 @@ import com.udea.skillbridge.validation.PreguntaValidador;
 public class VerdaderoFalsoValidador implements PreguntaValidador {
 
 	@Override
-	public void validador(Pregunta pregunta) {
-		var opcion = pregunta.getOpcionPregunta();
+	public void validador(PreguntaRequest preguntaRequest) {
+		var opcion = preguntaRequest.getOpcionPreguntaRequest();
 		
 		// REGLA 1: Debe tener exactamente 2 opciones (Verdadero y Falso)
         if (opcion == null || opcion.size() != 2) {

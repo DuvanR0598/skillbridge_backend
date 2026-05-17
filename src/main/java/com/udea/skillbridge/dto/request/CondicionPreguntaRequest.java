@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CrearCondicionPreguntaRequest {
+public class CondicionPreguntaRequest {
 	
 	@NotNull(message = "La pregunta disparadora es obligatoria")
     private Long triggerIdPregunta;

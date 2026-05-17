@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.udea.skillbridge.dto.ActualizarPesoOpcionesRequest;
-import com.udea.skillbridge.dto.Pregunta;
+import com.udea.skillbridge.common.response.ApiResponse;
+import com.udea.skillbridge.dto.request.ActualizarPesoOpcionesRequest;
+import com.udea.skillbridge.dto.request.PreguntaRequest;
+import com.udea.skillbridge.dto.response.PreguntaResponse;
 import com.udea.skillbridge.enums.TipoPregunta;
 import com.udea.skillbridge.service.IPreguntaService;
 
@@ -36,16 +38,19 @@ public class PreguntaController {
      * Las validaciones de opciones según tipo se ejecutan en el Service.
      */
     @PostMapping("/crear_pregunta")
-    public ResponseEntity<Pregunta> create(@Valid @RequestBody Pregunta pregunta) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(preguntaService.crearPregunta(pregunta));
+    public ResponseEntity<ApiResponse<PreguntaResponse>> crearPregunta
+    (@Valid @RequestBody PreguntaRequest preguntaRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(
+        		preguntaService.crearPregunta(preguntaRequest),
+        		"Pregunta creada exitosamente"));
     }
     
     /**
      * Obtener una pregunta por ID.
      */
     @GetMapping("/buscar_pregunta_id/{id}")
-    public ResponseEntity<Pregunta> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(preguntaService.getById(id));
+    public ResponseEntity<ApiResponse<PreguntaResponse>> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.ok(preguntaService.findById(id)));
     }
     
     /**
@@ -54,21 +59,13 @@ public class PreguntaController {
      * Ejemplo: GET /preguntas/listar?tipoPregunta=VERDADERO_FALSO
      */
     @GetMapping("/listar")
-    public ResponseEntity<List<Pregunta>> listarTodo(@RequestParam(required = false) TipoPregunta tipoPregunta){
-    	if(tipoPregunta != null) {
-    		return ResponseEntity.ok(preguntaService.listarPorTipo(tipoPregunta));
-    	}
-    	return ResponseEntity.ok(preguntaService.listarTodo());
-    }
-    
-    /**
-     * Eliminar pregunta.
-     * Solo funciona si la pregunta NO está asociada a ningún cuestionario.
-     */
-    @DeleteMapping("/eliminar_pregunta/{id}")
-    public ResponseEntity<Void> borrarPregunta(@PathVariable Long id) {
-        preguntaService.eliminarPregunta(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse<List<PreguntaResponse>>> listarTodo(
+    		@RequestParam(required = false) TipoPregunta tipoPregunta){
+    	List<PreguntaResponse> resultado = (tipoPregunta != null)
+                ? preguntaService.listarPorTipo(tipoPregunta)
+                : preguntaService.listarTodo();
+    	
+    	return ResponseEntity.ok(ApiResponse.ok(resultado));
     }
     
     /**
@@ -79,10 +76,22 @@ public class PreguntaController {
      * PATCH es más semántico que PUT aquí porque solo tocamos un campo parcial.
      */
     @PatchMapping("/{id}/opcion_peso")
-    public ResponseEntity<Pregunta> actualizarPesosOpciones(
+    public ResponseEntity<ApiResponse<PreguntaResponse>> actualizarPesosOpciones(
             @PathVariable Long id,
             @Valid @RequestBody ActualizarPesoOpcionesRequest request) {
-        return ResponseEntity.ok(preguntaService.actualizarPesosOpciones(id, request));
+    	return ResponseEntity.ok(ApiResponse.ok(preguntaService.actualizarPesosOpciones(id, request),
+                "Pesos actualizados"
+            ));
+    }
+    
+    /**
+     * Eliminar pregunta.
+     * Solo funciona si la pregunta NO está asociada a ningún cuestionario.
+     */
+    @DeleteMapping("/eliminar_pregunta/{id}")
+    public ResponseEntity<ApiResponse<Void>> borrarPregunta(@PathVariable Long id) {
+        preguntaService.eliminarPregunta(id);
+        return ResponseEntity.ok(ApiResponse.ok(null, "Pregunta eliminada"));
     }
 
 }

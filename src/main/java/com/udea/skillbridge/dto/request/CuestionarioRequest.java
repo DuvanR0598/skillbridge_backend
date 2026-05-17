@@ -1,4 +1,4 @@
-package com.udea.skillbridge.dto;
+package com.udea.skillbridge.dto.request;
 
 import java.time.LocalDate;
 
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Cuestionario {
+public class CuestionarioRequest {
 	
 	@NotBlank(message = "El nombre del cuestionario es obligatorio")
 	private String nombre;
@@ -17,5 +17,4 @@ public class Cuestionario {
 	private String instrucciones;
 	private LocalDate fechaCreacion;
 	private Boolean ordenAleatorio = false;
-
 }

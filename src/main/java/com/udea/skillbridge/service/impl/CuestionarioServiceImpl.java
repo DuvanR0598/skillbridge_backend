@@ -3,30 +3,35 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.udea.skillbridge.dto.Cuestionario;
-import com.udea.skillbridge.dto.CuestionarioEntregaResponse;
-import com.udea.skillbridge.dto.OpcionPreguntaResponse;
-import com.udea.skillbridge.dto.PreguntaCuestionario;
-import com.udea.skillbridge.dto.PreguntaEntregaResponse;
+import com.udea.skillbridge.common.exception.BusinessException;
+import com.udea.skillbridge.common.exception.ResourceNotFoundException;
+import com.udea.skillbridge.dto.request.ActualizarCuestionarioRequest;
+import com.udea.skillbridge.dto.request.CuestionarioRequest;
+import com.udea.skillbridge.dto.request.PreguntaCuestionarioRequest;
 import com.udea.skillbridge.dto.response.ActivarCondicionPreguntaResponse;
+import com.udea.skillbridge.dto.response.CuestionarioEntregaResponse;
+import com.udea.skillbridge.dto.response.CuestionarioResponse;
+import com.udea.skillbridge.dto.response.OpcionPreguntaResponse;
+import com.udea.skillbridge.dto.response.PreguntaEntregaResponse;
+import com.udea.skillbridge.entity.CondicionPreguntaEntity;
+import com.udea.skillbridge.entity.CuestionarioEntity;
+import com.udea.skillbridge.entity.OpcionPreguntaEntity;
+import com.udea.skillbridge.entity.PreguntaCuestionarioEntity;
+import com.udea.skillbridge.entity.PreguntaEntity;
 import com.udea.skillbridge.enums.EstadoCuestionario;
 import com.udea.skillbridge.exception.CuestionarioException;
 import com.udea.skillbridge.mapper.ICuestionarioMapper;
-import com.udea.skillbridge.persistence.entity.CondicionPreguntaEntity;
-import com.udea.skillbridge.persistence.entity.CuestionarioEntity;
-import com.udea.skillbridge.persistence.entity.OpcionPreguntaEntity;
-import com.udea.skillbridge.persistence.entity.PreguntaCuestionarioEntity;
-import com.udea.skillbridge.persistence.entity.PreguntaEntity;
-import com.udea.skillbridge.persistence.repository.ICondicionPreguntaRepository;
-import com.udea.skillbridge.persistence.repository.ICuestionarioRepository;
-import com.udea.skillbridge.persistence.repository.IPreguntaCuestionarioRepository;
-import com.udea.skillbridge.persistence.repository.IPreguntaRepository;
+import com.udea.skillbridge.repository.ICondicionPreguntaRepository;
+import com.udea.skillbridge.repository.ICuestionarioRepository;
+import com.udea.skillbridge.repository.IPreguntaCuestionarioRepository;
+import com.udea.skillbridge.repository.IPreguntaRepository;
 import com.udea.skillbridge.service.ICuestionarioService;
 
 import lombok.RequiredArgsConstructor;
@@ -48,57 +53,70 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	// *****************************************
 	
 	@Override
-	public Cuestionario crearCuestionario(Cuestionario cuestionario) {
-		log.info("Creando cuestionario: {}", cuestionario.getNombre());
-		CuestionarioEntity cuestionarioEnt = cuestionarioMapper.toEntity(cuestionario);
-		CuestionarioEntity guardarEntity = cuestionarioRepository.save(cuestionarioEnt);
-		log.info("Cuestionario creado con ID: {}", guardarEntity.getIdCuestionario());
-		return cuestionarioMapper.toDto(guardarEntity);
+	public CuestionarioResponse crearCuestionario(CuestionarioRequest cuestionarioRequest) {
+		log.info("Creando cuestionario: {}", cuestionarioRequest.getNombre());
+		CuestionarioEntity cuestionarioEnt = cuestionarioMapper.toEntity(cuestionarioRequest);
+		return cuestionarioMapper.toResponse(cuestionarioRepository.save(cuestionarioEnt));
 	}
 	
 	// *****************************************
-	// AGREGAR PREGUNTA AL CUESTIONARIO
+	// LISTAR
 	// *****************************************
 	
 	@Override
-	public void addPretuntaToCuestinario(Long idCuestionario, PreguntaCuestionario preguntaCuestionario) {
-		
-		// 1. Buscar el cuestionario (lanza 404 si no existe o está borrado)
-        CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
+	public CuestionarioResponse findById(Long idCuestionario) {
+		return cuestionarioMapper.toResponse(findActivoById(idCuestionario));
+	}
+	
+	@Override
+	public List<CuestionarioResponse> listarAllCuestionarios() {
+		return cuestionarioRepository.findAll()
+				.stream()
+				.map(cuestionarioMapper::toResponse)
+				.toList();
+	}
 
-        // 2. REGLA DE NEGOCIO: solo se pueden agregar preguntas en estado DRAFT
-        if (!cuestionarioEnt.isEditable()) {
-            throw new CuestionarioException(
-                "No se pueden agregar preguntas. El cuestionario no está en estado DRAFT."
+	@Override
+	public List<CuestionarioResponse> listarCuestionariosActivos() {
+		return cuestionarioRepository.findAllActivos()
+				.stream()
+				.map(cuestionarioMapper::toResponse)
+				.toList();
+	}
+	
+	// *****************************************
+	// BORRADO LOGICO
+	// *****************************************
+
+	@Override
+	public void borradoLogico(Long idCuestionario) {
+		CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
+
+        // REGLA: No se puede borrar si ya tiene respuestas
+        if (cuestionarioRepository.hasResponses(idCuestionario)) {
+            throw new BusinessException(
+                "No se puede eliminar. El cuestionario ya tiene respuestas registradas. " +
+                "Considere archivarlo en su lugar.", "HAS_RESPONSES"
             );
         }
 
-        // 3. Verificar que la pregunta existe
-        PreguntaEntity preguntaEnt = preguntaRepository.findById(preguntaCuestionario.getIdpregunta())
-                .orElseThrow(() -> new CuestionarioException(
-                    "Pregunta no encontrada: " + preguntaCuestionario.getIdpregunta(),
-                    HttpStatus.NOT_FOUND
-                ));
-
-        // 4. Verificar que la pregunta no esté ya en el cuestionario
-        if (pqRepository.existsByIdIdCuestionarioAndIdIdPregunta(idCuestionario, preguntaCuestionario.getIdpregunta())) {
-            throw new CuestionarioException("La pregunta ya está asociada a este cuestionario.");
-        }
-
-        // 5. Crear la relación
-        PreguntaCuestionarioEntity.IdPreguntaCuestionario pqId =
-                new PreguntaCuestionarioEntity.IdPreguntaCuestionario(idCuestionario, preguntaCuestionario.getIdpregunta());
-
-        PreguntaCuestionarioEntity pqEnt = PreguntaCuestionarioEntity.builder()
-                .id(pqId)
-                .cuestionarioEnt(cuestionarioEnt)
-                .preguntaEnt(preguntaEnt)
-                .obligatoria(preguntaCuestionario.getObligatoria())
-                .peso(preguntaCuestionario.getPeso())
-                .build();
-
-        pqRepository.save(pqEnt);
-        log.info("Pregunta {} agregada al cuestionario {}", preguntaEnt.getIdPregunta(), idCuestionario);
+        cuestionarioEnt.setEstadoCuestionario(EstadoCuestionario.ELIMINADO);
+        cuestionarioRepository.save(cuestionarioEnt);
+        log.info("Cuestionario con uuid [{}] borrado lógicamente", idCuestionario); 
+		
+	}
+	
+	// *****************************************
+	// ACTUALIZAR CUESTIONARIO
+	// *****************************************
+	
+	@Override
+	public CuestionarioResponse actualizarCuestionario(Long id, ActualizarCuestionarioRequest request) {
+		CuestionarioEntity cuestionarioEnt = findActivoById(id);
+		// Solo editable en BORRADOR
+		validarEditable(cuestionarioEnt, "modificar la configuración de");
+		cuestionarioMapper.actualizarCuestionarioRequest(cuestionarioEnt, request);
+	    return cuestionarioMapper.toResponse(cuestionarioRepository.save(cuestionarioEnt));
 	}
 	
 	// ***********************************************
@@ -106,25 +124,24 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	// ***********************************************
 	
 	@Override
-	public Cuestionario cuestionarioCompleto(Long idCuestionario) {
+	public CuestionarioResponse cuestionarioCompleto(Long idCuestionario) {
 		CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
 
         if (!EstadoCuestionario.BORRADOR.equals(cuestionarioEnt.getEstadoCuestionario())) {
-            throw new CuestionarioException("Solo los cuestionarios en estado BORRADOR pueden completarse.");
+            throw new BusinessException("Solo los cuestionarios en BORRADOR pueden completarse. Estado actual: "
+                    + cuestionarioEnt.getEstadoCuestionario(), "INVALID_STATUS_TRANSITION");
         }
 
         // REGLA: Mínimo 2 preguntas
         int count = pqRepository.countByIdIdCuestionario(idCuestionario);
         if (count < 2) {
-            throw new CuestionarioException(
-                "El cuestionario debe tener al menos 2 preguntas. Actualmente tiene: " + count + " pregunta"
+            throw new BusinessException(
+                "El cuestionario debe tener al menos 2 preguntas. Actualmente tiene: " + count, "INSUFFICIENT_QUESTIONS"
             );
         }
 
         cuestionarioEnt.setEstadoCuestionario(EstadoCuestionario.COMPLETO);
-        CuestionarioEntity guardar = cuestionarioRepository.save(cuestionarioEnt);
-        log.info("Cuestionario {} marcado como COMPLETO", idCuestionario);
-        return cuestionarioMapper.toDto(guardar);
+        return cuestionarioMapper.toResponse(cuestionarioRepository.save(cuestionarioEnt));
 	}
 	
 	// ***********************************************
@@ -140,19 +157,17 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	 */
 	
 	@Override
-	public Cuestionario cuestionarioPublicado(Long idCuestionario) {
+	public CuestionarioResponse cuestionarioPublicado(Long idCuestionario) {
 		CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
 
 	    if (!EstadoCuestionario.COMPLETO.equals(cuestionarioEnt.getEstadoCuestionario())) {
-	        throw new CuestionarioException(
-	            "Solo los cuestionarios en estado COMPLETO pueden publicarse. " +
-	            "Estado actual: " + cuestionarioEnt.getEstadoCuestionario());
+	        throw new BusinessException(
+	        		"Solo los cuestionarios COMPLETADOS pueden publicarse. Estado actual: "
+	                        + cuestionarioEnt.getEstadoCuestionario(), "INVALID_STATUS_TRANSITION");
 	    }
 
 	    cuestionarioEnt.setEstadoCuestionario(EstadoCuestionario.PUBLICADO);
-	    CuestionarioEntity guardar = cuestionarioRepository.save(cuestionarioEnt);
-	    log.info("Cuestionario [{}] publicado correctamente", idCuestionario);
-	    return cuestionarioMapper.toDto(guardar);
+	    return cuestionarioMapper.toResponse(cuestionarioRepository.save(cuestionarioEnt));
 	}
 	
 	// ***********************************************
@@ -167,101 +182,56 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	 * Es la alternativa al borrado lógico cuando ya hay datos de estudiantes.
 	 */
 	@Override
-	public Cuestionario cuestionarioArchivado(Long idCuestionario) {
+	public CuestionarioResponse cuestionarioArchivado(Long idCuestionario) {
 		CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
 
 	    if (!EstadoCuestionario.PUBLICADO.equals(cuestionarioEnt.getEstadoCuestionario())) {
-	        throw new CuestionarioException(
-	            "Solo los cuestionarios en estado PUBLICADO pueden archivarse. " +
-	            "Estado actual: " + cuestionarioEnt.getEstadoCuestionario());
+	        throw new BusinessException(
+	        		"Solo los cuestionarios PUBLICADOS pueden archivarse. Estado actual: "
+	                        + cuestionarioEnt.getEstadoCuestionario(), "INVALID_STATUS_TRANSITION");
 	    }
 
 	    cuestionarioEnt.setEstadoCuestionario(EstadoCuestionario.ARCHIVADO);
-	    CuestionarioEntity guardar = cuestionarioRepository.save(cuestionarioEnt);
-	    log.info("Cuestionario [{}] archivado correctamente", idCuestionario);
-	    return cuestionarioMapper.toDto(guardar);
+	    return cuestionarioMapper.toResponse(cuestionarioRepository.save(cuestionarioEnt));
 	}
 	
 	// *****************************************
-	// LISTAR
+	// AGREGAR PREGUNTA AL CUESTIONARIO
 	// *****************************************
 	
 	@Override
-	public Cuestionario getById(Long idCuestionario) {
-		Optional<CuestionarioEntity> cuestionarioOptEnt = Optional.of(cuestionarioRepository.findById(idCuestionario).
-				orElseThrow(() -> new CuestionarioException(
-						"Cuestionario no encontrado: " + idCuestionario, HttpStatus.NOT_FOUND)));
+	public void addPretuntaToCuestinario(Long idCuestionario, PreguntaCuestionarioRequest request) {
 		
-		return cuestionarioMapper.toDto(cuestionarioOptEnt.get());
-	}
-	
-	@Override
-	public List<Cuestionario> listarAllCuestionarios() {
-		return cuestionarioRepository.findAll()
-				.stream()
-				.map(cuestionarioMapper::toDto)
-				.toList();
-	}
+		// 1. Buscar el cuestionario (lanza 404 si no existe o está borrado)
+        CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
 
-	@Override
-	public List<Cuestionario> listarCuestionariosActivos() {
-		return cuestionarioRepository.findAllActivos()
-				.stream()
-				.map(cuestionarioMapper::toDto)
-				.toList();
-	}
-	
-	private CuestionarioEntity findActivoById(Long idCuestionario) {
-		return cuestionarioRepository.findActivoById(idCuestionario)
-				.orElseThrow(() -> new CuestionarioException(
-						"Cuestionario no encontrado: " + idCuestionario, HttpStatus.NOT_FOUND));
-	}
-	
-	// *****************************************
-	// BORRADO LOGICO
-	// *****************************************
+        // 2. REGLA DE NEGOCIO: solo se pueden agregar preguntas en estado BORRADOR
+        validarEditable(cuestionarioEnt, "agregar pregunta a");
 
-	@Override
-	public void borradoLogico(Long idCuestionario) {
-		CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
+        // 3. Verificar que la pregunta existe
+        PreguntaEntity preguntaEnt = preguntaRepository.findById(request.getIdpregunta())
+                .orElseThrow(() -> new ResourceNotFoundException("Pregunta", request.getIdpregunta()));
 
-        // REGLA: No se puede borrar si ya tiene respuestas
-        if (cuestionarioRepository.hasResponses(idCuestionario)) {
-            throw new CuestionarioException(
-                "No se puede eliminar. El cuestionario ya tiene respuestas registradas. " +
-                "Considere archivarlo en su lugar."
-            );
+        // 4. Verificar que la pregunta no esté ya en el cuestionario
+        if (pqRepository.existsByIdIdCuestionarioAndIdIdPregunta(idCuestionario, request.getIdpregunta())) {
+            throw new BusinessException("La pregunta " + request.getIdpregunta() + " ya está en el cuestionario.",
+                    "QUESTION_ALREADY_ADDED");
         }
 
-        cuestionarioEnt.setEstadoCuestionario(EstadoCuestionario.ELIMINADO);
-        cuestionarioRepository.save(cuestionarioEnt);
-        log.info("Cuestionario con uuid [{}] borrado lógicamente", idCuestionario); 
-		
-	}
-	
-	// *****************************************
-	// ACTUALIZAR CUESTIONARIO
-	// *****************************************
-	
-	@Override
-	public Cuestionario actualizarCuestionario(Long id, Cuestionario request) {
-		CuestionarioEntity cuestionarioEnt = findActivoById(id);
+        // 5. Crear la relación
+        PreguntaCuestionarioEntity.IdPreguntaCuestionario pqId =
+                new PreguntaCuestionarioEntity.IdPreguntaCuestionario(idCuestionario, request.getIdpregunta());
 
-	    // Solo editable en BORRADOR
-	    if (!cuestionarioEnt.isEditable()) {
-	        throw new CuestionarioException(
-	            "La configuración solo se puede modificar mientras el cuestionario está en BORRADOR."
-	        );
-	    }
+        PreguntaCuestionarioEntity pqEnt = PreguntaCuestionarioEntity.builder()
+                .id(pqId)
+                .cuestionarioEnt(cuestionarioEnt)
+                .preguntaEnt(preguntaEnt)
+                .obligatoria(request.getObligatoria())
+                .peso(request.getPeso())
+                .build();
 
-	    // Actualiza solo los campos que llegaron con valor (patrón patch parcial)
-	    if (request.getNombre() != null)            cuestionarioEnt.setNombre(request.getNombre());
-	    if (request.getObjetivo() != null)         cuestionarioEnt.setObjetivo(request.getObjetivo());
-	    if (request.getInstrucciones() != null)  cuestionarioEnt.setInstrucciones(request.getInstrucciones());
-	    if (request.getFechaCreacion() != null)    cuestionarioEnt.setFechaCreacion(request.getFechaCreacion());
-	    if (request.getOrdenAleatorio() != null) cuestionarioEnt.setOrdenAleatorio(request.getOrdenAleatorio());
-
-	    return cuestionarioMapper.toDto(cuestionarioRepository.save(cuestionarioEnt));
+        pqRepository.save(pqEnt);
+        log.info("Pregunta [{}] agregada al cuestionario [{}]", preguntaEnt.getIdPregunta(), idCuestionario);
 	}
 	
 	// *****************************************
@@ -293,11 +263,11 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         // 4. Separar preguntas base (siempre visibles) de las condicionales (visibles según respuesta)
         List<PreguntaCuestionarioEntity> preguntasBase = pqListaEnt.stream()
                 .filter(pq -> !Boolean.TRUE.equals(pq.getIsCondicional()))
-                .toList();
+                .collect(Collectors.toList());  // Lista mutable
         
         List<PreguntaCuestionarioEntity> preguntasCondicionales = pqListaEnt.stream()
                 .filter(pq -> Boolean.TRUE.equals(pq.getIsCondicional()))
-                .toList();
+                .collect(Collectors.toList());  // Lista mutable
         
         // 5. Solo las preguntas BASE se aleatorizan
         // Las condicionales no se mezclan porque su visibilidad depende de la respuesta anterior
@@ -343,11 +313,31 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
                 .build();
 	}
 	
+	// *****************************************
+	// METODOS PRIVADOS
+	// *****************************************
+	
+	private CuestionarioEntity findActivoById(Long idCuestionario) {
+		return cuestionarioRepository.findActivoById(idCuestionario)
+				.orElseThrow(() -> new ResourceNotFoundException("Cuestionario", idCuestionario));
+	}
+	
+	private void validarEditable(CuestionarioEntity cuestionario, String accion) {
+        if (!cuestionario.isEditable()) {
+            throw new BusinessException(
+                "No se puede " + accion + " el cuestionario. " +
+                "Solo es posible en estado BORRADOR. Estado actual: " + cuestionario.getEstadoCuestionario(),
+                "NOT_EDITABLE"
+            );
+        }
+    }
+	
+	
 	private PreguntaEntregaResponse buildDeliveredQuestion(
             PreguntaCuestionarioEntity pqEnt,
             Integer numeroPregunta,
             Boolean randomOrder,
-            List<CondicionPreguntaEntity> AllCondiciones) {
+            List<CondicionPreguntaEntity> allCondiciones) {
 
         PreguntaEntity preguntaEnt = pqEnt.getPreguntaEnt();
 
@@ -358,12 +348,12 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         );
         
         // Filtrar las condiciones que activan ESTA pregunta específica
-        List<ActivarCondicionPreguntaResponse> activaciones = AllCondiciones.stream()
+        List<ActivarCondicionPreguntaResponse> activaciones = allCondiciones.stream()
                 .filter(c -> c.getTargetPregunta().getIdPregunta().equals(preguntaEnt.getIdPregunta()))
                 .map(c -> ActivarCondicionPreguntaResponse.builder()
                         .idCondicion(c.getId())
                         .triggerIdPregunta(c.getTriggerPregunta().getIdPregunta())
-                        .triggerIdOpcion(c.getTriggerOpcion().getIdOpcPregunta())
+                        .triggerIdOpcion(c.getTriggerOpcion().getId())
                         .build())
                 .toList();
 
@@ -402,11 +392,12 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 
         return copiaOpciones.stream()
                 .map(opt -> OpcionPreguntaResponse.builder()
-                        .idOpcion(opt.getIdOpcPregunta())
+                        .idOpcion(opt.getId())
                         .texto(opt.getTexto())
                         .ordenVisualizacion(orden.getAndIncrement()) // orden en ESTA entrega
                         .build()
                 )
                 .toList();
     }
+
 }

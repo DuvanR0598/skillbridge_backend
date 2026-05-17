@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.udea.skillbridge.dto.OpcionPregunta;
+import com.udea.skillbridge.dto.request.OpcionPreguntaRequest;
 import com.udea.skillbridge.exception.CuestionarioException;
 
 /**
@@ -16,13 +16,13 @@ import com.udea.skillbridge.exception.CuestionarioException;
 @Component
 public class OpcionOrdenValidador {
 	
-	public void validate(List<OpcionPregunta> opcion) {
+	public void validate(List<OpcionPreguntaRequest> opcion) {
         if (opcion == null || opcion.isEmpty()) 
         	return;
 
         // REGLA 1: No puede haber dos opciones con el mismo ordenVisualizacion
         Set<Integer> orden = opcion.stream()
-                .map(OpcionPregunta::getOrdenVisualizacion)
+                .map(OpcionPreguntaRequest::getOrdenVisualizacion)
                 .collect(Collectors.toSet());
 
         if (orden.size() != opcion.size()) {

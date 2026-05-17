@@ -1,4 +1,4 @@
-package com.udea.skillbridge.persistence.repository;
+package com.udea.skillbridge.repository;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.udea.skillbridge.persistence.entity.CondicionPreguntaEntity;
+import com.udea.skillbridge.entity.CondicionPreguntaEntity;
 
 @Repository
 public interface ICondicionPreguntaRepository extends JpaRepository<CondicionPreguntaEntity, Long> {
@@ -16,10 +16,10 @@ public interface ICondicionPreguntaRepository extends JpaRepository<CondicionPre
     List<CondicionPreguntaEntity> findByCuestionarioEntIdCuestionario(Long idCuestionario);
     
     // Las condiciones que dispara una opción específica
-    List<CondicionPreguntaEntity> findByTriggerOpcionIdOpcPregunta(Long triggerIdOpcion);
+    List<CondicionPreguntaEntity> findByTriggerOpcionId(Long triggerIdOpcion);
     
     // Verificar si ya existe esta combinación (opción → pregunta)
-    boolean existsByTriggerOpcionIdOpcPreguntaAndTargetPreguntaIdPregunta(Long triggerIdOpcion, Long targetIdPregunto);
+    boolean existsByTriggerOpcionIdAndTargetPreguntaIdPregunta(Long triggerIdOpcion, Long targetIdPregunto);
 
     // Cuántas condiciones de ENTRADA tiene una pregunta hija
     // Usamos esto para validar que no tenga más de una
