@@ -3,7 +3,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -317,7 +316,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	// METODOS PRIVADOS
 	// *****************************************
 	
-	private CuestionarioEntity findActivoById(Long idCuestionario) {
+	public CuestionarioEntity findActivoById(Long idCuestionario) {
 		return cuestionarioRepository.findActivoById(idCuestionario)
 				.orElseThrow(() -> new ResourceNotFoundException("Cuestionario", idCuestionario));
 	}

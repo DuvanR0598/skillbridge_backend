@@ -2,7 +2,6 @@ package com.udea.skillbridge.service.impl;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.udea.skillbridge.common.exception.BusinessException;
@@ -14,7 +13,6 @@ import com.udea.skillbridge.entity.CuestionarioEntity;
 import com.udea.skillbridge.entity.OpcionPreguntaEntity;
 import com.udea.skillbridge.entity.PreguntaEntity;
 import com.udea.skillbridge.enums.TipoPregunta;
-import com.udea.skillbridge.exception.CuestionarioException;
 import com.udea.skillbridge.mapper.ICondicionPreguntaMapper;
 import com.udea.skillbridge.repository.ICondicionPreguntaRepository;
 import com.udea.skillbridge.repository.ICuestionarioRepository;

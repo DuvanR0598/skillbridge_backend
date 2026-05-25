@@ -161,7 +161,7 @@ public class PreguntaServiceImpl implements IPreguntaService {
     //  METODOS PRIVADOS
     // **************************************************
 
-	private PreguntaEntity findEntityById(Long id) {
+	public PreguntaEntity findEntityById(Long id) {
         return preguntaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pregunta", id));
     }
