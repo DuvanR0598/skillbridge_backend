@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.udea.skillbridge.enums.EvaluacionEstado;
+import com.udea.skillbridge.enums.EvaluacionFase;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,7 +56,7 @@ public class EvaluacionEstudianteEntity {
 
     @NotNull
     @Column(name = "id_estudiante", nullable = false)
-    private Long studentId;
+    private Long idEstudiante;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,12 +68,12 @@ public class EvaluacionEstudianteEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "evaluacion_fase", nullable = false, length = 20)
-    private evaluacionFaseEntity evaluacionFase;
+    private EvaluacionFase evaluacionFase;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private evaluacionEstadoEntity estado = AssessmentStatus.IN_PROGRESS;
+    private EvaluacionEstado estado = EvaluacionEstado.EN_PROGRESO;
     
     /**
      * Número de intento. Permite múltiples ciclos del modelo pedagógico.
@@ -93,7 +96,7 @@ public class EvaluacionEstudianteEntity {
 
     @Builder.Default
     @OneToMany(
-        mappedBy = "evaluacion",
+        mappedBy = "evaluacionEnt",
         cascade = CascadeType.ALL,
         orphanRemoval = true,
         fetch = FetchType.LAZY
@@ -102,17 +105,17 @@ public class EvaluacionEstudianteEntity {
     
     @Builder.Default
     @OneToMany(
-        mappedBy = "assessment",
+        mappedBy = "evaluacionEnt",
         cascade = CascadeType.ALL,
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
-    private List<PuntuacionresultadoEntity> resultados = new ArrayList<>();
+    private List<PuntuacionResultadoEntity> resultados = new ArrayList<>();
     
     // ── Método de dominio ───────────────────────────────────────────
 
     public boolean isEditable() {
-        return AssessmentStatus.IN_PROGRESS.equals(this.status);
+        return EvaluacionEstado.EN_PROGRESO.equals(this.estado);
     }
 
 }

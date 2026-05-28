@@ -32,7 +32,7 @@ public interface IPuntuacionMatrixMapper {
         target = "fullConfigurado",
         expression = "java(scoreMatrix.getPlanFortalecimientoEnt().size() == 3)"
     )
-    // strengtheningPlans se mapea automáticamente via StrengtheningPlanMapper
+    // planes de fortalecimiento se mapea automáticamente via PlanFortalecimientoMapper
     PuntuacionMatrixResponse toResponse(PuntuacionMatrixEntity scoreMatrix);
     
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

@@ -5,15 +5,17 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.factory.Mappers;
 
 import com.udea.skillbridge.dto.request.ActualizarPlanFortalecimientoRequest;
-import com.udea.skillbridge.dto.request.ActualizarPuntuacionMatrixRequest;
 import com.udea.skillbridge.dto.request.PlanFortalecimientoRequest;
 import com.udea.skillbridge.dto.response.PlanFortalecimientoResponse;
 import com.udea.skillbridge.entity.PlanFortalecimientoEntity;
 
 @Mapper(componentModel = "spring")
 public interface IPlanFortalecimientoMapper {
+	
+	IPlanFortalecimientoMapper INSTANCE = Mappers.getMapper(IPlanFortalecimientoMapper.class);
 	
     @Mapping(target = "id",                  ignore = true)
     @Mapping(target = "puntuacionMatrixEnt", ignore = true)
