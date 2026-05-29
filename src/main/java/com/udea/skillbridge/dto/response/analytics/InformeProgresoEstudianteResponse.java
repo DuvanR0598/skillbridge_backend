@@ -44,5 +44,6 @@ public class InformeProgresoEstudianteResponse {
     private List<PlanFortalecimientoResponse> planActual;
 
     // Resumen narrativo
+    private String resumen;
 
 }
