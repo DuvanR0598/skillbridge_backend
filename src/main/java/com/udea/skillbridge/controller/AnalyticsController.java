@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.udea.skillbridge.common.exception.BusinessException;
 import com.udea.skillbridge.common.response.ApiResponse;
 import com.udea.skillbridge.dto.response.analytics.AnalisisDimensionalResponse;
 import com.udea.skillbridge.dto.response.analytics.DistribucionNivelesResponse;
@@ -18,6 +20,8 @@ import com.udea.skillbridge.dto.response.analytics.HistorialIntentosResponse;
 import com.udea.skillbridge.dto.response.analytics.InformeProgresoEstudianteResponse;
 import com.udea.skillbridge.dto.response.analytics.ReporteGrupoResponse;
 import com.udea.skillbridge.dto.response.analytics.ResumenCuestionarioResponse;
+import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
+import com.udea.skillbridge.seguridad.enums.TipoRol;
 import com.udea.skillbridge.service.IAnalyticsService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +39,19 @@ public class AnalyticsController {
     @GetMapping("/estudiante/{idEstudiante}/cuestionario/{idCuestionario}/progreso")
     public ResponseEntity<ApiResponse<InformeProgresoEstudianteResponse>> getProgresoEstudiante(
             @PathVariable Long idEstudiante,
-            @PathVariable Long idCuestionario) {
+            @PathVariable Long idCuestionario,
+            @AuthenticationPrincipal UsuarioEntity usuarioActual) {
+
+        // Estudiante solo puede ver su propio progreso
+        // Admin y Coordinador pueden ver el de cualquiera
+        if (usuarioActual.hasRole(TipoRol.ROLE_ESTUDIANTE)
+                && !usuarioActual.getId().equals(idEstudiante)) {
+            throw new BusinessException(
+                "No tiene permiso para ver el progreso de otro estudiante.",
+                "ACCESS_DENIED"
+            );
+        }
+
         return ResponseEntity.ok(ApiResponse.ok(
             analyticsService.getProgresoEstudiante(idEstudiante, idCuestionario)
         ));
