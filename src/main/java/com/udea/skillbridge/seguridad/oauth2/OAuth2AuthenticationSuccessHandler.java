@@ -2,23 +2,21 @@ package com.udea.skillbridge.seguridad.oauth2;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.udea.skillbridge.common.response.ApiResponse;
-import com.udea.skillbridge.seguridad.dto.response.AuthResponse;
 import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
 import com.udea.skillbridge.seguridad.entity.UsuarioPerfilEntity;
 import com.udea.skillbridge.seguridad.enums.AuthProvider;
 import com.udea.skillbridge.seguridad.enums.TipoRol;
-import com.udea.skillbridge.seguridad.mapper.IUsuarioMapper;
 import com.udea.skillbridge.seguridad.repository.IRolRepository;
 import com.udea.skillbridge.seguridad.repository.IUsuarioPerfilRepository;
 import com.udea.skillbridge.seguridad.repository.IUsuarioRepository;
@@ -44,8 +42,10 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final IUsuarioPerfilRepository usuarioPerfilRepository;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
-    private final IUsuarioMapper usuarioMapper;
-    private final ObjectMapper objectMapper;
+
+    /** URL del frontend a donde se redirige tras el login con Google. */
+    @Value("${app.oauth2.redirect-uri:http://localhost:4200/oauth2/callback}")
+    private String frontendRedirectUri;
 
     @Override
     public void onAuthenticationSuccess(
@@ -83,24 +83,21 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                 .create(usuarioEnt, request.getHeader("User-Agent"))
                 .getToken();
 
-        AuthResponse authResponse = AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .tipoToken("Bearer")
-                .expiraEn(jwtService.getAccessTokenExpiration())
-                .usuario(usuarioMapper.toResponse(usuarioEnt))
-                .build();
+        boolean perfilCompletado = Boolean.TRUE.equals(usuarioEnt.getPerfilCompleto());
 
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setStatus(HttpServletResponse.SC_OK);
+        // Redirigir al frontend con los tokens en los query params.
+        // El componente Oauth2Callback de Angular los lee y completa el login.
+        String targetUrl = UriComponentsBuilder
+                .fromUriString(frontendRedirectUri)
+                .queryParam("token",   URLEncoder.encode(accessToken,  StandardCharsets.UTF_8))
+                .queryParam("refresh", URLEncoder.encode(refreshToken, StandardCharsets.UTF_8))
+                .queryParam("profileCompleted", perfilCompletado)
+                .build(true)
+                .toUriString();
 
-        objectMapper.writeValue(
-            response.getWriter(),
-            ApiResponse.ok(authResponse, "Login con Google exitoso")
-        );
+        log.info("Usuario {} autenticado con Google — redirigiendo al frontend", usuarioEnt.getEmail());
 
-        log.info("Usuario {} autenticado con Google", usuarioEnt.getEmail());
+        response.sendRedirect(targetUrl);
     }
 
     private UsuarioEntity createNewGoogleUser(GoogleOAuth2UserInfo info) {

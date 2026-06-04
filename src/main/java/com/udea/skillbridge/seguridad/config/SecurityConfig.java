@@ -1,5 +1,7 @@
 package com.udea.skillbridge.seguridad.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,8 +16,14 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.udea.skillbridge.seguridad.filter.JwtAuthenticationFilter;
 import com.udea.skillbridge.seguridad.oauth2.OAuth2AuthenticationSuccessHandler;
@@ -34,8 +42,11 @@ public class SecurityConfig {
     private final OAuth2AuthenticationSuccessHandler oAuth2SuccessHandler;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            ClientRegistrationRepository clientRegistrationRepository) throws Exception {
         http
+        	.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             // Desactivar CSRF — usamos JWT stateless
             .csrf(AbstractHttpConfigurer::disable)
 
@@ -133,8 +144,11 @@ public class SecurityConfig {
 
             // ── OAuth2 (Google) ──────────────────────────────────────
             .oauth2Login(oauth2 -> oauth2
+                // Forzar el selector de cuentas de Google en cada login
+                .authorizationEndpoint(authorization -> authorization
+                    .authorizationRequestResolver(
+                        authorizationRequestResolver(clientRegistrationRepository)))
                 .successHandler(oAuth2SuccessHandler)
-                // Spring maneja automáticamente el redirect a Google
             )
 
             // ── Proveedor de autenticación ───────────────────────────
@@ -145,6 +159,25 @@ public class SecurityConfig {
                 UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * Resolver que añade {@code prompt=select_account} a la petición de
+     * autorización de Google. Así el usuario siempre ve el selector de
+     * cuentas en lugar de autenticarse en silencio con la sesión activa.
+     */
+    private OAuth2AuthorizationRequestResolver authorizationRequestResolver(
+            ClientRegistrationRepository clientRegistrationRepository) {
+
+        DefaultOAuth2AuthorizationRequestResolver resolver =
+            new DefaultOAuth2AuthorizationRequestResolver(
+                clientRegistrationRepository, "/oauth2/authorization");
+
+        resolver.setAuthorizationRequestCustomizer(customizer ->
+            customizer.additionalParameters(params ->
+                params.put("prompt", "select_account")));
+
+        return resolver;
     }
 
     @Bean
@@ -164,6 +197,41 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
+    }
+    
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        // En dev: cualquier origen local
+        config.setAllowedOrigins(List.of(
+            "http://localhost:4200"   // Angular dev server
+        ));
+
+        config.setAllowedMethods(List.of(
+            "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"
+        ));
+
+        config.setAllowedHeaders(List.of(
+            "Authorization", 
+            "Content-Type", 
+            "Accept",
+            "X-Requested-With",
+            "Origin",
+            "Access-Control-Request-Method",
+            "Access-Control-Request-Headers"
+        ));
+        
+        config.setExposedHeaders(List.of(
+                "Authorization"  // Para enviar el token JWT en respuesta
+        ));
+
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
 }

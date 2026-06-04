@@ -19,7 +19,7 @@ import lombok.Setter;
 @Builder
 public class ProgramaIngenieriaResponse {
 	
-    private ProgramaIngenieria valor;   // valor para el request
-    private String montrarNombre;         // texto para mostrar al usuario
+    private ProgramaIngenieria value;       // valor para el request
+    private String displayName;             // texto para mostrar al usuario
 
 }

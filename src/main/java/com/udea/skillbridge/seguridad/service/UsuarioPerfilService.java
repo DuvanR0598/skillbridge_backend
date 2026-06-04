@@ -165,8 +165,8 @@ public class UsuarioPerfilService {
     public List<ProgramaIngenieriaResponse> listaProgramas() {
         return Arrays.stream(ProgramaIngenieria.values())
                 .map(p -> ProgramaIngenieriaResponse.builder()
-                        .valor(p)
-                        .montrarNombre(p.getDisplayName())
+                        .value(p)
+                        .displayName(p.getDisplayName())
                         .build())
                 .toList();
     }
