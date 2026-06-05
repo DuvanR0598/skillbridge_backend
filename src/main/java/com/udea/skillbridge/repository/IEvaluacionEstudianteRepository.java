@@ -33,4 +33,7 @@ public interface IEvaluacionEstudianteRepository extends JpaRepository<Evaluacio
     // Todas las sesiones de un estudiante para un cuestionario
     List<EvaluacionEstudianteEntity> findByIdEstudianteAndCuestionarioEntIdCuestionario(Long idEstuadiante, Long idCuestionario);
 
+    // Actividad reciente: últimas sesiones del estudiante (más recientes primero)
+    List<EvaluacionEstudianteEntity> findTop10ByIdEstudianteOrderByStartedAtDesc(Long idEstudiante);
+
 }

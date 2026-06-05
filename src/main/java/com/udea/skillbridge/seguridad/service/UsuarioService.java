@@ -12,6 +12,7 @@ import com.udea.skillbridge.seguridad.dto.request.ActualizarUsuariosRolesRequest
 import com.udea.skillbridge.seguridad.dto.response.UsuarioResponse;
 import com.udea.skillbridge.seguridad.entity.RolEntity;
 import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
+import com.udea.skillbridge.seguridad.enums.TipoRol;
 import com.udea.skillbridge.seguridad.mapper.IUsuarioMapper;
 import com.udea.skillbridge.seguridad.repository.IRolRepository;
 import com.udea.skillbridge.seguridad.repository.IUsuarioRepository;
@@ -53,6 +54,18 @@ public class UsuarioService {
             );
         }
 
+        // Proteger al último administrador: no permitir quitarle el rol ADMIN
+        // si es el único que queda en el sistema.
+        boolean eraAdmin   = usuarioEnt.hasRole(TipoRol.ROLE_ADMIN);
+        boolean sigueAdmin = request.getRoles().contains(TipoRol.ROLE_ADMIN);
+
+        if (eraAdmin && !sigueAdmin && userRepository.countByRol(TipoRol.ROLE_ADMIN) <= 1) {
+            throw new BusinessException(
+                "No se puede quitar el rol de administrador: es el último administrador del sistema.",
+                "LAST_ADMIN"
+            );
+        }
+
         usuarioEnt.getRoles().clear();
         usuarioEnt.getRoles().addAll(newRoles);
 
@@ -64,6 +77,18 @@ public class UsuarioService {
     @Transactional
     public void toggleEnabled(Long userId) {
     	UsuarioEntity usuarioEnt = findEntityById(userId);
+
+        // Proteger al último administrador activo: no permitir deshabilitarlo.
+        boolean seVaADeshabilitar = Boolean.TRUE.equals(usuarioEnt.getActivado());
+        if (seVaADeshabilitar
+                && usuarioEnt.hasRole(TipoRol.ROLE_ADMIN)
+                && userRepository.countByRolAndActivadoTrue(TipoRol.ROLE_ADMIN) <= 1) {
+            throw new BusinessException(
+                "No se puede deshabilitar al último administrador activo del sistema.",
+                "LAST_ADMIN"
+            );
+        }
+
         usuarioEnt.setActivado(!usuarioEnt.getActivado());
         userRepository.save(usuarioEnt);
         log.info("Usuario {} {}", userId,

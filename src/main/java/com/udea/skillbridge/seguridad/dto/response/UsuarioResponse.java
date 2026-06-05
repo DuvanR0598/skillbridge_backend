@@ -35,6 +35,9 @@ public class UsuarioResponse {
     @JsonProperty("emailVerified")
     private Boolean emailVerificado;
 
+    @JsonProperty("enabled")
+    private Boolean activado;
+
     private Set<TipoRol> roles;
 
     @JsonProperty("permissions")

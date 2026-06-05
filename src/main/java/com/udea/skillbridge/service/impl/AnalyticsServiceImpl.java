@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.udea.skillbridge.common.exception.BusinessException;
 import com.udea.skillbridge.common.exception.ResourceNotFoundException;
 import com.udea.skillbridge.dto.response.PlanFortalecimientoResponse;
 import com.udea.skillbridge.dto.response.analytics.AnalisisDimensionalResponse;
@@ -76,12 +75,18 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
 						idEstudiante, idCuestionario, EvaluacionFase.POST_TEST
 						);
 
+		// Sin PRE_TEST aún no es un error: el estudiante simplemente no ha
+		// empezado. Devolvemos un informe vacío (200) para que el dashboard
+		// pueda mostrar el estado "sin datos" sin tratarlo como fallo.
 		if (preResultados.isEmpty()) {
-			throw new BusinessException(
-					"El estudiante " + idEstudiante +
-					" no tiene un PRE_TEST completado para el cuestionario " + idCuestionario + ".",
-					"PRE_TEST_NOT_FOUND"
-					);
+			return InformeProgresoEstudianteResponse.builder()
+					.idEstudiante(idEstudiante)
+					.idCuestionario(idCuestionario)
+					.nombreCuestionario(cuestionarioEnt.getNombre())
+					.skillProgreso(List.of())
+					.planActual(List.of())
+					.resumen("El estudiante aún no tiene un PRE_TEST completado para este cuestionario.")
+					.build();
 		}
 
 		// Construir el progreso por dimensión
