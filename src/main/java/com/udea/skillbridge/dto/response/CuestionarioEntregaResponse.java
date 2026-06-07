@@ -24,7 +24,7 @@ import lombok.Setter;
 @Builder
 public class CuestionarioEntregaResponse {
 	
-	private Long idCuestinario;
+	private Long idCuestionario;
 	private String nombre;
 	private String objetivo;
 	private Boolean ordenAleatorio;

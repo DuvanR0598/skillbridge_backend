@@ -42,19 +42,19 @@ public class EvaluacionEstudianteController {
      */
     @PostMapping("/cuestionario/{idCuestionario}/iniciar")
     public ResponseEntity<ApiResponse<EvaluacionEstudianteResponse>> iniciar(
-            @PathVariable Long questionnaireId,
-            @RequestParam EvaluacionFase fase,
+            @PathVariable("idCuestionario") Long idCuestionario,
+            @RequestParam("phase") EvaluacionFase fase,
             @AuthenticationPrincipal UsuarioEntity usuarioActual,  // ← del JWT
             HttpServletRequest request) {
 
         IniciarEvaluacionRequest req = IniciarEvaluacionRequest.builder()
-                .idEstudiante(usuarioActual.getId())   
+                .idEstudiante(usuarioActual.getId())
                 .evaluacionFase(fase)
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok(
-                		evaluacionService.iniciar(questionnaireId, req),
+                		evaluacionService.iniciar(idCuestionario, req),
                     "Sesión iniciada exitosamente"
                 ));
     }

@@ -79,7 +79,7 @@ public class AnalyticsController {
     /**
      * Decisión de escalamiento de un estudiante (certificar vs reiniciar).
      */
-    @GetMapping("/estudiantes/{idEstudiante}/cuestionario/{idCuestionario}/escalar")
+    @GetMapping("/estudiante/{idEstudiante}/cuestionario/{idCuestionario}/escalar")
     public ResponseEntity<ApiResponse<EscalamientoResponse>> getEscalamiento(
             @PathVariable Long idEstudiante,
             @PathVariable Long idCuestionario) {
@@ -102,7 +102,7 @@ public class AnalyticsController {
     /**
      * Historial de intentos de un estudiante.
      */
-    @GetMapping("/estudiantes/{idEstudiante}/cuestionario/{idCuestionario}/historial")
+    @GetMapping("/estudiante/{idEstudiante}/cuestionario/{idCuestionario}/historial")
     public ResponseEntity<ApiResponse<List<HistorialIntentosResponse>>> getHistorialIntentos(
             @PathVariable Long idEstudiante,
             @PathVariable Long idCuestionario) {

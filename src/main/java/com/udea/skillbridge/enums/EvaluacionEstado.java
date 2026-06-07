@@ -9,8 +9,7 @@ package com.udea.skillbridge.enums;
  */
 public enum EvaluacionEstado {
 	
-	EN_PROGRESO,
+	EN_PROGRESO, 
 	COMPLETADO,
-	ABANDONADO
-
+	ABANDONADO,
 }

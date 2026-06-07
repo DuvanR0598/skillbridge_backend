@@ -40,6 +40,7 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsServiceImpl userDetailsService;
     private final OAuth2AuthenticationSuccessHandler oAuth2SuccessHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthEntryPoint;
 
     @Bean
     SecurityFilterChain securityFilterChain(
@@ -53,6 +54,11 @@ public class SecurityConfig {
             // Sin sesiones HTTP — cada request es independiente
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+
+            // Token ausente/expirado → 401 JSON (no redirige a Google)
+            .exceptionHandling(ex ->
+                ex.authenticationEntryPoint(jwtAuthEntryPoint)
             )
 
             // Reglas de autorización por URL

@@ -302,7 +302,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
                 .toList();
 
         return CuestionarioEntregaResponse.builder()
-                .idCuestinario(cuestionarioEnt.getIdCuestionario())
+                .idCuestionario(cuestionarioEnt.getIdCuestionario())
                 .nombre(cuestionarioEnt.getNombre())
                 .objetivo(cuestionarioEnt.getObjetivo())
                 .ordenAleatorio(cuestionarioEnt.getOrdenAleatorio())

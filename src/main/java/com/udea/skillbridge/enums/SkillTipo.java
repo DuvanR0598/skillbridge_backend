@@ -6,6 +6,6 @@ package com.udea.skillbridge.enums;
  */
 public enum SkillTipo {
 	
-	ADAPTABILIDAD,   
-    PENSAMIENTO_CRITICO   
+	ADAPTABILIDAD,
+    PENSAMIENTO_CRITICO
 }
