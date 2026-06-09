@@ -26,5 +26,5 @@ public class PreguntaResponse {
 	private Integer maxOpciones;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	private List<OpcionPreguntaResponse> opcionPregunta;
+	private List<OpcionPreguntaAdminResponse> opcionPregunta;
 }

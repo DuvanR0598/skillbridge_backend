@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.udea.skillbridge.common.exception.BusinessException;
 import com.udea.skillbridge.common.exception.ResourceNotFoundException;
@@ -17,7 +18,9 @@ import com.udea.skillbridge.dto.request.PreguntaCuestionarioRequest;
 import com.udea.skillbridge.dto.response.ActivarCondicionPreguntaResponse;
 import com.udea.skillbridge.dto.response.CuestionarioEntregaResponse;
 import com.udea.skillbridge.dto.response.CuestionarioResponse;
+import com.udea.skillbridge.dto.response.OpcionPreguntaAdminResponse;
 import com.udea.skillbridge.dto.response.OpcionPreguntaResponse;
+import com.udea.skillbridge.dto.response.PreguntaDeCuestionarioResponse;
 import com.udea.skillbridge.dto.response.PreguntaEntregaResponse;
 import com.udea.skillbridge.entity.CondicionPreguntaEntity;
 import com.udea.skillbridge.entity.CuestionarioEntity;
@@ -232,7 +235,71 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         pqRepository.save(pqEnt);
         log.info("Pregunta [{}] agregada al cuestionario [{}]", preguntaEnt.getIdPregunta(), idCuestionario);
 	}
-	
+
+	// *****************************************
+	// LISTAR PREGUNTAS DE UN CUESTIONARIO (vista coordinador)
+	// *****************************************
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<PreguntaDeCuestionarioResponse> getPreguntasDeCuestionario(Long idCuestionario) {
+		CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
+
+		return cuestionarioEnt.getPreguntasCuestionario().stream()
+				.map(this::buildPreguntaDeCuestionario)
+				.toList();
+	}
+
+	private PreguntaDeCuestionarioResponse buildPreguntaDeCuestionario(PreguntaCuestionarioEntity pq) {
+		PreguntaEntity p = pq.getPreguntaEnt();
+
+		List<OpcionPreguntaAdminResponse> opciones = p.getOpcionPregunta().stream()
+				.map(o -> OpcionPreguntaAdminResponse.builder()
+						.idOpcion(o.getId())
+						.texto(o.getTexto())
+						.isCorrecta(o.getIsCorrecta())
+						.peso(o.getPeso())
+						.ordenVisualizacion(o.getOrdenVisualizacion())
+						.build())
+				.toList();
+
+		return PreguntaDeCuestionarioResponse.builder()
+				.idPregunta(p.getIdPregunta())
+				.texto(p.getTexto())
+				.tipoPregunta(p.getTipoPregunta())
+				.imagenUrl(p.getImagenUrl())
+				.ayuda(p.getAyuda())
+				.maxOpciones(p.getMaxOpciones())
+				.obligatoria(pq.getObligatoria())
+				.peso(pq.getPeso())
+				.isCondicional(pq.getIsCondicional())
+				.opciones(opciones)
+				.build();
+	}
+
+	// *****************************************
+	// QUITAR PREGUNTA DE UN CUESTIONARIO
+	// *****************************************
+
+	@Override
+	@Transactional
+	public void removerPreguntaDeCuestionario(Long idCuestionario, Long idPregunta) {
+		CuestionarioEntity cuestionarioEnt = findActivoById(idCuestionario);
+
+		// Solo se pueden quitar preguntas en estado BORRADOR
+		validarEditable(cuestionarioEnt, "quitar pregunta de");
+
+		PreguntaCuestionarioEntity.IdPreguntaCuestionario pqId =
+				new PreguntaCuestionarioEntity.IdPreguntaCuestionario(idCuestionario, idPregunta);
+
+		if (!pqRepository.existsById(pqId)) {
+			throw new ResourceNotFoundException("PreguntaCuestionario", idPregunta);
+		}
+
+		pqRepository.deleteById(pqId);
+		log.info("Pregunta [{}] removida del cuestionario [{}]", idPregunta, idCuestionario);
+	}
+
 	// *****************************************
 	// ENTREGAR CUESTIONARIO AL ESTUDIANTE
 	// *****************************************
@@ -254,6 +321,9 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
                 "Estado actual: " + cuestionarioEnt.getEstadoCuestionario()
             );
         }
+
+        // Nota: la ventana de disponibilidad se valida al INICIAR la evaluación,
+        // no aquí, para no romper una sesión en curso si la ventana cierra a mitad.
 
         // 3. Obtener las preguntas del cuestionario
         List<PreguntaCuestionarioEntity> pqListaEnt =
@@ -305,6 +375,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
                 .idCuestionario(cuestionarioEnt.getIdCuestionario())
                 .nombre(cuestionarioEnt.getNombre())
                 .objetivo(cuestionarioEnt.getObjetivo())
+                .instrucciones(cuestionarioEnt.getInstrucciones())
                 .ordenAleatorio(cuestionarioEnt.getOrdenAleatorio())
                 .totalPreguntas(preguntasBaseEntregadas.size())      // solo las base son "totales" para el progreso
                 .preguntas(preguntasBaseEntregadas)

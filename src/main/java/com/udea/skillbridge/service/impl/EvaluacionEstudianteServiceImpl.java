@@ -72,6 +72,19 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
             );
         }
 
+        // 1.b Validar la ventana de disponibilidad (fecha/hora)
+        LocalDateTime ahora = LocalDateTime.now();
+        if (!cuestionarioEnt.ventanaVigente(ahora)) {
+            boolean aunNoAbre = cuestionarioEnt.getFechaInicio() != null
+                    && ahora.isBefore(cuestionarioEnt.getFechaInicio());
+            throw new BusinessException(
+                aunNoAbre
+                    ? "El cuestionario aún no está disponible para responder."
+                    : "El período para responder este cuestionario ya finalizó.",
+                "OUT_OF_WINDOW"
+            );
+        }
+
         // 2. Verificar que no haya sesión IN_PROGRESS para este estudiante
         evaluacionRepository.findByIdEstudianteAndCuestionarioEntIdCuestionarioAndEstado(
                 request.getIdEstudiante(),

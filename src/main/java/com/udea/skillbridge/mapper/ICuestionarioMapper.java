@@ -42,6 +42,10 @@ public interface ICuestionarioMapper {
             target = "editable",
             expression = "java(cuestionarioEnt.isEditable())"
     )
+    @Mapping(
+            target = "disponible",
+            expression = "java(cuestionarioEnt.disponibleParaResponder())"
+    )
 	CuestionarioResponse toResponse(CuestionarioEntity cuestionarioEnt);
     
     /**

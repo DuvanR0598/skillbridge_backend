@@ -1,6 +1,5 @@
 package com.udea.skillbridge.dto.response;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.udea.skillbridge.enums.EstadoCuestionario;
@@ -22,10 +21,14 @@ public class CuestionarioResponse {
 	private String nombre;
 	private String objetivo;
 	private String instrucciones;
-	private LocalDate fechaCreacion;
 	private Boolean ordenAleatorio;
 	private EstadoCuestionario estadoCuestionario;
 	private LocalDateTime createdAt;
 	private int totalPreguntas;
 	private boolean editable;
+
+	// Ventana de disponibilidad
+	private LocalDateTime fechaInicio;
+	private LocalDateTime fechaFin;
+	private boolean disponible;  // calculado: PUBLICADO y dentro de la ventana
 }

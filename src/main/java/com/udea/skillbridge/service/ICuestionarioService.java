@@ -7,6 +7,7 @@ import com.udea.skillbridge.dto.request.CuestionarioRequest;
 import com.udea.skillbridge.dto.request.PreguntaCuestionarioRequest;
 import com.udea.skillbridge.dto.response.CuestionarioEntregaResponse;
 import com.udea.skillbridge.dto.response.CuestionarioResponse;
+import com.udea.skillbridge.dto.response.PreguntaDeCuestionarioResponse;
 
 public interface ICuestionarioService {
 	
@@ -21,6 +22,10 @@ public interface ICuestionarioService {
 	CuestionarioResponse actualizarCuestionario(Long id, ActualizarCuestionarioRequest request);
 	
 	void addPretuntaToCuestinario(Long idCuestionario, PreguntaCuestionarioRequest request);
+
+	List<PreguntaDeCuestionarioResponse> getPreguntasDeCuestionario(Long idCuestionario);
+
+	void removerPreguntaDeCuestionario(Long idCuestionario, Long idPregunta);
 	
 	CuestionarioResponse cuestionarioCompleto(Long idCuestionario);
 	

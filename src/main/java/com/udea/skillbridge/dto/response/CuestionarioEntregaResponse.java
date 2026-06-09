@@ -27,6 +27,7 @@ public class CuestionarioEntregaResponse {
 	private Long idCuestionario;
 	private String nombre;
 	private String objetivo;
+	private String instrucciones;
 	private Boolean ordenAleatorio;
 	private Integer totalPreguntas;
 	private List<PreguntaEntregaResponse> preguntas;

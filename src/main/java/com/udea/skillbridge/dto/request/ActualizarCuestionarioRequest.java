@@ -1,6 +1,7 @@
 package com.udea.skillbridge.dto.request;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,7 @@ public class ActualizarCuestionarioRequest {
 	private LocalDate fechaCreacion;
 	private Boolean ordenAleatorio;   // El docente lo activa o desactiva aquí
 
+	// Ventana de disponibilidad (fecha + hora)
+	private LocalDateTime fechaInicio;
+	private LocalDateTime fechaFin;
 }

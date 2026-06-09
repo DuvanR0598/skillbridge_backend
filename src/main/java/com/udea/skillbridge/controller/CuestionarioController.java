@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import com.udea.skillbridge.dto.request.CuestionarioRequest;
 import com.udea.skillbridge.dto.request.PreguntaCuestionarioRequest;
 import com.udea.skillbridge.dto.response.CuestionarioEntregaResponse;
 import com.udea.skillbridge.dto.response.CuestionarioResponse;
+import com.udea.skillbridge.dto.response.PreguntaDeCuestionarioResponse;
 import com.udea.skillbridge.service.ICuestionarioService;
 
 import jakarta.validation.Valid;
@@ -120,6 +122,31 @@ public class CuestionarioController {
     		@PathVariable Long id) {
     	CuestionarioEntregaResponse response = cuestionarioService.entregarCuestionario(id);
         return ResponseEntity.ok(ApiResponse.ok(response, "Cuestionario listo para responder"));
+    }
+
+    /**
+     * Listar las preguntas de un cuestionario con detalle de admin
+     * (peso, obligatoria, opciones con isCorrecta/peso).
+     * Restringido a ADMIN/COORDINADOR — el estudiante NO debe ver respuestas correctas.
+     */
+    @GetMapping("/{idCuestionario}/preguntas")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
+    public ResponseEntity<ApiResponse<List<PreguntaDeCuestionarioResponse>>> getPreguntasDeCuestionario(
+            @PathVariable Long idCuestionario) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                cuestionarioService.getPreguntasDeCuestionario(idCuestionario)));
+    }
+
+    /**
+     * Quitar una pregunta de un cuestionario (solo en estado BORRADOR).
+     */
+    @DeleteMapping("/{idCuestionario}/pregunta/{idPregunta}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
+    public ResponseEntity<ApiResponse<Void>> removerPreguntaDeCuestionario(
+            @PathVariable Long idCuestionario,
+            @PathVariable Long idPregunta) {
+        cuestionarioService.removerPreguntaDeCuestionario(idCuestionario, idPregunta);
+        return ResponseEntity.ok(ApiResponse.ok(null, "Pregunta removida del cuestionario"));
     }
 
 }

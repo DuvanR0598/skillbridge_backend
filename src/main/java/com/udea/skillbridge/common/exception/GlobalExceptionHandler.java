@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.udea.skillbridge.common.response.ApiResponse;
+import com.udea.skillbridge.exception.CuestionarioException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +31,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(ex.getStatus())
                 .body(ApiResponse.error(ex.getMessage(), ex.getErrorCode()));
+    }
+
+    @ExceptionHandler(CuestionarioException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCuestionario(CuestionarioException ex) {
+        log.warn("Regla de cuestionario violada: {}", ex.getMessage());
+        return ResponseEntity
+                .status(ex.getStatus())
+                .body(ApiResponse.error(ex.getMessage(), "CUESTIONARIO_RULE"));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

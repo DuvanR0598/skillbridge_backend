@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.udea.skillbridge.enums.TipoPregunta;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,8 @@ public class PreguntaRequest {
     private String ayuda;
     private Integer maxOpciones;  // Para MULTIPLE_CHOICE: cuántas puede elegir
 
-    // Lista de opciones de respuesta (opcional para DESCRIPTION)
+    // Lista de opciones de respuesta (opcional para DESCRIPTION).
+    // @Valid hace que se validen también los campos de cada opción.
+    @Valid
     private List<OpcionPreguntaRequest> opcionPreguntaRequest;
 }

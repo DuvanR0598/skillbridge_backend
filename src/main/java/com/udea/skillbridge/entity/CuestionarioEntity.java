@@ -1,6 +1,5 @@
 package com.udea.skillbridge.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +53,6 @@ public class CuestionarioEntity {
 	@Column(name = "instrucciones", columnDefinition = "TEXT")
 	private String instrucciones;
 
-	@CreationTimestamp
-	@Column(name = "fecha_Creacion")
-	private LocalDate fechaCreacion; // Fecha en que se crea el cuestionario
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "estado_cuestionario", nullable = false, length = 20)
 	@Builder.Default
@@ -66,6 +61,14 @@ public class CuestionarioEntity {
 	@Column(name = "orden_aleatorio")
 	@Builder.Default
 	private Boolean ordenAleatorio = false; // El docente lo activa al crear
+
+	// Ventana de disponibilidad para responder (con fecha y hora).
+	// null = sin restricción en ese extremo.
+	@Column(name = "fecha_inicio")
+	private LocalDateTime fechaInicio;
+
+	@Column(name = "fecha_fin")
+	private LocalDateTime fechaFin;
 
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
@@ -105,7 +108,23 @@ public class CuestionarioEntity {
 	public boolean isEditable() {
         return EstadoCuestionario.BORRADOR.equals(this.estadoCuestionario);
     }
-	
+
+	/**
+     * ¿La ventana de disponibilidad está vigente en el momento dado?
+     * Si no hay fechas definidas, se considera siempre vigente.
+     */
+    public boolean ventanaVigente(LocalDateTime ahora) {
+        if (this.fechaInicio != null && ahora.isBefore(this.fechaInicio)) return false;
+        if (this.fechaFin != null && ahora.isAfter(this.fechaFin)) return false;
+        return true;
+    }
+
+    /** ¿Está publicado y dentro de la ventana → respondible ahora mismo? */
+    public boolean disponibleParaResponder() {
+        return EstadoCuestionario.PUBLICADO.equals(this.estadoCuestionario)
+                && ventanaVigente(LocalDateTime.now());
+    }
+
 	// Método que reemplaza el chequeo de isDeleted — semántica clara
 	public boolean isDeleted() {
 	    return EstadoCuestionario.ELIMINADO.equals(this.estadoCuestionario);

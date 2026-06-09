@@ -6,6 +6,7 @@ import org.mapstruct.ReportingPolicy;
 
 import com.udea.skillbridge.dto.request.OpcionPreguntaRequest;
 import com.udea.skillbridge.dto.request.PreguntaRequest;
+import com.udea.skillbridge.dto.response.OpcionPreguntaAdminResponse;
 import com.udea.skillbridge.dto.response.PreguntaResponse;
 import com.udea.skillbridge.entity.OpcionPreguntaEntity;
 import com.udea.skillbridge.entity.PreguntaEntity;
@@ -28,6 +29,10 @@ public interface IPreguntaMapper {
     @Mapping(target = "preguntaEnt", ignore = true)
     OpcionPreguntaEntity toOpcionPreguntaEntity(OpcionPreguntaRequest request);
 	
-	PreguntaResponse toResponse(PreguntaEntity response); 
+	PreguntaResponse toResponse(PreguntaEntity response);
+
+	// Opción para la vista de admin (incluye isCorrecta y peso).
+	@Mapping(target = "idOpcion", source = "id")
+	OpcionPreguntaAdminResponse toOpcionAdmin(OpcionPreguntaEntity entity);
 
 }
