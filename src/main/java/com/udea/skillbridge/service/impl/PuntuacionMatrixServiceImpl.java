@@ -15,7 +15,6 @@ import com.udea.skillbridge.entity.PreguntaEntity;
 import com.udea.skillbridge.entity.PuntuacionMatrixEntity;
 import com.udea.skillbridge.enums.EstadoCuestionario;
 import com.udea.skillbridge.enums.NivelBloom;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 import com.udea.skillbridge.enums.TipoPregunta;
@@ -78,8 +77,8 @@ public class PuntuacionMatrixServiceImpl implements IPuntuacionMatrixService {
 		matrix.getNivelesBloom().addAll(nivelesBloom);
 
 		PuntuacionMatrixEntity guardar = puntuacionMatrixRepository.save(matrix);
-		log.info("PuntuacionMatrix creada → cuestionario={} skill={} dimension={} nivel={}", idcuestionario,
-				request.getSkill(), request.getDimension(), request.getNivel());
+		log.info("PuntuacionMatrix creada → cuestionario={} skill={} idDimension={} nivel={}", idcuestionario,
+				request.getSkill(), request.getIdDimension(), request.getNivel());
 
 		return puntuacionMatrixMapper.toResponse(guardar);
 	}

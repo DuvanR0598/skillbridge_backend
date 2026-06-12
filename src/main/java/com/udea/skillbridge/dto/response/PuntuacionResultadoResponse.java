@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 
@@ -23,7 +22,6 @@ public class PuntuacionResultadoResponse {
 	
     private Long id;
     private SkillTipo skill;
-    private SkillDimension dimension;
     private Integer totalPuntaje;
     private Integer maxPuntuacionPosible;
     private BigDecimal porcentajePuntuacion;

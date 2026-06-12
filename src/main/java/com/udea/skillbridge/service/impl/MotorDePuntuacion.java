@@ -17,7 +17,6 @@ import com.udea.skillbridge.entity.OpcionPreguntaEntity;
 import com.udea.skillbridge.entity.PreguntaEntity;
 import com.udea.skillbridge.entity.PuntuacionMatrixEntity;
 import com.udea.skillbridge.entity.PuntuacionResultadoEntity;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillTipo;
 import com.udea.skillbridge.enums.TipoPregunta;
 import com.udea.skillbridge.repository.IPuntuacionMatrixRepository;
@@ -73,10 +72,9 @@ public class MotorDePuntuacion {
 		for (Map.Entry<String, List<PuntuacionMatrixEntity>> entry : grupoMatrices.entrySet()) {
 			List<PuntuacionMatrixEntity> groupMatrices = entry.getValue();
 
-			// Determinar el skill y dimension del grupo
+			// Determinar el skill y dimensión gestionada (FK) del grupo
 			PuntuacionMatrixEntity muestra = groupMatrices.get(0);
 			SkillTipo skill = muestra.getSkill();
-			SkillDimension dimension = muestra.getDimension();
 
 			// Sumar puntajes de las preguntas asociadas a este grupo.
 			// IMPORTANTE: cada pregunta debe contar UNA sola vez aunque el grupo
@@ -123,7 +121,6 @@ public class MotorDePuntuacion {
 			PuntuacionResultadoEntity resultado = PuntuacionResultadoEntity.builder()
 					.evaluacionEnt(evaluacion)
 					.skill(skill)
-					.dimension(dimension)
 					.dimensionEnt(muestra.getDimensionEnt())  // dimensión gestionada (si la matriz la tiene)
 					.totalPuntaje(totalPuntaje)
 					.maxPuntuacionPosible(maxPuntajePosible)
@@ -133,7 +130,8 @@ public class MotorDePuntuacion {
 					.build();
 
 			resultados.add(resultado);
-			log.info("PuntuacionResultadoEntity → skill={} dimension={} score={}/{} ({}%) nivel={}", skill, dimension, totalPuntaje,
+			log.info("PuntuacionResultadoEntity → skill={} idDimension={} score={}/{} ({}%) nivel={}", skill,
+					muestra.getDimensionEnt() != null ? muestra.getDimensionEnt().getId() : null, totalPuntaje,
 					maxPuntajePosible, porcentaje, matrizCoincidencia != null ? matrizCoincidencia.getNivel() : "N/A");
 		}
 

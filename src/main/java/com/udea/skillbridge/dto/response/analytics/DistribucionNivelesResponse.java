@@ -1,7 +1,6 @@
 package com.udea.skillbridge.dto.response.analytics;
 
 import com.udea.skillbridge.enums.EvaluacionFase;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillTipo;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +20,8 @@ import lombok.Setter;
 public class DistribucionNivelesResponse {
 	
     private SkillTipo skill;
-    private SkillDimension dimension;
+    private Long idDimension;          // dimensión gestionada (tabla); null = global
+    private String dimensionNombre;    // nombre legible; null = global
     private EvaluacionFase fase;
 
     private Long recuentoBasico;

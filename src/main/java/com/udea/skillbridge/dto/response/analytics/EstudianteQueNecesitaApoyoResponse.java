@@ -3,7 +3,6 @@ package com.udea.skillbridge.dto.response.analytics;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillTipo;
 
 import lombok.AllArgsConstructor;
@@ -35,7 +34,8 @@ public class EstudianteQueNecesitaApoyoResponse {
 	@Builder
 	public static class DimensionBajaResponse {
 		private SkillTipo skill;
-		private SkillDimension dimension;
+		private Long idDimension;
+		private String dimensionNombre;
 		private Integer puntaje;
 		private BigDecimal porcentaje;
 	}

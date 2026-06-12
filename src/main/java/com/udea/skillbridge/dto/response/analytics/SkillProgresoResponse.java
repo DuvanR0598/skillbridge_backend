@@ -2,7 +2,6 @@ package com.udea.skillbridge.dto.response.analytics;
 
 import java.math.BigDecimal;
 
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 
@@ -23,7 +22,6 @@ import lombok.Setter;
 public class SkillProgresoResponse {
 	
     private SkillTipo skill;
-    private SkillDimension dimension;      // enum legado
     private Long idDimension;              // dimensión gestionada (tabla)
     private String dimensionNombre;        // nombre legible (null si no está vinculada)
 

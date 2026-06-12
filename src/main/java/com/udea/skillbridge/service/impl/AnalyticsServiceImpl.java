@@ -6,11 +6,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -33,7 +32,6 @@ import com.udea.skillbridge.entity.EvaluacionEstudianteEntity;
 import com.udea.skillbridge.entity.PuntuacionMatrixEntity;
 import com.udea.skillbridge.entity.PuntuacionResultadoEntity;
 import com.udea.skillbridge.enums.EvaluacionFase;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 import com.udea.skillbridge.enums.analytics.DecisionEscala;
@@ -45,10 +43,12 @@ import com.udea.skillbridge.service.IAnalyticsService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true) // mantiene la sesión abierta para cargas LAZY (dimensionEnt)
 public class AnalyticsServiceImpl implements IAnalyticsService {
 	
 	private final ICuestionarioRepository cuestionarioRepository;
@@ -144,18 +144,12 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         List<PuntuacionMatrixEntity> matrices = puntuacionMatrixRepository
                 .findByCuestionarioEntIdCuestionario(idCuestionario);
 
-        Set<String> dimensionKeys = matrices.stream()
-                .map(m -> buildGroupKey(m.getSkill(), m.getDimension()))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        List<GrupoDimension> grupos = gruposDeDimension(matrices);
 
         // Análisis por dimensión
         List<AnalisisDimensionalResponse> analisisDimensional = new ArrayList<>();
-        for (String key : dimensionKeys) {
-            SkillTipo skill = extraerSkill(key);
-            SkillDimension dimension = extraerDimension(key);
-            analisisDimensional.add(buildAnalisisDimensional(
-                idCuestionario, skill, dimension
-            ));
+        for (GrupoDimension grupo : grupos) {
+            analisisDimensional.add(buildAnalisisDimensional(idCuestionario, grupo));
         }
 
         // Marcar dimensión más crítica y con mayor mejora
@@ -176,7 +170,7 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         // % que llegó a AVANZADO
         double pctCualquierAvanzado = calcularPctCualquierAvanzado(idCuestionario, totalAmbos);
         double pctFullyAdvanced = calcularPctFullyAvanzado(
-            idCuestionario, dimensionKeys.size(), totalAmbos
+            idCuestionario, grupos.size(), totalAmbos
         );
 
         return ReporteGrupoResponse.builder()
@@ -206,14 +200,8 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         List<PuntuacionMatrixEntity> matrices = puntuacionMatrixRepository
                 .findByCuestionarioEntIdCuestionario(idCuestionario);
 
-        Set<String> dimensionKeys = matrices.stream()
-                .map(m -> buildGroupKey(m.getSkill(), m.getDimension()))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-
-        List<AnalisisDimensionalResponse> analisis = dimensionKeys.stream()
-                .map(key -> buildAnalisisDimensional(
-                    idCuestionario, extraerSkill(key), extraerDimension(key)
-                ))
+        List<AnalisisDimensionalResponse> analisis = gruposDeDimension(matrices).stream()
+                .map(grupo -> buildAnalisisDimensional(idCuestionario, grupo))
                 .toList();
 
         marcarAsCriticoAndMayormenteMejorado(analisis);
@@ -268,8 +256,8 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
                 : "El estudiante aún tiene " + pendiente.size() +
                   " dimensión(es) sin alcanzar nivel AVANZADO: " +
                   pendiente.stream()
-                      .map(sp -> (sp.getDimension() != null
-                          ? sp.getDimension().name() : sp.getSkill().name()))
+                      .map(sp -> (sp.getDimensionNombre() != null
+                          ? sp.getDimensionNombre() : sp.getSkill().name()))
                       .collect(Collectors.joining(", ")) + ".";
 
         return EscalamientoResponse.builder()
@@ -356,7 +344,8 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
                         evaluacion.getResultados().stream()
                             .map(r -> HistorialIntentosResponse.PuntuacionIntentosResponse.builder()
                                     .skill(r.getSkill())
-                                    .dimension(r.getDimension())
+                                    .idDimension(r.getDimensionEnt() != null ? r.getDimensionEnt().getId() : null)
+                                    .dimensionNombre(r.getDimensionEnt() != null ? r.getDimensionEnt().getNombre() : null)
                                     .totalPuntuacion(r.getTotalPuntaje())
                                     .porcentajePuntuacion(r.getPorcentajePuntuacion())
                                     .nivel(r.getNivel() != null ? r.getNivel().name() : "N/A")
@@ -387,17 +376,13 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         List<PuntuacionMatrixEntity> matrices = puntuacionMatrixRepository
                 .findByCuestionarioEntIdCuestionario(idCuestionario);
 
-        Set<String> dimensionKeys = matrices.stream()
-                .map(m -> buildGroupKey(m.getSkill(), m.getDimension()))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        List<GrupoDimension> grupos = gruposDeDimension(matrices);
 
         List<DistribucionNivelesResponse> distribuciones = new ArrayList<>();
         for (EvaluacionFase fase : EvaluacionFase.values()) {
-            for (String key : dimensionKeys) {
-                SkillTipo skill = extraerSkill(key);
-                SkillDimension dimension = extraerDimension(key);
+            for (GrupoDimension grupo : grupos) {
                 distribuciones.add(
-                    buildDistribucionNiveles(idCuestionario, skill, dimension, fase)
+                    buildDistribucionNiveles(idCuestionario, grupo, fase)
                 );
             }
         }
@@ -428,7 +413,8 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
                             .map(r -> EstudianteQueNecesitaApoyoResponse.DimensionBajaResponse
                                 .builder()
                                 .skill(r.getSkill())
-                                .dimension(r.getDimension())
+                                .idDimension(r.getDimensionEnt() != null ? r.getDimensionEnt().getId() : null)
+                                .dimensionNombre(r.getDimensionEnt() != null ? r.getDimensionEnt().getNombre() : null)
                                 .puntaje(r.getTotalPuntaje())
                                 .porcentaje(r.getPorcentajePuntuacion())
                                 .build())
@@ -525,7 +511,6 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
 
             return SkillProgresoResponse.builder()
                     .skill(pre.getSkill())
-                    .dimension(pre.getDimension())
                     .idDimension(pre.getDimensionEnt() != null ? pre.getDimensionEnt().getId() : null)
                     .dimensionNombre(pre.getDimensionEnt() != null ? pre.getDimensionEnt().getNombre() : null)
                     .prePuntaje(prePuntaje)
@@ -566,7 +551,7 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
 			"¡Felicitaciones! El estudiante alcanzó nivel AVANZADO en todas las dimensiones evaluadas. Es elegible para certificación.";
 		case REINICIAR -> "El estudiante no alcanzó el nivel AVANZADO en "
 				+ progreso.stream().filter(sp -> !sp.isAlcanzoNivelAva())
-						.map(sp -> sp.getDimension() != null ? sp.getDimension().name() : sp.getSkill().name())
+						.map(sp -> sp.getDimensionNombre() != null ? sp.getDimensionNombre() : sp.getSkill().name())
 						.collect(Collectors.joining(", "))
 				+ ". Se recomienda reiniciar la Fase 2 con un plan de acción ajustado.";
 		case PENDIENTE -> "El estudiante aún no ha completado el POST_TEST.";
@@ -588,16 +573,28 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
 				progreso.size(), avanzado, decision.name());
 	}
 	
-    private String buildGroupKey(SkillTipo skill, SkillDimension dimension) {
-        return skill.name() + "_" + (dimension != null ? dimension.name() : "_GLOBAL");
+    /**
+     * Grupo de análisis: skill + dimensión gestionada (FK). Reemplaza al
+     * antiguo enum SkillDimension. idDimension null = evaluación global del skill.
+     */
+    private record GrupoDimension(SkillTipo skill, Long idDimension, String nombre) {}
+
+    /**
+     * Construye la lista única de grupos (skill + dimensión gestionada) a partir
+     * de las entradas de la matriz del cuestionario, preservando el orden.
+     */
+    private List<GrupoDimension> gruposDeDimension(List<PuntuacionMatrixEntity> matrices) {
+        Map<String, GrupoDimension> grupos = new LinkedHashMap<>();
+        for (PuntuacionMatrixEntity m : matrices) {
+            DimensionEntity dim = m.getDimensionEnt();
+            Long idDim = dim != null ? dim.getId() : null;
+            String nombre = dim != null ? dim.getNombre() : null;
+            String key = m.getSkill().name() + "_" + (idDim != null ? idDim : "GLOBAL");
+            grupos.putIfAbsent(key, new GrupoDimension(m.getSkill(), idDim, nombre));
+        }
+        return new ArrayList<>(grupos.values());
     }
-	
-    private SkillTipo extraerSkill(String key) {
-        int lastUnderscore = key.lastIndexOf("_");
-        String skillPart = key.substring(0, lastUnderscore);
-        return SkillTipo.valueOf(skillPart);
-    }
-    
+
     /**
      * Clave de agrupamiento por skill + dimensión gestionada (FK) — Fase 3.
      * Debe coincidir con la del MotorDePuntuacion para emparejar PRE/POST.
@@ -606,25 +603,17 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         String dimPart = r.getDimensionEnt() != null ? "DIM_" + r.getDimensionEnt().getId() : "GLOBAL";
         return r.getSkill().name() + "_" + dimPart;
     }
-
-    private SkillDimension extraerDimension(String key) {
-    	int lastUnderscore = key.lastIndexOf("_");
-        String dimensionPart = key.substring(lastUnderscore + 1);
-        
-        if ("GLOBAL".equals(dimensionPart)) {
-            return null;
-        }
-        
-        return SkillDimension.valueOf(dimensionPart);
-    }
     
     private AnalisisDimensionalResponse buildAnalisisDimensional(
-            Long idCuestionario, SkillTipo skill, SkillDimension dimension) {
+            Long idCuestionario, GrupoDimension grupo) {
+
+        SkillTipo skill = grupo.skill();
+        Long idDimension = grupo.idDimension();
 
         Double avgPre = analyticsRepository.avgPorcentajePorDimensionDeHabilidadFase(
-                idCuestionario, EvaluacionFase.PRE_TEST, skill, dimension);
+                idCuestionario, EvaluacionFase.PRE_TEST, skill, idDimension);
         Double avgPost = analyticsRepository.avgPorcentajePorDimensionDeHabilidadFase(
-                idCuestionario, EvaluacionFase.POST_TEST, skill, dimension);
+                idCuestionario, EvaluacionFase.POST_TEST, skill, idDimension);
 
         BigDecimal avgPreBD  = toBD(avgPre);
         BigDecimal avgPostBD = toBD(avgPost);
@@ -632,27 +621,27 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
                 .setScale(2, RoundingMode.HALF_UP);
 
         DistribucionNivelesResponse preDistribucion =
-        		buildDistribucionNiveles(idCuestionario, skill, dimension, EvaluacionFase.PRE_TEST);
+        		buildDistribucionNiveles(idCuestionario, grupo, EvaluacionFase.PRE_TEST);
         DistribucionNivelesResponse postDistribucion =
-        		buildDistribucionNiveles(idCuestionario, skill, dimension, EvaluacionFase.POST_TEST);
+        		buildDistribucionNiveles(idCuestionario, grupo, EvaluacionFase.POST_TEST);
 
         // Calcular estudiantes que mejoraron/estancaron/regresaron
         List<PuntuacionResultadoEntity> preResultados = analyticsRepository
                 .findAllResultadosPorDimensionSkillDelCuestionarioFase(
-                    idCuestionario, EvaluacionFase.PRE_TEST, skill, dimension
+                    idCuestionario, EvaluacionFase.PRE_TEST, skill, idDimension
                 );
 
         List<PuntuacionResultadoEntity> postResultados = analyticsRepository
                 .findAllResultadosPorDimensionSkillDelCuestionarioFase(
-                    idCuestionario, EvaluacionFase.POST_TEST, skill, dimension
+                    idCuestionario, EvaluacionFase.POST_TEST, skill, idDimension
                 );
 
-        Map<Long, SkillNivel> preByEstudiante = preResultados.stream()
-                .collect(Collectors.toMap(
-                    r -> r.getEvaluacionEnt().getIdEstudiante(),
-                    PuntuacionResultadoEntity::getNivel,
-                    (a, b) -> a
-                ));
+        // putIfAbsent (no Collectors.toMap) porque el nivel puede ser null
+        // (resultado fuera de los rangos configurados) y toMap rechaza valores null.
+        Map<Long, SkillNivel> preByEstudiante = new HashMap<>();
+        for (PuntuacionResultadoEntity r : preResultados) {
+            preByEstudiante.putIfAbsent(r.getEvaluacionEnt().getIdEstudiante(), r.getNivel());
+        }
 
         long mejorado = 0;
         long estancado = 0;
@@ -667,22 +656,10 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
             else retrocedio++;
         }
         
-        // Nombre de la dimensión gestionada (tabla), tomado del primer resultado vinculado
-        DimensionEntity dimEnt = preResultados.stream()
-                .map(PuntuacionResultadoEntity::getDimensionEnt)
-                .filter(d -> d != null)
-                .findFirst()
-                .or(() -> postResultados.stream()
-                        .map(PuntuacionResultadoEntity::getDimensionEnt)
-                        .filter(d -> d != null)
-                        .findFirst())
-                .orElse(null);
-
         return AnalisisDimensionalResponse.builder()
                 .skill(skill)
-                .dimension(dimension)
-                .idDimension(dimEnt != null ? dimEnt.getId() : null)
-                .dimensionNombre(dimEnt != null ? dimEnt.getNombre() : null)
+                .idDimension(idDimension)
+                .dimensionNombre(grupo.nombre())
                 .avgPrePorcentaje(avgPreBD)
                 .avgPostPorcentaje(avgPostBD)
                 .avgDelta(avgDelta)
@@ -704,12 +681,11 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
     }
     
     private DistribucionNivelesResponse buildDistribucionNiveles(
-            Long idCUestionario, SkillTipo skill,
-            SkillDimension dimension, EvaluacionFase fase) {
+            Long idCUestionario, GrupoDimension grupo, EvaluacionFase fase) {
 
         List<PuntuacionResultadoEntity> resultados = analyticsRepository
                 .findAllResultadosPorDimensionSkillDelCuestionarioFase(
-                    idCUestionario, fase, skill, dimension
+                    idCUestionario, fase, grupo.skill(), grupo.idDimension()
                 );
 
         long bajo        = resultados.stream().filter(r -> SkillNivel.BAJO.equals(r.getNivel())).count();
@@ -718,8 +694,9 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         long total       = resultados.size();
 
         return DistribucionNivelesResponse.builder()
-                .skill(skill)
-                .dimension(dimension)
+                .skill(grupo.skill())
+                .idDimension(grupo.idDimension())
+                .dimensionNombre(grupo.nombre())
                 .fase(fase)
                 .recuentoBasico(bajo)
                 .recuentoIntermedio(intermedio)
@@ -756,7 +733,8 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         return allResultados.stream().map(r -> NivelEstudianteResumenResponse.builder()
                 .idEstudiante(r.getEvaluacionEnt().getIdEstudiante())
                 .skill(r.getSkill())
-                .dimension(r.getDimension())
+                .idDimension(r.getDimensionEnt() != null ? r.getDimensionEnt().getId() : null)
+                .dimensionNombre(r.getDimensionEnt() != null ? r.getDimensionEnt().getNombre() : null)
                 .fase(r.getEvaluacionEnt().getEvaluacionFase())
                 .totalPuntaje(r.getTotalPuntaje())
                 .maxPosiblePuntaje(r.getMaxPuntuacionPosible())
@@ -819,14 +797,14 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
                     .filter(r -> EvaluacionFase.PRE_TEST
                         .equals(r.getEvaluacionEnt().getEvaluacionFase()))
                     .collect(Collectors.toMap(
-                        r -> buildGroupKey(r.getSkill(), r.getDimension()),
+                        this::keyPorDimensionResultado,
                         r -> r, (a, b) -> a
                     ));
             return resultados.stream()
                     .filter(r -> EvaluacionFase.POST_TEST
                         .equals(r.getEvaluacionEnt().getEvaluacionFase()))
                     .anyMatch(post -> {
-                        String key = buildGroupKey(post.getSkill(), post.getDimension());
+                        String key = keyPorDimensionResultado(post);
                         PuntuacionResultadoEntity prePuntuacion = pre.get(key);
                         return prePuntuacion != null && post.getNivel() != null
                             && prePuntuacion.getNivel() != null

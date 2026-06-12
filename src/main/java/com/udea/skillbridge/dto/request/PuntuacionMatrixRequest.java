@@ -3,7 +3,6 @@ package com.udea.skillbridge.dto.request;
 import java.util.List;
 
 import com.udea.skillbridge.enums.NivelBloom;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 
@@ -29,10 +28,8 @@ public class PuntuacionMatrixRequest {
     @NotNull(message = "El skill es obligatorio")
     private SkillTipo skill;
 
-    // Dimensión del skill (enum legado) — null = evaluación global del skill completo
-    private SkillDimension dimension;
-
     // Dimensión gestionada por el coordinador (tabla `dimension`) — opcional.
+    // null = evaluación global del skill completo.
     private Long idDimension;
 
     @NotNull(message = "El nivel es obligatorio")

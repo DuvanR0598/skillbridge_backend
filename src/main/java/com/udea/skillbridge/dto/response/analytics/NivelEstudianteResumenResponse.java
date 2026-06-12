@@ -3,7 +3,6 @@ package com.udea.skillbridge.dto.response.analytics;
 import java.math.BigDecimal;
 
 import com.udea.skillbridge.enums.EvaluacionFase;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 
@@ -25,7 +24,8 @@ public class NivelEstudianteResumenResponse {
 	
     private Long idEstudiante;
     private SkillTipo skill;
-    private SkillDimension dimension;
+    private Long idDimension;
+    private String dimensionNombre;
     private EvaluacionFase fase;
     private Integer totalPuntaje;
     private Integer maxPosiblePuntaje;

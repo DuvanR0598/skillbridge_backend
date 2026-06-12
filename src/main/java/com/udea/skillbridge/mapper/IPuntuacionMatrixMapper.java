@@ -49,7 +49,6 @@ public interface IPuntuacionMatrixMapper {
     @Mapping(target = "cuestionarioEnt",           ignore = true)
     @Mapping(target = "preguntaEnt",                ignore = true)
     @Mapping(target = "skill",                   ignore = true)
-    @Mapping(target = "dimension",               ignore = true)
     @Mapping(target = "dimensionEnt",            ignore = true)
     @Mapping(target = "nivel",                   ignore = true)
     @Mapping(target = "planFortalecimientoEnt",      ignore = true)

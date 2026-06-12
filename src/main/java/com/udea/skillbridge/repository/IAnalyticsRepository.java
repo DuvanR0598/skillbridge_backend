@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.udea.skillbridge.entity.EvaluacionEstudianteEntity;
 import com.udea.skillbridge.entity.PuntuacionResultadoEntity;
 import com.udea.skillbridge.enums.EvaluacionFase;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillTipo;
 
 /**
@@ -109,14 +108,14 @@ public interface IAnalyticsRepository extends JpaRepository<EvaluacionEstudiante
               AND r.evaluacionEnt.evaluacionFase                 = :fase
               AND r.evaluacionEnt.estado                         = 'COMPLETADO'
               AND r.skill                                        = :skill
-              AND ((:dimension IS NULL AND r.dimension IS NULL)
-                   OR r.dimension = :dimension)
+              AND ((:idDimension IS NULL AND r.dimensionEnt IS NULL)
+                   OR r.dimensionEnt.id = :idDimension)
         """)
         List<PuntuacionResultadoEntity> findAllResultadosPorDimensionSkillDelCuestionarioFase(
             Long idCuestionario,
             EvaluacionFase fase,
             SkillTipo skill,
-            SkillDimension dimension
+            Long idDimension
         );
     
     @Query("""
@@ -135,14 +134,14 @@ public interface IAnalyticsRepository extends JpaRepository<EvaluacionEstudiante
           AND r.evaluacionEnt.evaluacionFase                 = :fase
           AND r.evaluacionEnt.estado                         = 'COMPLETADO'
           AND r.skill                                        = :skill
-          AND ((:dimension IS NULL AND r.dimension IS NULL)
-               OR r.dimension = :dimension)
+          AND ((:idDimension IS NULL AND r.dimensionEnt IS NULL)
+               OR r.dimensionEnt.id = :idDimension)
     """)
     Double avgPorcentajePorDimensionDeHabilidadFase(
         Long idCuestionario,
         EvaluacionFase fase,
         SkillTipo skill,
-        SkillDimension dimension
+        Long idDimension
     );
     
     // ── Estudiantes en nivel BAJO (necesitan apoyo prioritario) ────

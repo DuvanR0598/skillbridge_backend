@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.udea.skillbridge.enums.EvaluacionEstado;
 import com.udea.skillbridge.enums.EvaluacionFase;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillTipo;
 
 import lombok.AllArgsConstructor;
@@ -40,7 +39,8 @@ public class HistorialIntentosResponse {
 	@Builder
 	public static class PuntuacionIntentosResponse {
 		private SkillTipo skill;
-		private SkillDimension dimension;
+		private Long idDimension;
+		private String dimensionNombre;
 		private Integer totalPuntuacion;
 		private BigDecimal porcentajePuntuacion;
 		private String nivel;

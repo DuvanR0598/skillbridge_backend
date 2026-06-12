@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.udea.skillbridge.enums.NivelBloom;
 import com.udea.skillbridge.enums.PlanAxis;
-import com.udea.skillbridge.enums.SkillDimension;
 // DimensionEntity está en el mismo paquete (entity), no requiere import
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
@@ -85,17 +84,8 @@ public class PuntuacionMatrixEntity {
     private SkillTipo skill;
     
     /**
-     * Dimensión específica del skill (ej: INFERENCIA dentro de PENSAMIENTO_CRITICO).
-     * NULL = evaluación global del skill sin desglose por dimensión.
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(length = 40)
-    private SkillDimension dimension;
-
-    /**
      * Dimensión gestionada por el coordinador (tabla `dimension`).
-     * Convive con el enum `dimension` durante la migración (Fase 3).
-     * NULL = aún no vinculada a una dimensión de la tabla.
+     * NULL = evaluación global del skill sin desglose por dimensión.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_dimension")

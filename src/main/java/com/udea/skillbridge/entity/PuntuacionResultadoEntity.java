@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 
@@ -70,15 +69,9 @@ public class PuntuacionResultadoEntity {
     private SkillTipo skill;
 
     /**
-     * Null = resultado global del skill (sin desglose por dimensión).
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(length = 40)
-    private SkillDimension dimension;
-
-    /**
      * Dimensión gestionada (tabla `dimension`), copiada de la matriz al calcular.
-     * Convive con el enum durante la migración (Fase 3). Solo la ve el coordinador.
+     * Null = resultado global del skill (sin desglose por dimensión).
+     * Solo la ve el coordinador.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_dimension")

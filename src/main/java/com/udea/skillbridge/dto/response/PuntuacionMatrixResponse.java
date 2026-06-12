@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.udea.skillbridge.dto.request.PlanFortalecimientoRequest;
 import com.udea.skillbridge.enums.NivelBloom;
-import com.udea.skillbridge.enums.SkillDimension;
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 
@@ -30,7 +29,6 @@ public class PuntuacionMatrixResponse {
     private String textoPregunta;
 
     private SkillTipo skill;
-    private SkillDimension dimension;     // enum legado — null = global
     private Long idDimension;             // dimensión gestionada (tabla)
     private String dimensionNombre;       // nombre legible de la dimensión gestionada
     private SkillNivel nivel;

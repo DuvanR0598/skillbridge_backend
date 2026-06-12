@@ -429,7 +429,6 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
     			.map(r -> PuntuacionResultadoResponse.builder()
     					.id(r.getId())
     					.skill(r.getSkill())
-    					.dimension(r.getDimension())
     					.totalPuntaje(r.getTotalPuntaje())
     					.maxPuntuacionPosible(r.getMaxPuntuacionPosible())
     					.porcentajePuntuacion(r.getPorcentajePuntuacion())
