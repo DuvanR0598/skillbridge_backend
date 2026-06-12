@@ -30,7 +30,9 @@ public class PuntuacionMatrixResponse {
     private String textoPregunta;
 
     private SkillTipo skill;
-    private SkillDimension dimension;     // null = global
+    private SkillDimension dimension;     // enum legado — null = global
+    private Long idDimension;             // dimensión gestionada (tabla)
+    private String dimensionNombre;       // nombre legible de la dimensión gestionada
     private SkillNivel nivel;
 
     private Integer minPuntaje;

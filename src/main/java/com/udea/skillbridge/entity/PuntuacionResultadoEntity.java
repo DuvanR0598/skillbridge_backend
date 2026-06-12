@@ -33,7 +33,7 @@ import lombok.Setter;
     name = "puntuacion_resultado",
     uniqueConstraints = @UniqueConstraint(
         name = "uk_dimension_evaluacion_skill_resultados",
-        columnNames = {"assessment_id", "skill", "dimension"}
+        columnNames = {"id_evaluacion", "skill", "id_dimension"}
     )
 )
 @Getter
@@ -75,6 +75,14 @@ public class PuntuacionResultadoEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 40)
     private SkillDimension dimension;
+
+    /**
+     * Dimensión gestionada (tabla `dimension`), copiada de la matriz al calcular.
+     * Convive con el enum durante la migración (Fase 3). Solo la ve el coordinador.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_dimension")
+    private DimensionEntity dimensionEnt;
     
     // --- Puntaje ---
 

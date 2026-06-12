@@ -18,8 +18,14 @@ public interface ICondicionPreguntaRepository extends JpaRepository<CondicionPre
     // Las condiciones que dispara una opción específica
     List<CondicionPreguntaEntity> findByTriggerOpcionId(Long triggerIdOpcion);
     
-    // Verificar si ya existe esta combinación (opción → pregunta)
-    boolean existsByTriggerOpcionIdAndTargetPreguntaIdPregunta(Long triggerIdOpcion, Long targetIdPregunto);
+    // Verificar si ya existe esta combinación DENTRO de un cuestionario específico.
+    // La misma condición (opción → destino) puede repetirse en cuestionarios distintos.
+    boolean existsByTriggerOpcionIdAndTargetPreguntaIdPreguntaAndCuestionarioEntIdCuestionario(
+            Long triggerIdOpcion, Long targetIdPregunta, Long idCuestionario);
+
+    // Igual que la anterior pero excluyendo una condición concreta (para editar sin chocar consigo misma).
+    boolean existsByTriggerOpcionIdAndTargetPreguntaIdPreguntaAndCuestionarioEntIdCuestionarioAndIdNot(
+            Long triggerIdOpcion, Long targetIdPregunta, Long idCuestionario, Long idCondicion);
 
     // Cuántas condiciones de ENTRADA tiene una pregunta hija
     // Usamos esto para validar que no tenga más de una

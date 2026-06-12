@@ -18,6 +18,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
@@ -54,7 +56,16 @@ public class PreguntaEntity {
     
     @Column(name = "max_opciones")
     private Integer maxOpciones;          // Máximo de opciones seleccionables
-    
+
+    /**
+     * Dimensión a la que pertenece la pregunta (la define el coordinador).
+     * NULL = pregunta aún sin clasificar en una dimensión.
+     * El estudiante nunca ve esta información.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_dimension")
+    private DimensionEntity dimension;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

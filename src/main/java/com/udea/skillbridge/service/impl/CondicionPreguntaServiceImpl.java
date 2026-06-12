@@ -69,7 +69,7 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
         }
 
         // 4. REGLA: trigger y target no pueden ser la misma pregunta
-        if (request.getTriggerIdPregunta().equals(request.getTargetIdPreguta())) {
+        if (request.getTriggerIdPregunta().equals(request.getTargetIdPregunta())) {
             throw new BusinessException(
                 "La pregunta disparadora y la pregunta destino no pueden ser la misma."
             );
@@ -84,33 +84,34 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
                     " no pertenece a la pregunta " + request.getTriggerIdPregunta()
                 ));
         
-        // Validar que no exista duplicado (misma opción → misma pregunta)
-        if (condicionRepository.existsByTriggerOpcionIdAndTargetPreguntaIdPregunta(
-                request.getTriggerIdOpcion(), request.getTargetIdPreguta())) {
+        // Validar que no exista duplicado EN ESTE CUESTIONARIO
+        // (la misma combinación puede repetirse en otro cuestionario distinto)
+        if (condicionRepository.existsByTriggerOpcionIdAndTargetPreguntaIdPreguntaAndCuestionarioEntIdCuestionario(
+                request.getTriggerIdOpcion(), request.getTargetIdPregunta(), idCuestionario)) {
             throw new BusinessException(
-                "Ya existe una condición con esta opción para esta pregunta destino",
+                "Ya existe una condición con esta opción para esta pregunta destino en este cuestionario",
                 "DUPLICATE_CONDITION"
             );
         }
 
         // 6. Cargar la pregunta destino
-        PreguntaEntity targetPregunta = buscarPregunta(request.getTargetIdPreguta());
+        PreguntaEntity targetPregunta = buscarPregunta(request.getTargetIdPregunta());
 
         // 7. REGLA: ambas preguntas deben estar en el cuestionario
         validarPreguntaInCuestionario(request.getTriggerIdPregunta(), idCuestionario);
-        validarPreguntaInCuestionario(request.getTargetIdPreguta(), idCuestionario);
+        validarPreguntaInCuestionario(request.getTargetIdPregunta(), idCuestionario);
 
-        // 8. REGLA: la condición no puede existir ya (unicidad opción → pregunta)
-        if (condicionRepository.existsByTriggerOpcionIdAndTargetPreguntaIdPregunta (
-                request.getTriggerIdOpcion(), request.getTargetIdPreguta())) {
+        // 8. REGLA: la condición no puede existir ya EN ESTE CUESTIONARIO
+        if (condicionRepository.existsByTriggerOpcionIdAndTargetPreguntaIdPreguntaAndCuestionarioEntIdCuestionario(
+                request.getTriggerIdOpcion(), request.getTargetIdPregunta(), idCuestionario)) {
             throw new BusinessException(
-                "Ya existe una condición que conecta esta opción con la pregunta destino."
+                "Ya existe una condición que conecta esta opción con la pregunta destino en este cuestionario."
             );
         }
 
         // 9. REGLA: una pregunta hija tiene máximo UNA condición de entrada
         int condicionEntrada = condicionRepository.countByTargetPreguntaIdPreguntaAndCuestionarioEntIdCuestionario(
-                request.getTargetIdPreguta(), idCuestionario);
+                request.getTargetIdPregunta(), idCuestionario);
 
         if (condicionEntrada >= 1) {
             throw new BusinessException(
@@ -122,7 +123,7 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
         // 10. REGLA: detectar ciclo directo A→B→A
         if (condicionRepository.existeCicloDirecto(
                 request.getTriggerIdPregunta(),
-                request.getTargetIdPreguta(),
+                request.getTargetIdPregunta(),
                 idCuestionario)) {
             throw new BusinessException(
                 "Se detectó un ciclo: la pregunta destino ya es disparadora " +
@@ -141,7 +142,7 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
         CondicionPreguntaEntity guardar = condicionRepository.save(condicion);
 
         // 12. Marcar la pregunta target como condicional en la tabla intermedia
-        marcarAsCondicional(request.getTargetIdPreguta(), idCuestionario);
+        marcarAsCondicional(request.getTargetIdPregunta(), idCuestionario);
 
         log.info("Condición creada: opción [{}] → pregunta [{}] en cuestionario [{}]",
                 triggerOpcion.getId(), targetPregunta.getIdPregunta(), idCuestionario);
@@ -150,7 +151,112 @@ public class CondicionPreguntaServiceImpl implements ICondicionPreguntaService {
 	}
 	
 	// *****************************************
-    //  LISTAR CONDICIONES DE UN CUESTIONARIO 
+    //  ACTUALIZAR CONDICION
+    // *****************************************
+
+    @Override
+    public CondicionPreguntaResponse actualizarCondicion(
+            Long idCuestionario, Long idCondicion, CondicionPreguntaRequest request) {
+        log.info("Actualizando condición [{}] del cuestionario [{}]", idCondicion, idCuestionario);
+
+        // 1. Cargar la condición y validar pertenencia + estado BORRADOR
+        CondicionPreguntaEntity condicion = condicionRepository.findById(idCondicion)
+                .orElseThrow(() -> new ResourceNotFoundException("Condición", idCondicion));
+
+        CuestionarioEntity cuestionarioEnt = condicion.getCuestionarioEnt();
+        if (!cuestionarioEnt.getIdCuestionario().equals(idCuestionario)) {
+            throw new BusinessException(
+                String.format("La condición %d no pertenece al cuestionario %d", idCondicion, idCuestionario),
+                "CONDICION_NOT_IN_CUESTIONARIO"
+            );
+        }
+        if (!cuestionarioEnt.isEditable()) {
+            throw new BusinessException(
+                "Solo se pueden modificar condiciones de cuestionarios en estado BORRADOR."
+            );
+        }
+
+        // 2. Resolver y validar la nueva combinación (mismas reglas que al crear)
+        PreguntaEntity triggerPregunta = buscarPregunta(request.getTriggerIdPregunta());
+
+        if (INVALIDAR_TIPO_TRIGGER.contains(triggerPregunta.getTipoPregunta())) {
+            throw new BusinessException(
+                "Las preguntas de tipo DESCRIPCION no pueden ser disparadoras."
+            );
+        }
+        if (request.getTriggerIdPregunta().equals(request.getTargetIdPregunta())) {
+            throw new BusinessException(
+                "La pregunta disparadora y la pregunta destino no pueden ser la misma."
+            );
+        }
+
+        OpcionPreguntaEntity triggerOpcion = triggerPregunta.getOpcionPregunta().stream()
+                .filter(o -> o.getId().equals(request.getTriggerIdOpcion()))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(
+                    "La opción " + request.getTriggerIdOpcion() +
+                    " no pertenece a la pregunta " + request.getTriggerIdPregunta()
+                ));
+
+        PreguntaEntity targetPregunta = buscarPregunta(request.getTargetIdPregunta());
+
+        validarPreguntaInCuestionario(request.getTriggerIdPregunta(), idCuestionario);
+        validarPreguntaInCuestionario(request.getTargetIdPregunta(), idCuestionario);
+
+        // 3. Duplicado en este cuestionario, excluyendo la propia condición
+        if (condicionRepository.existsByTriggerOpcionIdAndTargetPreguntaIdPreguntaAndCuestionarioEntIdCuestionarioAndIdNot(
+                request.getTriggerIdOpcion(), request.getTargetIdPregunta(), idCuestionario, idCondicion)) {
+            throw new BusinessException(
+                "Ya existe otra condición con esta opción para esta pregunta destino en este cuestionario.",
+                "DUPLICATE_CONDITION"
+            );
+        }
+
+        Long oldTargetId = condicion.getTargetPregunta().getIdPregunta();
+        Long newTargetId = request.getTargetIdPregunta();
+
+        // 4. Si cambia el destino, el nuevo no puede tener ya una condición de entrada
+        if (!oldTargetId.equals(newTargetId)) {
+            int incoming = condicionRepository.countByTargetPreguntaIdPreguntaAndCuestionarioEntIdCuestionario(
+                    newTargetId, idCuestionario);
+            if (incoming >= 1) {
+                throw new BusinessException(
+                    "La nueva pregunta destino ya tiene una condición de entrada. " +
+                    "Una pregunta condicional solo puede tener un disparador."
+                );
+            }
+        }
+
+        // 5. Detectar ciclo directo con la nueva combinación
+        if (condicionRepository.existeCicloDirecto(
+                request.getTriggerIdPregunta(), request.getTargetIdPregunta(), idCuestionario)) {
+            throw new BusinessException(
+                "Se detectó un ciclo: la pregunta destino ya es disparadora de la pregunta origen."
+            );
+        }
+
+        // 6. Aplicar los cambios
+        condicion.setTriggerPregunta(triggerPregunta);
+        condicion.setTriggerOpcion(triggerOpcion);
+        condicion.setTargetPregunta(targetPregunta);
+        CondicionPreguntaEntity guardar = condicionRepository.save(condicion);
+
+        // 7. Re-sincronizar los flags de condicional si cambió el destino
+        if (!oldTargetId.equals(newTargetId)) {
+            int restante = condicionRepository.countByTargetPreguntaIdPreguntaAndCuestionarioEntIdCuestionario(
+                    oldTargetId, idCuestionario);
+            if (restante == 0) {
+                demarcarAsCondicional(oldTargetId, idCuestionario);
+            }
+            marcarAsCondicional(newTargetId, idCuestionario);
+        }
+
+        log.info("Condición [{}] actualizada en cuestionario [{}]", idCondicion, idCuestionario);
+        return condicionMapper.toResponse(guardar);
+    }
+
+	// *****************************************
+    //  LISTAR CONDICIONES DE UN CUESTIONARIO
     // *****************************************
 	
 	@Override

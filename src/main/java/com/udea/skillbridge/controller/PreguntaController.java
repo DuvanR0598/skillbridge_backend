@@ -85,6 +85,19 @@ public class PreguntaController {
     }
     
     /**
+     * Asignar o cambiar la dimensión de una pregunta.
+     * ?idDimension=5  → asigna; omitir el parámetro → desasigna (null).
+     */
+    @PatchMapping("/{id}/dimension")
+    public ResponseEntity<ApiResponse<PreguntaResponse>> asignarDimension(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long idDimension) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                preguntaService.asignarDimension(id, idDimension),
+                "Dimensión de la pregunta actualizada"));
+    }
+
+    /**
      * Eliminar pregunta.
      * Solo funciona si la pregunta NO está asociada a ningún cuestionario.
      */

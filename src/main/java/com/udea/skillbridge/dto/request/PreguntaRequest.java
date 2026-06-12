@@ -30,6 +30,9 @@ public class PreguntaRequest {
     private String ayuda;
     private Integer maxOpciones;  // Para MULTIPLE_CHOICE: cuántas puede elegir
 
+    // Dimensión a la que se carga la pregunta (opcional). La define el coordinador.
+    private Long idDimension;
+
     // Lista de opciones de respuesta (opcional para DESCRIPTION).
     // @Valid hace que se validen también los campos de cada opción.
     @Valid

@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.udea.skillbridge.enums.NivelBloom;
 import com.udea.skillbridge.enums.PlanAxis;
 import com.udea.skillbridge.enums.SkillDimension;
+// DimensionEntity está en el mismo paquete (entity), no requiere import
 import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 
@@ -46,7 +47,7 @@ import lombok.Setter;
 	     */
 	    uniqueConstraints = @UniqueConstraint(
 	        name = "uk_entrada_unica_de_matriz",
-	        columnNames = {"id_cuestionario", "skill", "dimension", "nivel", "id_pregunta"}
+	        columnNames = {"id_cuestionario", "skill", "id_dimension", "nivel", "id_pregunta"}
 	    )
 	)
 @Getter
@@ -90,6 +91,15 @@ public class PuntuacionMatrixEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 40)
     private SkillDimension dimension;
+
+    /**
+     * Dimensión gestionada por el coordinador (tabla `dimension`).
+     * Convive con el enum `dimension` durante la migración (Fase 3).
+     * NULL = aún no vinculada a una dimensión de la tabla.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_dimension")
+    private DimensionEntity dimensionEnt;
 
     @NotNull
     @Enumerated(EnumType.STRING)

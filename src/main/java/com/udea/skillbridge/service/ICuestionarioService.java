@@ -11,7 +11,7 @@ import com.udea.skillbridge.dto.response.PreguntaDeCuestionarioResponse;
 
 public interface ICuestionarioService {
 	
-	CuestionarioResponse crearCuestionario (CuestionarioRequest cuestionarioRequest);
+	CuestionarioResponse crearCuestionario (CuestionarioRequest cuestionarioRequest, String creadoPor);
 	
 	CuestionarioResponse findById (Long idCuestionario);
 	

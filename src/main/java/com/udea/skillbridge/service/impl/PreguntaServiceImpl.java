@@ -9,10 +9,12 @@ import com.udea.skillbridge.common.exception.ResourceNotFoundException;
 import com.udea.skillbridge.dto.request.ActualizarPesoOpcionesRequest;
 import com.udea.skillbridge.dto.request.PreguntaRequest;
 import com.udea.skillbridge.dto.response.PreguntaResponse;
+import com.udea.skillbridge.entity.DimensionEntity;
 import com.udea.skillbridge.entity.OpcionPreguntaEntity;
 import com.udea.skillbridge.entity.PreguntaEntity;
 import com.udea.skillbridge.enums.TipoPregunta;
 import com.udea.skillbridge.mapper.IPreguntaMapper;
+import com.udea.skillbridge.repository.IDimensionRepository;
 import com.udea.skillbridge.repository.IPreguntaRepository;
 import com.udea.skillbridge.service.IPreguntaService;
 import com.udea.skillbridge.validation.OpcionOrdenValidador;
@@ -30,6 +32,7 @@ public class PreguntaServiceImpl implements IPreguntaService {
 	private final PreguntaValidadorFactory validadorFactory;
 	private final OpcionOrdenValidador opcionOrdenValidador;
 	private final IPreguntaMapper preguntaMapper;
+	private final IDimensionRepository dimensionRepository;
 	
 	// *****************************************
     //  CREAR PREGUNTA
@@ -49,7 +52,12 @@ public class PreguntaServiceImpl implements IPreguntaService {
 		
 		// PASO 3: Construir la entidad
 		PreguntaEntity preguntaEnt = preguntaMapper.toEntity(request);
-		
+
+		// PASO 3.b: Asignar dimensión si viene en el request
+		if (request.getIdDimension() != null) {
+			preguntaEnt.setDimension(buscarDimension(request.getIdDimension()));
+		}
+
 		// PASO 4: Construir y asociar las opciones de respuesta
         // Cada opción conoce a su pregunta (relación bidireccional)
         if (request.getOpcionPreguntaRequest() != null && !request.getOpcionPreguntaRequest().isEmpty()) {
@@ -158,11 +166,29 @@ public class PreguntaServiceImpl implements IPreguntaService {
 	}
 	
 	// **************************************************
+    //  ASIGNAR / CAMBIAR DIMENSIÓN DE UNA PREGUNTA
+    // **************************************************
+
+	@Override
+	public PreguntaResponse asignarDimension(Long idPregunta, Long idDimension) {
+		PreguntaEntity pregunta = findEntityById(idPregunta);
+		// idDimension null = desasignar
+		pregunta.setDimension(idDimension == null ? null : buscarDimension(idDimension));
+		log.info("Pregunta {} -> dimensión {}", idPregunta, idDimension);
+		return preguntaMapper.toResponse(preguntaRepository.save(pregunta));
+	}
+
+	// **************************************************
     //  METODOS PRIVADOS
     // **************************************************
 
 	public PreguntaEntity findEntityById(Long id) {
         return preguntaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pregunta", id));
+    }
+
+	private DimensionEntity buscarDimension(Long idDimension) {
+        return dimensionRepository.findById(idDimension)
+                .orElseThrow(() -> new ResourceNotFoundException("Dimensión", idDimension));
     }
 }

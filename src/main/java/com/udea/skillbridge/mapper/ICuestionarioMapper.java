@@ -26,6 +26,7 @@ public interface ICuestionarioMapper {
 	@Mapping(target = "estadoCuestionario",    ignore = true)
 	@Mapping(target = "createdAt",             ignore = true)
 	@Mapping(target = "updatedAt",             ignore = true)
+	@Mapping(target = "creadoPor",             ignore = true)
 	@Mapping(target = "preguntasCuestionario", ignore = true)
 	CuestionarioEntity toEntity (CuestionarioRequest cuestionarioRequest);
 	
@@ -58,6 +59,7 @@ public interface ICuestionarioMapper {
     @Mapping(target = "estadoCuestionario",    ignore = true)
     @Mapping(target = "createdAt",             ignore = true)
     @Mapping(target = "updatedAt",             ignore = true)
+    @Mapping(target = "creadoPor",             ignore = true)
     @Mapping(target = "preguntasCuestionario", ignore = true)
     void actualizarCuestionarioRequest(
         @MappingTarget CuestionarioEntity cuestionarioEnt,

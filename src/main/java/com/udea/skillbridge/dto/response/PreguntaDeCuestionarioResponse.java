@@ -34,5 +34,8 @@ public class PreguntaDeCuestionarioResponse {
     private Integer peso;
     private Boolean isCondicional;
 
+    // Dimensión asignada a la pregunta (null si no tiene). Solo la ve el coordinador.
+    private DimensionResponse dimension;
+
     private List<OpcionPreguntaAdminResponse> opciones;
 }

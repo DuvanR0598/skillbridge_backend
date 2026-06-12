@@ -18,6 +18,7 @@ import com.udea.skillbridge.dto.request.PreguntaCuestionarioRequest;
 import com.udea.skillbridge.dto.response.ActivarCondicionPreguntaResponse;
 import com.udea.skillbridge.dto.response.CuestionarioEntregaResponse;
 import com.udea.skillbridge.dto.response.CuestionarioResponse;
+import com.udea.skillbridge.dto.response.DimensionResponse;
 import com.udea.skillbridge.dto.response.OpcionPreguntaAdminResponse;
 import com.udea.skillbridge.dto.response.OpcionPreguntaResponse;
 import com.udea.skillbridge.dto.response.PreguntaDeCuestionarioResponse;
@@ -55,9 +56,10 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	// *****************************************
 	
 	@Override
-	public CuestionarioResponse crearCuestionario(CuestionarioRequest cuestionarioRequest) {
-		log.info("Creando cuestionario: {}", cuestionarioRequest.getNombre());
+	public CuestionarioResponse crearCuestionario(CuestionarioRequest cuestionarioRequest, String creadoPor) {
+		log.info("Creando cuestionario: {} (por {})", cuestionarioRequest.getNombre(), creadoPor);
 		CuestionarioEntity cuestionarioEnt = cuestionarioMapper.toEntity(cuestionarioRequest);
+		cuestionarioEnt.setCreadoPor(creadoPor);
 		return cuestionarioMapper.toResponse(cuestionarioRepository.save(cuestionarioEnt));
 	}
 	
@@ -263,6 +265,15 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 						.build())
 				.toList();
 
+		DimensionResponse dimension = p.getDimension() == null ? null
+				: DimensionResponse.builder()
+						.id(p.getDimension().getId())
+						.nombre(p.getDimension().getNombre())
+						.descripcion(p.getDimension().getDescripcion())
+						.skill(p.getDimension().getSkill())
+						.createdAt(p.getDimension().getCreatedAt())
+						.build();
+
 		return PreguntaDeCuestionarioResponse.builder()
 				.idPregunta(p.getIdPregunta())
 				.texto(p.getTexto())
@@ -273,6 +284,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 				.obligatoria(pq.getObligatoria())
 				.peso(pq.getPeso())
 				.isCondicional(pq.getIsCondicional())
+				.dimension(dimension)
 				.opciones(opciones)
 				.build();
 	}

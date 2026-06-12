@@ -18,7 +18,10 @@ public interface IPreguntaService {
 	List<PreguntaResponse> listarPorTipo(TipoPregunta tipoPregunta);
 	
 	PreguntaResponse actualizarPesosOpciones(Long idPregunta, ActualizarPesoOpcionesRequest request);
-	
+
+	/** Asigna o cambia la dimensión de una pregunta (idDimension null = desasignar). */
+	PreguntaResponse asignarDimension(Long idPregunta, Long idDimension);
+
 	void eliminarPregunta(Long preguntaId);
 
 }

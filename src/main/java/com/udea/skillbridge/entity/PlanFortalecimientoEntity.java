@@ -21,7 +21,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
@@ -58,9 +58,10 @@ public class PlanFortalecimientoEntity {
 	
 	// --- Relación con la matriz ---
 	
+    // Muchos planes por matriz (hasta 3, uno por eje — ver uk_plan_matrix_axis).
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_puntuacion_matrix", nullable = false, unique = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_puntuacion_matrix", nullable = false)
     private PuntuacionMatrixEntity puntuacionMatrixEnt;
     
     // --- Eje del plan ---

@@ -10,6 +10,7 @@ import com.udea.skillbridge.dto.request.ActualizarPuntuacionMatrixRequest;
 import com.udea.skillbridge.dto.request.PuntuacionMatrixRequest;
 import com.udea.skillbridge.dto.response.PuntuacionMatrixResponse;
 import com.udea.skillbridge.entity.CuestionarioEntity;
+import com.udea.skillbridge.entity.DimensionEntity;
 import com.udea.skillbridge.entity.PreguntaEntity;
 import com.udea.skillbridge.entity.PuntuacionMatrixEntity;
 import com.udea.skillbridge.enums.EstadoCuestionario;
@@ -19,6 +20,7 @@ import com.udea.skillbridge.enums.SkillNivel;
 import com.udea.skillbridge.enums.SkillTipo;
 import com.udea.skillbridge.enums.TipoPregunta;
 import com.udea.skillbridge.mapper.IPuntuacionMatrixMapper;
+import com.udea.skillbridge.repository.IDimensionRepository;
 import com.udea.skillbridge.repository.IPuntuacionMatrixRepository;
 import com.udea.skillbridge.service.IPuntuacionMatrixService;
 
@@ -34,6 +36,7 @@ public class PuntuacionMatrixServiceImpl implements IPuntuacionMatrixService {
 	private final PreguntaServiceImpl preguntaService;
 	private final IPuntuacionMatrixRepository puntuacionMatrixRepository;
 	private final IPuntuacionMatrixMapper puntuacionMatrixMapper;
+	private final IDimensionRepository dimensionRepository;
 
 	// *****************************************
 	// CREAR ENTRADA
@@ -53,12 +56,12 @@ public class PuntuacionMatrixServiceImpl implements IPuntuacionMatrixService {
 			validarPreguntaPerteneceToCuestionario(preguntaEnt, cuestionarioEnt);
 		}
 
-		// Verificar unicidad de la combinación
-		validarEntradaUnica(idcuestionario, request.getSkill(), request.getDimension(), request.getNivel(),
+		// Verificar unicidad de la combinación (por dimensión gestionada — Fase 3)
+		validarEntradaUnica(idcuestionario, request.getSkill(), request.getIdDimension(), request.getNivel(),
 				request.getIdPregunta());
 
 		// Detectar solapamiento de rangos
-		validarSinSuperposiciónRango(idcuestionario, request.getSkill(), request.getDimension(), request.getNivel(),
+		validarSinSuperposiciónRango(idcuestionario, request.getSkill(), request.getIdDimension(), request.getNivel(),
 				request.getIdPregunta(), request.getMinPuntaje(), request.getMaxPuntaje(), -1L);
 
 		// Aplicar niveles de Bloom por defecto si no vienen en el request
@@ -67,6 +70,10 @@ public class PuntuacionMatrixServiceImpl implements IPuntuacionMatrixService {
 		PuntuacionMatrixEntity matrix = puntuacionMatrixMapper.toEntity(request);
 		matrix.setCuestionarioEnt(cuestionarioEnt);
 		matrix.setPreguntaEnt(preguntaEnt);
+		// Vincular la dimensión gestionada (tabla) si viene en el request
+		if (request.getIdDimension() != null) {
+			matrix.setDimensionEnt(buscarDimension(request.getIdDimension()));
+		}
 		matrix.getNivelesBloom().clear();
 		matrix.getNivelesBloom().addAll(nivelesBloom);
 
@@ -132,7 +139,7 @@ public class PuntuacionMatrixServiceImpl implements IPuntuacionMatrixService {
         validarSinSuperposiciónRango(
             matrix.getCuestionarioEnt().getIdCuestionario(),
             matrix.getSkill(),
-            matrix.getDimension(),
+            matrix.getDimensionEnt() != null ? matrix.getDimensionEnt().getId() : null,
             matrix.getNivel(),
             matrix.getPreguntaEnt() != null ? matrix.getPreguntaEnt().getIdPregunta() : null,
             finalMin,
@@ -208,28 +215,27 @@ public class PuntuacionMatrixServiceImpl implements IPuntuacionMatrixService {
 		}
 	}
 
-	private void validarEntradaUnica(Long idCuestionario, SkillTipo skill, SkillDimension dimension, SkillNivel nivel,
+	private void validarEntradaUnica(Long idCuestionario, SkillTipo skill, Long idDimension, SkillNivel nivel,
 			Long idPregunta) {
 		puntuacionMatrixRepository
-				.findByCuestionarioEntIdCuestionarioAndSkillAndDimensionAndNivelAndPreguntaEntIdPregunta(idCuestionario,
-						skill, dimension, nivel, idPregunta)
+				.buscarEntradaPorDimension(idCuestionario, skill, idDimension, nivel, idPregunta)
 				.ifPresent(existing -> {
 					throw new BusinessException(
 							"Ya existe una entrada en la matriz para: skill=" + skill
-									+ (dimension != null ? " dimensión=" + dimension : "") + " nivel=" + nivel
+									+ (idDimension != null ? " dimensión=" + idDimension : "") + " nivel=" + nivel
 									+ (idPregunta != null ? " pregunta=" + idPregunta : " (global)") + ".",
 							"MATRIX_ENTRY_ALREADY_EXISTS");
 				});
 	}
 
-	private void validarSinSuperposiciónRango(Long idCuestionario, SkillTipo skill, SkillDimension dimension,
+	private void validarSinSuperposiciónRango(Long idCuestionario, SkillTipo skill, Long idDimension,
 			SkillNivel nivel, Long idPregunta, Integer min, Integer max, Long excludeId) {
-		boolean overlaps = puntuacionMatrixRepository.existeRangoSuperpuesto(idCuestionario, skill, dimension, nivel,
-				idPregunta, min, max, excludeId);
+		boolean overlaps = puntuacionMatrixRepository.existeRangoSuperpuestoPorDimension(idCuestionario, skill,
+				idDimension, nivel, idPregunta, min, max, excludeId);
 		if (overlaps) {
 			throw new BusinessException(
 					"El rango [" + min + " - " + max + "] se solapa con una entrada " + "existente para skill=" + skill
-							+ (dimension != null ? " dimensión=" + dimension : "") + " nivel=" + nivel + ".",
+							+ (idDimension != null ? " dimensión=" + idDimension : "") + " nivel=" + nivel + ".",
 					"SCORE_RANGE_OVERLAP");
 		}
 	}
@@ -251,6 +257,11 @@ public class PuntuacionMatrixServiceImpl implements IPuntuacionMatrixService {
     public PuntuacionMatrixEntity findEntityById(Long id) {
         return puntuacionMatrixRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PuntuacionMatrix", id));
+    }
+
+    private DimensionEntity buscarDimension(Long idDimension) {
+        return dimensionRepository.findById(idDimension)
+                .orElseThrow(() -> new ResourceNotFoundException("Dimensión", idDimension));
     }
 
 

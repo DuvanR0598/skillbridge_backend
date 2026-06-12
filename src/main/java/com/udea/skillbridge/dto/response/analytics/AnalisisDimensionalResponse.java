@@ -22,7 +22,9 @@ import lombok.Setter;
 public class AnalisisDimensionalResponse {
 	
     private SkillTipo skill;
-    private SkillDimension dimension;
+    private SkillDimension dimension;      // enum legado
+    private Long idDimension;              // dimensión gestionada (tabla)
+    private String dimensionNombre;        // nombre legible (null si no está vinculada)
 
     // Promedios del grupo
     private BigDecimal avgPrePorcentaje;

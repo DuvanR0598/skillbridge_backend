@@ -26,5 +26,6 @@ public class PreguntaResponse {
 	private Integer maxOpciones;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private DimensionResponse dimension;   // dimensión asignada (null si no tiene)
 	private List<OpcionPreguntaAdminResponse> opcionPregunta;
 }

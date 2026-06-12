@@ -21,22 +21,16 @@ import lombok.Setter;
 @Builder
 public class EstadoPerfilResponse {
 	
-    @JsonProperty("profileComplete")
     private boolean perfilCompleto;
-
-    @JsonProperty("completionPercentage")
     private int porcentajeCompleto;
 
     // Campos mínimos obligatorios que aún faltan
-    @JsonProperty("missingRequiredFields")
     private List<String> camposObligatoriosFaltantes;
 
     // Campos opcionales que aún no se han llenado
-    @JsonProperty("missingOptionalFields")
     private List<String> camposOpcionalesFaltantes;
 
     // Mensaje sugerido para mostrar al usuario
-    @JsonProperty("message")
     private String mensaje;
 
 }

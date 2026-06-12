@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import com.udea.skillbridge.dto.request.PreguntaCuestionarioRequest;
 import com.udea.skillbridge.dto.response.CuestionarioEntregaResponse;
 import com.udea.skillbridge.dto.response.CuestionarioResponse;
 import com.udea.skillbridge.dto.response.PreguntaDeCuestionarioResponse;
+import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
 import com.udea.skillbridge.service.ICuestionarioService;
 
 import jakarta.validation.Valid;
@@ -38,10 +40,14 @@ public class CuestionarioController {
 	// Crear un cuestionario
 	@PostMapping("/crear_cuestionario")
 	public ResponseEntity<ApiResponse<CuestionarioResponse>> crearCuestionario (
-			@Valid @RequestBody CuestionarioRequest cuestionarioRequest) { 
+			@Valid @RequestBody CuestionarioRequest cuestionarioRequest,
+			@AuthenticationPrincipal UsuarioEntity usuarioActual) {
+
+		String creadoPor = (usuarioActual.getNombre() + " " + usuarioActual.getApellido()).trim();
+
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(ApiResponse.ok(
-						cuestionarioService.crearCuestionario(cuestionarioRequest),
+						cuestionarioService.crearCuestionario(cuestionarioRequest, creadoPor),
 						"Cuestionario creado exitosamente"
 				));
 	}

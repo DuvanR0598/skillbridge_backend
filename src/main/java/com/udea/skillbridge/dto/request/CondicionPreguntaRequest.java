@@ -25,6 +25,6 @@ public class CondicionPreguntaRequest {
     private Long triggerIdOpcion;
 
     @NotNull(message = "La pregunta destino es obligatoria")
-    private Long targetIdPreguta;
+    private Long targetIdPregunta;
 
 }

@@ -28,6 +28,7 @@ import com.udea.skillbridge.dto.response.analytics.ReporteGrupoResponse;
 import com.udea.skillbridge.dto.response.analytics.ResumenCuestionarioResponse;
 import com.udea.skillbridge.dto.response.analytics.SkillProgresoResponse;
 import com.udea.skillbridge.entity.CuestionarioEntity;
+import com.udea.skillbridge.entity.DimensionEntity;
 import com.udea.skillbridge.entity.EvaluacionEstudianteEntity;
 import com.udea.skillbridge.entity.PuntuacionMatrixEntity;
 import com.udea.skillbridge.entity.PuntuacionResultadoEntity;
@@ -493,16 +494,16 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
             List<PuntuacionResultadoEntity> preResultados,
             List<PuntuacionResultadoEntity> postResultados) {
 
-        // Indexar POST por key
+        // Indexar POST por key (por dimensión gestionada FK — Fase 3)
         Map<String, PuntuacionResultadoEntity> postByKey = postResultados.stream()
                 .collect(Collectors.toMap(
-                    r -> buildGroupKey(r.getSkill(), r.getDimension()),
+                    this::keyPorDimensionResultado,
                     r -> r,
                     (a, b) -> a
                 ));
 
         return preResultados.stream().map(pre -> {
-            String key = buildGroupKey(pre.getSkill(), pre.getDimension());
+            String key = keyPorDimensionResultado(pre);
             PuntuacionResultadoEntity post = postByKey.get(key);
 
             int prePuntaje = pre.getTotalPuntaje();
@@ -525,6 +526,8 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
             return SkillProgresoResponse.builder()
                     .skill(pre.getSkill())
                     .dimension(pre.getDimension())
+                    .idDimension(pre.getDimensionEnt() != null ? pre.getDimensionEnt().getId() : null)
+                    .dimensionNombre(pre.getDimensionEnt() != null ? pre.getDimensionEnt().getNombre() : null)
                     .prePuntaje(prePuntaje)
                     .preMaxPuntaje(pre.getMaxPuntuacionPosible())
                     .prePorcentaje(prePct)
@@ -595,6 +598,15 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         return SkillTipo.valueOf(skillPart);
     }
     
+    /**
+     * Clave de agrupamiento por skill + dimensión gestionada (FK) — Fase 3.
+     * Debe coincidir con la del MotorDePuntuacion para emparejar PRE/POST.
+     */
+    private String keyPorDimensionResultado(PuntuacionResultadoEntity r) {
+        String dimPart = r.getDimensionEnt() != null ? "DIM_" + r.getDimensionEnt().getId() : "GLOBAL";
+        return r.getSkill().name() + "_" + dimPart;
+    }
+
     private SkillDimension extraerDimension(String key) {
     	int lastUnderscore = key.lastIndexOf("_");
         String dimensionPart = key.substring(lastUnderscore + 1);
@@ -655,9 +667,22 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
             else retrocedio++;
         }
         
+        // Nombre de la dimensión gestionada (tabla), tomado del primer resultado vinculado
+        DimensionEntity dimEnt = preResultados.stream()
+                .map(PuntuacionResultadoEntity::getDimensionEnt)
+                .filter(d -> d != null)
+                .findFirst()
+                .or(() -> postResultados.stream()
+                        .map(PuntuacionResultadoEntity::getDimensionEnt)
+                        .filter(d -> d != null)
+                        .findFirst())
+                .orElse(null);
+
         return AnalisisDimensionalResponse.builder()
                 .skill(skill)
                 .dimension(dimension)
+                .idDimension(dimEnt != null ? dimEnt.getId() : null)
+                .dimensionNombre(dimEnt != null ? dimEnt.getNombre() : null)
                 .avgPrePorcentaje(avgPreBD)
                 .avgPostPorcentaje(avgPostBD)
                 .avgDelta(avgDelta)

@@ -29,8 +29,11 @@ public class PuntuacionMatrixRequest {
     @NotNull(message = "El skill es obligatorio")
     private SkillTipo skill;
 
-    // Dimensión del skill — null = evaluación global del skill completo
+    // Dimensión del skill (enum legado) — null = evaluación global del skill completo
     private SkillDimension dimension;
+
+    // Dimensión gestionada por el coordinador (tabla `dimension`) — opcional.
+    private Long idDimension;
 
     @NotNull(message = "El nivel es obligatorio")
     private SkillNivel nivel;

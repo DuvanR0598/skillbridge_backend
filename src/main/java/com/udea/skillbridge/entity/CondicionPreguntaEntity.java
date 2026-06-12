@@ -36,10 +36,12 @@ import lombok.Setter;
 @Entity
 @Table(
 	    name = "condicion_pregunta",
-	    // Evita duplicados: la misma opción no puede abrir la misma pregunta dos veces
+	    // Evita duplicados DENTRO de un mismo cuestionario: la misma opción no puede
+	    // abrir la misma pregunta dos veces en ese cuestionario. La misma combinación
+	    // SÍ puede repetirse en cuestionarios distintos (por eso incluye id_cuestionario).
 	    uniqueConstraints = @UniqueConstraint(
 	        name = "uk_target_condicion_opcion",
-	        columnNames = {"id_trigger_opcion", "id_target_pregunta"}
+	        columnNames = {"id_cuestionario", "id_trigger_opcion", "id_target_pregunta"}
 	    )
 	)
 @Getter

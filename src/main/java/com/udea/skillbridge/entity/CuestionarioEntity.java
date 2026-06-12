@@ -78,8 +78,10 @@ public class CuestionarioEntity {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 	
-//	@Column(name = "creado_por", nullable = false, updatable = false, length = 100)
-//	private String creadoPor;
+	// Nombre y apellido del coordinador/admin que creó el cuestionario.
+	// nullable = true para no romper registros existentes; updatable = false (inmutable).
+	@Column(name = "creado_por", updatable = false, length = 150)
+	private String creadoPor;
 
 	// --- RELACIONES ---
 

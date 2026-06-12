@@ -64,4 +64,45 @@ public interface IPuntuacionMatrixRepository extends JpaRepository<PuntuacionMat
             @Param("excludeId") Long excludeId
         );
 
+    // ── Variantes basadas en la dimensión gestionada (FK) — Fase 3 ──
+
+    @Query("""
+        SELECT m FROM PuntuacionMatrixEntity m
+        WHERE m.cuestionarioEnt.idCuestionario = :idCuestionario
+          AND m.skill = :skill
+          AND m.nivel = :nivel
+          AND ((:idDimension IS NULL AND m.dimensionEnt IS NULL) OR m.dimensionEnt.id = :idDimension)
+          AND ((:idPregunta IS NULL AND m.preguntaEnt IS NULL) OR m.preguntaEnt.idPregunta = :idPregunta)
+    """)
+    Optional<PuntuacionMatrixEntity> buscarEntradaPorDimension(
+            @Param("idCuestionario") Long idCuestionario,
+            @Param("skill") SkillTipo skill,
+            @Param("idDimension") Long idDimension,
+            @Param("nivel") SkillNivel nivel,
+            @Param("idPregunta") Long idPregunta
+        );
+
+    @Query("""
+        SELECT COUNT(m) > 0
+        FROM PuntuacionMatrixEntity m
+        WHERE m.cuestionarioEnt.idCuestionario = :idCuestionario
+          AND m.skill = :skill
+          AND m.nivel = :nivel
+          AND m.id != :excludeId
+          AND ((:idDimension IS NULL AND m.dimensionEnt IS NULL) OR m.dimensionEnt.id = :idDimension)
+          AND ((:idPregunta IS NULL AND m.preguntaEnt IS NULL) OR m.preguntaEnt.idPregunta = :idPregunta)
+          AND :newMin <= m.maxPuntaje
+          AND :newMax >= m.minPuntaje
+    """)
+    boolean existeRangoSuperpuestoPorDimension(
+            @Param("idCuestionario") Long idCuestionario,
+            @Param("skill") SkillTipo skill,
+            @Param("idDimension") Long idDimension,
+            @Param("nivel") SkillNivel nivel,
+            @Param("idPregunta") Long idPregunta,
+            @Param("newMin") Integer newMin,
+            @Param("newMax") Integer newMax,
+            @Param("excludeId") Long excludeId
+        );
+
 }

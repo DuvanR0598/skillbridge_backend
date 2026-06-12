@@ -24,6 +24,7 @@ public class CuestionarioResponse {
 	private Boolean ordenAleatorio;
 	private EstadoCuestionario estadoCuestionario;
 	private LocalDateTime createdAt;
+	private String creadoPor;       // nombre y apellido de quien lo creó
 	private int totalPreguntas;
 	private boolean editable;
 

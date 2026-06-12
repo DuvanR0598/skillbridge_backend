@@ -23,7 +23,9 @@ import lombok.Setter;
 public class SkillProgresoResponse {
 	
     private SkillTipo skill;
-    private SkillDimension dimension;
+    private SkillDimension dimension;      // enum legado
+    private Long idDimension;              // dimensión gestionada (tabla)
+    private String dimensionNombre;        // nombre legible (null si no está vinculada)
 
     // PRE_TEST
     private Integer prePuntaje;

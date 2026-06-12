@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +39,16 @@ public class CondicionPreguntaController {
                 .body(ApiResponse.ok(response, "Condición creada exitosamente"));
     }
 	
+	@PutMapping("/{idCondicion}")
+    public ResponseEntity<ApiResponse<CondicionPreguntaResponse>> actualizarCondicion(
+            @PathVariable Long idCuestionario,
+            @PathVariable Long idCondicion,
+            @Valid @RequestBody CondicionPreguntaRequest request) {
+        CondicionPreguntaResponse response =
+                condicionPreguntaService.actualizarCondicion(idCuestionario, idCondicion, request);
+        return ResponseEntity.ok(ApiResponse.ok(response, "Condición actualizada exitosamente"));
+    }
+
 	@GetMapping("/listar_condicion")
     public ResponseEntity<ApiResponse<List<CondicionPreguntaResponse>>> listarCondiciones(
             @PathVariable Long idCuestionario) {

@@ -63,11 +63,9 @@ public class MotorDePuntuacion {
 			return Collections.emptyList();
 		}
 
-		// 3. Agrupar matrices por (skill + dimension)
+		// 3. Agrupar matrices por (skill + dimensión gestionada FK) — Fase 3
         Map<String, List<PuntuacionMatrixEntity>> grupoMatrices = matrices.stream()
-                .collect(Collectors.groupingBy(
-                    m -> buildGroupKey(m.getSkill(), m.getDimension())
-                ));
+                .collect(Collectors.groupingBy(this::buildGroupKey));
         
         // 4. Calcular un PuntuacionMatrixEntity por grupo
 		List<PuntuacionResultadoEntity> resultados = new ArrayList<>();
@@ -80,24 +78,32 @@ public class MotorDePuntuacion {
 			SkillTipo skill = muestra.getSkill();
 			SkillDimension dimension = muestra.getDimension();
 
-			// Sumar puntajes de las preguntas asociadas a este grupo
+			// Sumar puntajes de las preguntas asociadas a este grupo.
+			// IMPORTANTE: cada pregunta debe contar UNA sola vez aunque el grupo
+			// tenga varias entradas de matriz (una por nivel). Por eso se deduplica
+			// por idPregunta antes de sumar (evita el "triplicado").
 			int totalPuntaje = 0;
 			int maxPuntajePosible = 0;
 
-			for (PuntuacionMatrixEntity matrix : groupMatrices) {
-				if (matrix.getPreguntaEnt() != null) {
-					// Evaluación por pregunta específica
-					Long idPregunta = matrix.getPreguntaEnt().getIdPregunta();
-					totalPuntaje += puntajeByPregunta.getOrDefault(idPregunta, 0);
-					maxPuntajePosible += calcularPuntuacionMaxima(matrix.getPreguntaEnt());
-				} else {
-					// Evaluación global: suma todas las preguntas respondidas
-					for (DetalleRespuestaEntity respuestaEnt : respuesta) {
-						totalPuntaje += puntajeByPregunta.getOrDefault(respuestaEnt.getPreguntaEnt().getIdPregunta(), 0);
-						maxPuntajePosible += calcularPuntuacionMaxima(respuestaEnt.getPreguntaEnt());
-					}
-					break; // evitar duplicar para evaluación global
-				}
+			boolean esGlobal = groupMatrices.stream().anyMatch(m -> m.getPreguntaEnt() == null);
+
+			Map<Long, PreguntaEntity> preguntasUnicas;
+			if (esGlobal) {
+				// Evaluación global: cada pregunta respondida cuenta una sola vez
+				preguntasUnicas = respuesta.stream()
+						.map(DetalleRespuestaEntity::getPreguntaEnt)
+						.collect(Collectors.toMap(PreguntaEntity::getIdPregunta, p -> p, (a, b) -> a));
+			} else {
+				// Evaluación por pregunta específica: deduplicar preguntas del grupo
+				preguntasUnicas = groupMatrices.stream()
+						.map(PuntuacionMatrixEntity::getPreguntaEnt)
+						.filter(p -> p != null)
+						.collect(Collectors.toMap(PreguntaEntity::getIdPregunta, p -> p, (a, b) -> a));
+			}
+
+			for (PreguntaEntity preguntaEnt : preguntasUnicas.values()) {
+				totalPuntaje += puntajeByPregunta.getOrDefault(preguntaEnt.getIdPregunta(), 0);
+				maxPuntajePosible += calcularPuntuacionMaxima(preguntaEnt);
 			}
 
 			// Calcular porcentaje
@@ -118,6 +124,7 @@ public class MotorDePuntuacion {
 					.evaluacionEnt(evaluacion)
 					.skill(skill)
 					.dimension(dimension)
+					.dimensionEnt(muestra.getDimensionEnt())  // dimensión gestionada (si la matriz la tiene)
 					.totalPuntaje(totalPuntaje)
 					.maxPuntuacionPosible(maxPuntajePosible)
 					.porcentajePuntuacion(porcentaje)
@@ -158,8 +165,13 @@ public class MotorDePuntuacion {
                 .sum();
     }
 	
-    private String buildGroupKey(SkillTipo skill, SkillDimension dimension) {
-        return skill.name() + "_" + (dimension != null ? dimension.name() : "GLOBAL");
+    /**
+     * Clave de agrupamiento por skill + dimensión gestionada (FK).
+     * Si la entrada no tiene dimensión, se agrupa como "GLOBAL".
+     */
+    private String buildGroupKey(PuntuacionMatrixEntity m) {
+        String dimPart = m.getDimensionEnt() != null ? "DIM_" + m.getDimensionEnt().getId() : "GLOBAL";
+        return m.getSkill().name() + "_" + dimPart;
     }
     
     private int calcularPuntuacionMaxima(PreguntaEntity preguntaEnt) {
