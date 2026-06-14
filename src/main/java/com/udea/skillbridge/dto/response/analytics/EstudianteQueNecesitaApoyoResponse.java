@@ -22,6 +22,8 @@ import lombok.Setter;
 public class EstudianteQueNecesitaApoyoResponse {
 
 	private Long idEstudiante;
+	private String nombreCompleto;   // nombre + apellido
+	private String email;
 	private Long idPreTestEvaluacion;
 
 	// Dimensiones en BAJO

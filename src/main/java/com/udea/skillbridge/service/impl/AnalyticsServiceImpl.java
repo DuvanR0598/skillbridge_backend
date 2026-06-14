@@ -55,6 +55,7 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
 	private final IAnalyticsRepository analyticsRepository;
 	private final IPuntuacionMatrixRepository puntuacionMatrixRepository;
 	private final IPlanFortalecimientoMapper planMapper;
+	private final com.udea.skillbridge.seguridad.repository.IUsuarioRepository usuarioRepository;
 
 	
 	// *****************************************
@@ -406,6 +407,14 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
                     r -> r.getEvaluacionEnt().getIdEstudiante()
                 ));
 
+        // Datos de los estudiantes (nombre/apellido/email) en una sola consulta.
+        Map<Long, com.udea.skillbridge.seguridad.entity.UsuarioEntity> usuariosById =
+                usuarioRepository.findAllById(byEstudiante.keySet()).stream()
+                        .collect(Collectors.toMap(
+                            com.udea.skillbridge.seguridad.entity.UsuarioEntity::getId,
+                            u -> u
+                        ));
+
         return byEstudiante.entrySet().stream()
                 .map(entry -> {
                     List<EstudianteQueNecesitaApoyoResponse.DimensionBajaResponse> dimensionBaja =
@@ -422,8 +431,16 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
 
                     Long preTestId = entry.getValue().get(0).getEvaluacionEnt().getId();
 
+                    com.udea.skillbridge.seguridad.entity.UsuarioEntity u = usuariosById.get(entry.getKey());
+                    String nombreCompleto = u != null
+                            ? (u.getNombre() + " " + u.getApellido()).trim()
+                            : null;
+                    String email = u != null ? u.getEmail() : null;
+
                     return EstudianteQueNecesitaApoyoResponse.builder()
                             .idEstudiante(entry.getKey())
+                            .nombreCompleto(nombreCompleto)
+                            .email(email)
                             .idPreTestEvaluacion(preTestId)
                             .dimensionBaja(dimensionBaja)
                             .build();
@@ -559,8 +576,19 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
 	}
 	
     private List<PlanFortalecimientoResponse> construirPlanesActuales(List<PuntuacionResultadoEntity> resultados) {
-        return resultados.stream()
-                .filter(r -> r.getPuntuacionMatrizEnt() != null)
+        // El "plan actual" es el del resultado GLOBAL (sin dimensión), con sus
+        // ejes (Académico/Experimental/Personal). No se mezclan los planes de
+        // cada dimensión. Si el cuestionario no tiene entrada global, se cae a
+        // todos los resultados con plan (compatibilidad).
+        List<PuntuacionResultadoEntity> globales = resultados.stream()
+                .filter(r -> r.getDimensionEnt() == null && r.getPuntuacionMatrizEnt() != null)
+                .toList();
+
+        List<PuntuacionResultadoEntity> fuente = globales.isEmpty()
+                ? resultados.stream().filter(r -> r.getPuntuacionMatrizEnt() != null).toList()
+                : globales;
+
+        return fuente.stream()
                 .flatMap(r -> r.getPuntuacionMatrizEnt().getPlanFortalecimientoEnt().stream())
                 .map(planMapper::toResponse)
                 .toList();
@@ -730,18 +758,34 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
         List<PuntuacionResultadoEntity> allResultados = analyticsRepository
                 .findTodosLosResultadosPorCuestionario(idCuestionario);
 
-        return allResultados.stream().map(r -> NivelEstudianteResumenResponse.builder()
-                .idEstudiante(r.getEvaluacionEnt().getIdEstudiante())
-                .skill(r.getSkill())
-                .idDimension(r.getDimensionEnt() != null ? r.getDimensionEnt().getId() : null)
-                .dimensionNombre(r.getDimensionEnt() != null ? r.getDimensionEnt().getNombre() : null)
-                .fase(r.getEvaluacionEnt().getEvaluacionFase())
-                .totalPuntaje(r.getTotalPuntaje())
-                .maxPosiblePuntaje(r.getMaxPuntuacionPosible())
-                .puntajePorcentaje(r.getPorcentajePuntuacion())
-                .nivel(r.getNivel())
-                .build()
-        ).toList();
+        // Datos de los estudiantes (nombre/apellido/email) en una sola consulta.
+        java.util.Set<Long> idsEstudiantes = allResultados.stream()
+                .map(r -> r.getEvaluacionEnt().getIdEstudiante())
+                .collect(Collectors.toSet());
+        Map<Long, com.udea.skillbridge.seguridad.entity.UsuarioEntity> usuariosById =
+                usuarioRepository.findAllById(idsEstudiantes).stream()
+                        .collect(Collectors.toMap(
+                            com.udea.skillbridge.seguridad.entity.UsuarioEntity::getId,
+                            u -> u
+                        ));
+
+        return allResultados.stream().map(r -> {
+                com.udea.skillbridge.seguridad.entity.UsuarioEntity u =
+                        usuariosById.get(r.getEvaluacionEnt().getIdEstudiante());
+                return NivelEstudianteResumenResponse.builder()
+                    .idEstudiante(r.getEvaluacionEnt().getIdEstudiante())
+                    .nombreCompleto(u != null ? (u.getNombre() + " " + u.getApellido()).trim() : null)
+                    .email(u != null ? u.getEmail() : null)
+                    .skill(r.getSkill())
+                    .idDimension(r.getDimensionEnt() != null ? r.getDimensionEnt().getId() : null)
+                    .dimensionNombre(r.getDimensionEnt() != null ? r.getDimensionEnt().getNombre() : null)
+                    .fase(r.getEvaluacionEnt().getEvaluacionFase())
+                    .totalPuntaje(r.getTotalPuntaje())
+                    .maxPosiblePuntaje(r.getMaxPuntuacionPosible())
+                    .puntajePorcentaje(r.getPorcentajePuntuacion())
+                    .nivel(r.getNivel())
+                    .build();
+        }).toList();
     }
     
     private double calcularPctCualquierAvanzado(Long idCuestionario, Long totalAmbos) {

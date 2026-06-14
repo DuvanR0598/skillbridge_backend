@@ -89,6 +89,15 @@ public class EvaluacionEstudianteEntity {
     @Column(name = "started_at", updatable = false)
     private LocalDateTime startedAt;
 
+    /**
+     * Momento en que el estudiante empezó a responder (tras pasar las
+     * instrucciones). Ancla del tiempo límite: el conteo corre desde aquí y
+     * NO se reinicia si el estudiante se sale y vuelve a entrar.
+     * null = aún no ha comenzado el conteo.
+     */
+    @Column(name = "tiempo_inicio_conteo")
+    private LocalDateTime tiempoInicioConteo;
+
     @Column(name = "finished_at")
     private LocalDateTime finishedAt;
     

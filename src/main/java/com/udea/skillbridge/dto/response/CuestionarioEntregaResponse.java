@@ -30,6 +30,10 @@ public class CuestionarioEntregaResponse {
 	private String instrucciones;
 	private Boolean ordenAleatorio;
 	private Integer totalPreguntas;
+
+	// Tiempo límite para responder, en minutos. null = sin límite.
+	private Integer tiempoLimiteMinutos;
+
 	private List<PreguntaEntregaResponse> preguntas;
 	private List<PreguntaEntregaResponse> preguntasCondicionales;
 

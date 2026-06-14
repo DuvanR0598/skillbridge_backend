@@ -13,6 +13,7 @@ import com.udea.skillbridge.dto.response.DetalleRespuestaResponse;
 import com.udea.skillbridge.dto.response.EvaluacionEstudianteResponse;
 import com.udea.skillbridge.dto.response.InformeEvaluacionResponse;
 import com.udea.skillbridge.dto.response.PuntuacionResultadoResponse;
+import com.udea.skillbridge.dto.response.TiempoConteoResponse;
 import com.udea.skillbridge.entity.CuestionarioEntity;
 import com.udea.skillbridge.entity.DetalleRespuestaEntity;
 import com.udea.skillbridge.entity.EvaluacionEstudianteEntity;
@@ -139,7 +140,40 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
 
         return evaluacionMapper.toResponse(guardar);
 	}
-	
+
+	// *****************************************
+    //  TIEMPO LÍMITE
+    // *****************************************
+
+	@Override
+	public TiempoConteoResponse iniciarConteo(Long idEvaluacion) {
+		EvaluacionEstudianteEntity evaluacion = findActivoById(idEvaluacion);
+		Integer limite = evaluacion.getCuestionarioEnt().getTiempoLimiteMinutos();
+
+		// Cuestionario sin tiempo límite → no hay nada que anclar.
+		if (limite == null) {
+			return TiempoConteoResponse.builder()
+					.tiempoLimiteMinutos(null)
+					.segundosRestantes(null)
+					.tiempoAgotado(false)
+					.build();
+		}
+
+		// Fijar el ancla la PRIMERA vez (al pasar las instrucciones). Idempotente:
+		// si ya existe, no se reinicia aunque el estudiante reingrese.
+		if (evaluacion.getTiempoInicioConteo() == null && evaluacion.isEditable()) {
+			evaluacion.setTiempoInicioConteo(LocalDateTime.now());
+			evaluacionRepository.save(evaluacion);
+		}
+
+		long restantes = calcularSegundosRestantes(evaluacion, limite);
+		return TiempoConteoResponse.builder()
+				.tiempoLimiteMinutos(limite)
+				.segundosRestantes(restantes)
+				.tiempoAgotado(restantes <= 0)
+				.build();
+	}
+
 	// *****************************************
     //  GUARDAR RESPUESTA
     // *****************************************
@@ -148,6 +182,7 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
 	public DetalleRespuestaResponse enviarRespuesta(Long idEvaluacion, EnviarRespuestaRequest request) {
 		EvaluacionEstudianteEntity evaluacion = findActivoById(idEvaluacion);
 		validarEditable(evaluacion);
+		validarTiempoNoAgotado(evaluacion);
 
         PreguntaEntity pregunta = preguntaRepository.findById(request.getIdPregunta())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -198,6 +233,7 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
 		
 		EvaluacionEstudianteEntity evaluacion = findActivoById(idEvaluacion);
         validarEditable(evaluacion);
+        validarTiempoNoAgotado(evaluacion);
 
         DetalleRespuestaEntity respuesta = detalleRespuestaRepository
                 .findByEvaluacionEntIdAndPreguntaEntIdPregunta(idEvaluacion, idPregunta)
@@ -225,8 +261,16 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
 		EvaluacionEstudianteEntity evaluacion = findActivoById(idEvaluacion);
         validarEditable(evaluacion);
 
-        // REGLA: todas las preguntas obligatorias deben estar respondidas
-        validarPreguntasObligatoriasRespondidas(evaluacion);
+        // REGLA: todas las preguntas obligatorias deben estar respondidas.
+        // EXCEPCIÓN: si el tiempo límite ya se agotó, se cierra automáticamente
+        // con las respuestas que el estudiante alcanzó a dar (sin exigir las
+        // obligatorias faltantes).
+        boolean porTiempoAgotado = tiempoAgotado(evaluacion);
+        if (!porTiempoAgotado) {
+            validarPreguntasObligatoriasRespondidas(evaluacion);
+        } else {
+            log.info("Sesión [{}] se completa por tiempo agotado (cierre automático).", idEvaluacion);
+        }
 
         // Obtener todas las respuestas de la sesión
         List<DetalleRespuestaEntity> respuesta = detalleRespuestaRepository.findByEvaluacionEntId(idEvaluacion);
@@ -306,6 +350,50 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
                 "ASSESSMENT_NOT_EDITABLE"
             );
         }
+    }
+
+    /** Segundos que le quedan al estudiante; 0 si ya se agotó. */
+    private long calcularSegundosRestantes(EvaluacionEstudianteEntity ev, Integer limiteMinutos) {
+        if (limiteMinutos == null || ev.getTiempoInicioConteo() == null) {
+            return limiteMinutos == null ? 0L : (long) limiteMinutos * 60;
+        }
+        LocalDateTime deadline = ev.getTiempoInicioConteo().plusMinutes(limiteMinutos);
+        // Redondear hacia ARRIBA: si quedan 899.9s, devolver 900. Evita que la
+        // cuenta regresiva del cliente llegue a 0 ANTES del deadline real del
+        // servidor (lo que haría fallar el cierre automático por obligatorias).
+        long millis = java.time.Duration.between(LocalDateTime.now(), deadline).toMillis();
+        long restantes = (long) Math.ceil(millis / 1000.0);
+        return Math.max(0, restantes);
+    }
+
+    /** Rechaza la operación si el tiempo límite ya finalizó. */
+    private void validarTiempoNoAgotado(EvaluacionEstudianteEntity ev) {
+        if (tiempoAgotado(ev)) {
+            throw new BusinessException(
+                "El tiempo límite para responder este cuestionario ya finalizó.",
+                "TIME_LIMIT_EXCEEDED"
+            );
+        }
+    }
+
+    /**
+     * true si el cuestionario tiene tiempo límite y el deadline ya pasó.
+     * Se aplica una tolerancia de 2s para absorber el desfase de red/cliente:
+     * cuando la cuenta regresiva del estudiante llega a 0, el cierre automático
+     * debe considerarse válido aunque el reloj del servidor esté 1-2s atrás.
+     */
+    private static final int GRACIA_CIERRE_SEGUNDOS = 2;
+
+    private boolean tiempoAgotado(EvaluacionEstudianteEntity ev) {
+        Integer limite = ev.getCuestionarioEnt().getTiempoLimiteMinutos();
+        // Sin límite, o el conteo aún no ha arrancado → no está agotado.
+        if (limite == null || ev.getTiempoInicioConteo() == null) {
+            return false;
+        }
+        LocalDateTime deadline = ev.getTiempoInicioConteo()
+                .plusMinutes(limite)
+                .minusSeconds(GRACIA_CIERRE_SEGUNDOS);
+        return LocalDateTime.now().isAfter(deadline);
     }
     
     private void validarPreguntaPerteneceToCuestionario(PreguntaEntity pregunta,
@@ -429,6 +517,8 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
     			.map(r -> PuntuacionResultadoResponse.builder()
     					.id(r.getId())
     					.skill(r.getSkill())
+    					.idDimension(r.getDimensionEnt() != null ? r.getDimensionEnt().getId() : null)
+    					.dimensionNombre(r.getDimensionEnt() != null ? r.getDimensionEnt().getNombre() : null)
     					.totalPuntaje(r.getTotalPuntaje())
     					.maxPuntuacionPosible(r.getMaxPuntuacionPosible())
     					.porcentajePuntuacion(r.getPorcentajePuntuacion())

@@ -7,10 +7,13 @@ import com.udea.skillbridge.dto.request.IniciarEvaluacionRequest;
 import com.udea.skillbridge.dto.response.DetalleRespuestaResponse;
 import com.udea.skillbridge.dto.response.EvaluacionEstudianteResponse;
 import com.udea.skillbridge.dto.response.InformeEvaluacionResponse;
+import com.udea.skillbridge.dto.response.TiempoConteoResponse;
 
 public interface IEvaluacionEstudianteService {
-	
+
 	EvaluacionEstudianteResponse iniciar(Long idCuestionario, IniciarEvaluacionRequest request);
+
+	TiempoConteoResponse iniciarConteo(Long idEvaluacion);
 	
 	DetalleRespuestaResponse enviarRespuesta(Long idEvaluacion, EnviarRespuestaRequest request);
 	

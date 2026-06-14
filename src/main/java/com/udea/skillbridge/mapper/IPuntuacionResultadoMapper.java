@@ -19,6 +19,10 @@ public interface IPuntuacionResultadoMapper {
 	
     @Mapping(target = "descripcionNivel",           source = "puntuacionMatrizEnt.descripcion")
     @Mapping(target = "caracteristicasObservables", source = "puntuacionMatrizEnt.caracteristicasObservables")
+    @Mapping(target = "idDimension",
+        expression = "java(resultado.getDimensionEnt() != null ? resultado.getDimensionEnt().getId() : null)")
+    @Mapping(target = "dimensionNombre",
+        expression = "java(resultado.getDimensionEnt() != null ? resultado.getDimensionEnt().getNombre() : null)")
     @Mapping(target = "planesAsignados",            expression = "java(toPlanesResponse(resultado.getPuntuacionMatrizEnt()))")
     PuntuacionResultadoResponse toResponse(PuntuacionResultadoEntity resultado);
     

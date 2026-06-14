@@ -32,4 +32,7 @@ public class CuestionarioResponse {
 	private LocalDateTime fechaInicio;
 	private LocalDateTime fechaFin;
 	private boolean disponible;  // calculado: PUBLICADO y dentro de la ventana
+
+	// Tiempo límite para responder, en minutos. null = sin límite.
+	private Integer tiempoLimiteMinutos;
 }

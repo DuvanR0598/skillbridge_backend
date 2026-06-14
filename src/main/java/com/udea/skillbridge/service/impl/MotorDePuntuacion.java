@@ -75,6 +75,8 @@ public class MotorDePuntuacion {
 			// Determinar el skill y dimensión gestionada (FK) del grupo
 			PuntuacionMatrixEntity muestra = groupMatrices.get(0);
 			SkillTipo skill = muestra.getSkill();
+			Long grupoIdDimension = muestra.getDimensionEnt() != null
+					? muestra.getDimensionEnt().getId() : null;
 
 			// Sumar puntajes de las preguntas asociadas a este grupo.
 			// IMPORTANTE: cada pregunta debe contar UNA sola vez aunque el grupo
@@ -87,9 +89,12 @@ public class MotorDePuntuacion {
 
 			Map<Long, PreguntaEntity> preguntasUnicas;
 			if (esGlobal) {
-				// Evaluación global: cada pregunta respondida cuenta una sola vez
+				// Evaluación global: se suman las preguntas respondidas una sola vez.
+				// Si el grupo tiene dimensión, se restringe a las preguntas de ESA
+				// dimensión (no todo el cuestionario); si no, se suman todas.
 				preguntasUnicas = respuesta.stream()
 						.map(DetalleRespuestaEntity::getPreguntaEnt)
+						.filter(p -> perteneceADimension(p, grupoIdDimension))
 						.collect(Collectors.toMap(PreguntaEntity::getIdPregunta, p -> p, (a, b) -> a));
 			} else {
 				// Evaluación por pregunta específica: deduplicar preguntas del grupo
@@ -163,6 +168,19 @@ public class MotorDePuntuacion {
                 .sum();
     }
 	
+    /**
+     * Indica si una pregunta pertenece a la dimensión del grupo.
+     * - grupoIdDimension null (grupo global del skill): aplica a todas las preguntas.
+     * - grupoIdDimension no null: solo las preguntas vinculadas a esa dimensión.
+     */
+    private boolean perteneceADimension(PreguntaEntity pregunta, Long grupoIdDimension) {
+        if (grupoIdDimension == null) {
+            return true;
+        }
+        return pregunta.getDimension() != null
+                && grupoIdDimension.equals(pregunta.getDimension().getId());
+    }
+
     /**
      * Clave de agrupamiento por skill + dimensión gestionada (FK).
      * Si la entrada no tiene dimensión, se agrupa como "GLOBAL".

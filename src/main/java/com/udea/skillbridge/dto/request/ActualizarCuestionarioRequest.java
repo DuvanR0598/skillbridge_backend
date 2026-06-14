@@ -28,4 +28,7 @@ public class ActualizarCuestionarioRequest {
 	// Ventana de disponibilidad (fecha + hora)
 	private LocalDateTime fechaInicio;
 	private LocalDateTime fechaFin;
+
+	// Tiempo límite para responder, en minutos. null = sin límite / sin cambio.
+	private Integer tiempoLimiteMinutos;
 }

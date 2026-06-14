@@ -21,6 +21,7 @@ import com.udea.skillbridge.dto.request.IniciarEvaluacionRequest;
 import com.udea.skillbridge.dto.response.DetalleRespuestaResponse;
 import com.udea.skillbridge.dto.response.EvaluacionEstudianteResponse;
 import com.udea.skillbridge.dto.response.InformeEvaluacionResponse;
+import com.udea.skillbridge.dto.response.TiempoConteoResponse;
 import com.udea.skillbridge.enums.EvaluacionFase;
 import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
 import com.udea.skillbridge.service.IEvaluacionEstudianteService;
@@ -59,6 +60,19 @@ public class EvaluacionEstudianteController {
                 ));
     }
     
+    /**
+     * Inicia (o consulta) el conteo del tiempo límite. Fija el ancla la primera
+     * vez (al pasar las instrucciones) y devuelve los segundos restantes.
+     * Idempotente: reingresar NO reinicia el tiempo.
+     */
+    @PostMapping("/{idEvaluacion}/iniciar-conteo")
+    public ResponseEntity<ApiResponse<TiempoConteoResponse>> iniciarConteo(
+            @PathVariable Long idEvaluacion) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                evaluacionService.iniciarConteo(idEvaluacion)
+        ));
+    }
+
     /**
      * Envía la respuesta a una pregunta.
      */

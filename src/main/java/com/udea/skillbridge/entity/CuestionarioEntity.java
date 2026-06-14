@@ -70,6 +70,10 @@ public class CuestionarioEntity {
 	@Column(name = "fecha_fin")
 	private LocalDateTime fechaFin;
 
+	// Tiempo límite para responder, en minutos. null = sin límite.
+	@Column(name = "tiempo_limite_minutos")
+	private Integer tiempoLimiteMinutos;
+
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;

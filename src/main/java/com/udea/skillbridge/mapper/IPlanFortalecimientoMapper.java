@@ -23,7 +23,8 @@ public interface IPlanFortalecimientoMapper {
     @Mapping(target = "updatedAt",           ignore = true)
     PlanFortalecimientoEntity toEntity(PlanFortalecimientoRequest request);
     
-    @Mapping(source = "puntuacionMatrixEnt.id", target = "id")
+    // id → el id propio del plan (auto). idPuntuacionMatrix → el id de la matriz.
+    @Mapping(source = "puntuacionMatrixEnt.id", target = "idPuntuacionMatrix")
     PlanFortalecimientoResponse toResponse(PlanFortalecimientoEntity plan);
     
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

@@ -22,6 +22,12 @@ public class PuntuacionResultadoResponse {
 	
     private Long id;
     private SkillTipo skill;
+
+    // Dimensión gestionada evaluada (null = resultado general del cuestionario).
+    // El estudiante no la ve mientras responde, pero sí en sus resultados finales.
+    private Long idDimension;
+    private String dimensionNombre;
+
     private Integer totalPuntaje;
     private Integer maxPuntuacionPosible;
     private BigDecimal porcentajePuntuacion;

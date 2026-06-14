@@ -23,6 +23,8 @@ import lombok.Setter;
 public class NivelEstudianteResumenResponse {
 	
     private Long idEstudiante;
+    private String nombreCompleto;   // nombre + apellido
+    private String email;
     private SkillTipo skill;
     private Long idDimension;
     private String dimensionNombre;

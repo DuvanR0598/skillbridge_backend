@@ -3,6 +3,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ import com.udea.skillbridge.entity.OpcionPreguntaEntity;
 import com.udea.skillbridge.entity.PreguntaCuestionarioEntity;
 import com.udea.skillbridge.entity.PreguntaEntity;
 import com.udea.skillbridge.enums.EstadoCuestionario;
+import com.udea.skillbridge.enums.TipoPregunta;
 import com.udea.skillbridge.exception.CuestionarioException;
 import com.udea.skillbridge.mapper.ICuestionarioMapper;
 import com.udea.skillbridge.repository.ICondicionPreguntaRepository;
@@ -340,25 +342,32 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         // 3. Obtener las preguntas del cuestionario
         List<PreguntaCuestionarioEntity> pqListaEnt =
                 new ArrayList<>(cuestionarioEnt.getPreguntasCuestionario());
-        
-        // 4. Separar preguntas base (siempre visibles) de las condicionales (visibles según respuesta)
+
+        // 4. Cargar todas las condiciones del cuestionario (fuente de verdad de
+        //    la ramificación) y armar el conjunto de preguntas que son TARGET de
+        //    alguna condición → esas son las condicionales.
+        List<CondicionPreguntaEntity> condiciones =
+        		condicionPreguntaRepository.findByCuestionarioEntIdCuestionario(idCuestionario);
+
+        Set<Long> idsPreguntasCondicionales = condiciones.stream()
+                .map(c -> c.getTargetPregunta().getIdPregunta())
+                .collect(Collectors.toSet());
+
+        // 5. Separar preguntas base (siempre visibles) de las condicionales
+        //    (visibles según la respuesta que las dispara).
         List<PreguntaCuestionarioEntity> preguntasBase = pqListaEnt.stream()
-                .filter(pq -> !Boolean.TRUE.equals(pq.getIsCondicional()))
+                .filter(pq -> !idsPreguntasCondicionales.contains(pq.getPreguntaEnt().getIdPregunta()))
                 .collect(Collectors.toList());  // Lista mutable
-        
+
         List<PreguntaCuestionarioEntity> preguntasCondicionales = pqListaEnt.stream()
-                .filter(pq -> Boolean.TRUE.equals(pq.getIsCondicional()))
+                .filter(pq -> idsPreguntasCondicionales.contains(pq.getPreguntaEnt().getIdPregunta()))
                 .collect(Collectors.toList());  // Lista mutable
-        
-        // 5. Solo las preguntas BASE se aleatorizan
+
+        // 6. Solo las preguntas BASE se aleatorizan
         // Las condicionales no se mezclan porque su visibilidad depende de la respuesta anterior
         if (Boolean.TRUE.equals(cuestionarioEnt.getOrdenAleatorio())) {
             Collections.shuffle(preguntasBase);
         }
-        
-        // 6. Cargar todas las condiciones del cuestionario de una sola consulta
-        List<CondicionPreguntaEntity> condiciones =
-        		condicionPreguntaRepository.findByCuestionarioEntIdCuestionario(idCuestionario);
 
         // 7. Construir las preguntas entregadas numeradas desde 1
         // Construir preguntas base 
@@ -389,6 +398,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
                 .objetivo(cuestionarioEnt.getObjetivo())
                 .instrucciones(cuestionarioEnt.getInstrucciones())
                 .ordenAleatorio(cuestionarioEnt.getOrdenAleatorio())
+                .tiempoLimiteMinutos(cuestionarioEnt.getTiempoLimiteMinutos())
                 .totalPreguntas(preguntasBaseEntregadas.size())      // solo las base son "totales" para el progreso
                 .preguntas(preguntasBaseEntregadas)
                 .preguntasCondicionales(preguntasCondicionalesEntregadas)
@@ -424,9 +434,10 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         PreguntaEntity preguntaEnt = pqEnt.getPreguntaEnt();
 
         // Las opciones también se aleatorizan si el flag está activo
-        // Evita el sesgo cognitivo de "siempre marco la primera opción"
+        // Evita el sesgo cognitivo de "siempre marco la primera opción".
+        // Excepción: LIKERT conserva su orden (escala con significado intrínseco).
         List<OpcionPreguntaResponse> opciones = buildDeliveredOptions(
-                preguntaEnt.getOpcionPregunta(), randomOrder
+                preguntaEnt.getOpcionPregunta(), randomOrder, preguntaEnt.getTipoPregunta()
         );
         
         // Filtrar las condiciones que activan ESTA pregunta específica
@@ -454,8 +465,9 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
     }
 	
 	private List<OpcionPreguntaResponse> buildDeliveredOptions(
-            List<OpcionPreguntaEntity> opciones, 
-            Boolean ordenAleatorio) {
+            List<OpcionPreguntaEntity> opciones,
+            Boolean ordenAleatorio,
+            TipoPregunta tipoPregunta) {
 
         if (opciones == null || opciones.isEmpty()) {
             return Collections.emptyList();
@@ -464,7 +476,9 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
         // Copiamos para no mutar la lista de la entidad
         List<OpcionPreguntaEntity> copiaOpciones = new ArrayList<>(opciones);
 
-        if (Boolean.TRUE.equals(ordenAleatorio)) {
+        // LIKERT nunca se aleatoriza: la escala tiene un orden con significado
+        // (p. ej. "Muy en desacuerdo" → "Muy de acuerdo").
+        if (Boolean.TRUE.equals(ordenAleatorio) && !TipoPregunta.LIKERT.equals(tipoPregunta)) {
             Collections.shuffle(copiaOpciones);
         }
 
