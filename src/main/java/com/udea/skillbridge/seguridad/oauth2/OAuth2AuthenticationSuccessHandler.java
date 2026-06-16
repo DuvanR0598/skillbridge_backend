@@ -73,6 +73,19 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                         .orElseGet(() -> createNewGoogleUser(usuarioInfo))
                 );
 
+        // Si la cuenta está deshabilitada, NO se permite el ingreso (igual que en
+        // el login local). Se redirige al frontend con un error y sin tokens.
+        if (!usuarioEnt.isEnabled()) {
+            log.warn("Login con Google rechazado: cuenta deshabilitada ({})", usuarioEnt.getEmail());
+            String errorUrl = UriComponentsBuilder
+                    .fromUriString(frontendRedirectUri)
+                    .queryParam("error", "account_disabled")
+                    .build(true)
+                    .toUriString();
+            response.sendRedirect(errorUrl);
+            return;
+        }
+
         // Actualizar último login
         usuarioEnt.setUltimoLoginAt(LocalDateTime.now());
         usuarioRepository.save(usuarioEnt);

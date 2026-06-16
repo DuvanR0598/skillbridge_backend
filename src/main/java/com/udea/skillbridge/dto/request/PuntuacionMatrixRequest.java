@@ -48,7 +48,6 @@ public class PuntuacionMatrixRequest {
 
     /**
      * Niveles de Bloom asociados a esta entrada.
-     * Recomendación según el PDF:
      *   BASICO     → [RECORDAR, ENTENDER]
      *   INTERMEDIO → [APLICAR, ANALIZAR]
      *   AVANZADO   → [EVALUAR, CREAR]

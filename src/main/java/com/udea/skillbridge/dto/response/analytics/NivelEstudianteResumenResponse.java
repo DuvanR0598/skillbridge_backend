@@ -25,6 +25,7 @@ public class NivelEstudianteResumenResponse {
     private Long idEstudiante;
     private String nombreCompleto;   // nombre + apellido
     private String email;
+    private Long idEvaluacion;       // id de la sesión (para consultar sus respuestas)
     private SkillTipo skill;
     private Long idDimension;
     private String dimensionNombre;

@@ -20,6 +20,7 @@ public class DetalleRespuestaResponse {
     private Long idPregunta;
     private String textoPregunta;
     private List<Long> idsOpcionesSeleccionadas;
+    private List<String> opcionesSeleccionadas;   // textos de las opciones elegidas
     private String respuestaAbierta;
     private Integer puntajeObtenido;
     private LocalDateTime answeredAt;

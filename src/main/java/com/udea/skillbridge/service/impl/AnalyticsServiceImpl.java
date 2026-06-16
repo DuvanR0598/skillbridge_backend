@@ -776,6 +776,7 @@ public class AnalyticsServiceImpl implements IAnalyticsService {
                     .idEstudiante(r.getEvaluacionEnt().getIdEstudiante())
                     .nombreCompleto(u != null ? (u.getNombre() + " " + u.getApellido()).trim() : null)
                     .email(u != null ? u.getEmail() : null)
+                    .idEvaluacion(r.getEvaluacionEnt().getId())
                     .skill(r.getSkill())
                     .idDimension(r.getDimensionEnt() != null ? r.getDimensionEnt().getId() : null)
                     .dimensionNombre(r.getDimensionEnt() != null ? r.getDimensionEnt().getNombre() : null)

@@ -2,12 +2,17 @@ package com.udea.skillbridge.service.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.udea.skillbridge.common.exception.BusinessException;
 import com.udea.skillbridge.common.exception.ResourceNotFoundException;
 import com.udea.skillbridge.dto.request.ActualizarPesoOpcionesRequest;
 import com.udea.skillbridge.dto.request.PreguntaRequest;
+import com.udea.skillbridge.dto.response.PaginaResponse;
 import com.udea.skillbridge.dto.response.PreguntaResponse;
 import com.udea.skillbridge.entity.DimensionEntity;
 import com.udea.skillbridge.entity.OpcionPreguntaEntity;
@@ -109,6 +114,23 @@ public class PreguntaServiceImpl implements IPreguntaService {
 				.stream()
 				.map(preguntaMapper::toResponse)
 				.toList();
+	}
+
+	// *****************************************
+    //  LISTAR PAGINADO (banco de preguntas)
+    // *****************************************
+
+	@Override
+	public PaginaResponse<PreguntaResponse> listarPaginado(int page, int size, TipoPregunta tipoPregunta, String texto) {
+		// Más recientes primero (id descendente)
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "idPregunta"));
+
+		// Normalizar el texto: vacío o en blanco → sin filtro
+		String textoFiltro = (texto != null && !texto.isBlank()) ? texto.trim() : null;
+
+		Page<PreguntaEntity> pagina = preguntaRepository.buscar(tipoPregunta, textoFiltro, pageable);
+
+		return PaginaResponse.of(pagina.map(preguntaMapper::toResponse));
 	}
 	
     // **************************************************

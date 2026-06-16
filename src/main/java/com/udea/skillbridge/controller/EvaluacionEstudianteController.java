@@ -114,7 +114,7 @@ public class EvaluacionEstudianteController {
     }
     
     /**
-     * Consulta el estado actual de una sesión.
+     * Consulta el estado actual de una sesión (evaluación) con sus respuestas
      */
     @GetMapping("/consultar-id/{idEvaluacion}")
     public ResponseEntity<ApiResponse<EvaluacionEstudianteResponse>> findById(

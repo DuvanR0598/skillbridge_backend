@@ -1,7 +1,5 @@
 package com.udea.skillbridge.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.udea.skillbridge.common.response.ApiResponse;
 import com.udea.skillbridge.dto.request.ActualizarPesoOpcionesRequest;
 import com.udea.skillbridge.dto.request.PreguntaRequest;
+import com.udea.skillbridge.dto.response.PaginaResponse;
 import com.udea.skillbridge.dto.response.PreguntaResponse;
 import com.udea.skillbridge.enums.TipoPregunta;
 import com.udea.skillbridge.service.IPreguntaService;
@@ -52,25 +51,26 @@ public class PreguntaController {
     public ResponseEntity<ApiResponse<PreguntaResponse>> findById(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.ok(preguntaService.findById(id)));
     }
-    
+
     /**
-     * Listar todas las preguntas.
+     * Banco de preguntas paginado.
      * Opcional: filtrar por tipo con query param.
      * Ejemplo: GET /preguntas/listar?tipoPregunta=VERDADERO_FALSO
      */
-    @GetMapping("/listar")
-    public ResponseEntity<ApiResponse<List<PreguntaResponse>>> listarTodo(
-    		@RequestParam(required = false) TipoPregunta tipoPregunta){
-    	List<PreguntaResponse> resultado = (tipoPregunta != null)
-                ? preguntaService.listarPorTipo(tipoPregunta)
-                : preguntaService.listarTodo();
-    	
-    	return ResponseEntity.ok(ApiResponse.ok(resultado));
+    @GetMapping("/paginado")
+    public ResponseEntity<ApiResponse<PaginaResponse<PreguntaResponse>>> listarPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) TipoPregunta tipoPregunta,
+            @RequestParam(required = false) String search) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                preguntaService.listarPaginado(page, size, tipoPregunta, search)
+        ));
     }
-    
+
     /**
      * Actualizar SOLO los pesos de las opciones.
-     * Permitido aunque el cuestionario que use esta pregunta esté COMPLETE,
+     * Permitido aunque el cuestionario que use esta pregunta esté en COMPLETO,
      * porque los pesos son un ajuste de calibración, no un cambio estructural.
      *
      * PATCH es más semántico que PUT aquí porque solo tocamos un campo parcial.

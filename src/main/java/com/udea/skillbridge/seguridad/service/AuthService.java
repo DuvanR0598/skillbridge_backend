@@ -135,6 +135,17 @@ public class AuthService {
         RefreshTokenEntity storedToken = refreshTokenService.validate(request.getRefreshToken());
         UsuarioEntity usuarioEnt = storedToken.getUsuario();
 
+        // Si el usuario fue deshabilitado, no se renueva la sesión: se revocan
+        // todos sus tokens para forzar el cierre de sesión.
+        if (!usuarioEnt.isEnabled()) {
+            refreshTokenService.revokeAll(usuarioEnt.getId());
+            log.warn("Refresh rechazado: cuenta deshabilitada ({})", usuarioEnt.getEmail());
+            throw new BusinessException(
+                "La cuenta está deshabilitada. Contacte al administrador.",
+                "ACCOUNT_DISABLED"
+            );
+        }
+
         // Rotar el refresh token (invalidar el viejo, generar uno nuevo)
         storedToken.setRevocado(true);
         refreshTokenRepository.save(storedToken);
