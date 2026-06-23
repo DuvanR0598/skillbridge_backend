@@ -3,6 +3,8 @@ package com.udea.skillbridge.dto.request;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,4 +33,8 @@ public class ActualizarCuestionarioRequest {
 
 	// Tiempo límite para responder, en minutos. null = sin límite / sin cambio.
 	private Integer tiempoLimiteMinutos;
+
+	// Programa al que va dirigido. null = general (todos los estudiantes).
+	// Se aplica siempre (el formulario de edición envía el valor seleccionado).
+	private ProgramaIngenieria programaObjetivo;
 }

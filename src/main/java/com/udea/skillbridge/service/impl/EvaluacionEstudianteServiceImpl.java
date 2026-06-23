@@ -32,6 +32,8 @@ import com.udea.skillbridge.repository.IDetalleRespuestaRepository;
 import com.udea.skillbridge.repository.IEvaluacionEstudianteRepository;
 import com.udea.skillbridge.repository.IPreguntaRepository;
 import com.udea.skillbridge.repository.IPuntuacionResultadoRepository;
+import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+import com.udea.skillbridge.seguridad.repository.IUsuarioPerfilRepository;
 import com.udea.skillbridge.service.IEvaluacionEstudianteService;
 
 import lombok.RequiredArgsConstructor;
@@ -51,6 +53,7 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
 	private final MotorDePuntuacion motorPuntuacion;
 	private final IPuntuacionResultadoRepository puntuacionResultadoRepository;
 	private final IPlanFortalecimientoMapper planMapper;
+	private final IUsuarioPerfilRepository usuarioPerfilRepository;
 
 	// *****************************************
     //  INICIAR SESIÓN
@@ -71,6 +74,22 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
                 "Estado actual: " + cuestionarioEnt.getEstadoCuestionario(),
                 "QUESTIONNAIRE_NOT_PUBLISHED"
             );
+        }
+
+        // 1.a Si el cuestionario está dirigido a un programa específico, validar
+        // que el estudiante pertenezca a ese programa (impide el acceso por ID directo).
+        ProgramaIngenieria objetivo = cuestionarioEnt.getProgramaObjetivo();
+        if (objetivo != null) {
+            ProgramaIngenieria programaEstudiante = usuarioPerfilRepository
+                    .findByUsuarioEntId(request.getIdEstudiante())
+                    .map(p -> p.getProgramaIngenieria())
+                    .orElse(null);
+            if (!objetivo.equals(programaEstudiante)) {
+                throw new BusinessException(
+                    "Este cuestionario está dirigido a estudiantes de otro programa académico.",
+                    "PROGRAM_NOT_ALLOWED"
+                );
+            }
         }
 
         // 1.b Validar la ventana de disponibilidad (fecha/hora)
@@ -503,8 +522,7 @@ public class EvaluacionEstudianteServiceImpl implements IEvaluacionEstudianteSer
 
         if (!sinRespuesta.isEmpty()) {
             throw new BusinessException(
-                "Hay " + sinRespuesta.size() + " pregunta(s) obligatoria(s) sin responder: "
-                + sinRespuesta,
+                "Hay " + sinRespuesta.size() + " pregunta(s) obligatoria(s) sin responder: ",
                 "MANDATORY_QUESTIONS_UNANSWERED"
             );
         }

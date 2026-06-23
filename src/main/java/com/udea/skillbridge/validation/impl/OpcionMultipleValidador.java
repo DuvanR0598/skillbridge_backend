@@ -13,34 +13,15 @@ public class OpcionMultipleValidador implements PreguntaValidador {
 	public void validador(PreguntaRequest preguntaRequest) {
 		var opciones = preguntaRequest.getOpcionPreguntaRequest();
 		
-		// REGLA 1: Mínimo 2 opciones
+		// REGLA ÚNICA: Mínimo 2 opciones
+        // En soft skills no hay opciones "correctas": cada opción aporta su peso.
         if (opciones == null || opciones.size() < 2) {
             throw new CuestionarioException(
                 "Una pregunta de MÚLTIPLE OPCIÓN debe tener al menos 2 opciones. " +
                 "Se recibieron: " + (opciones == null ? 0 : opciones.size())
             );
         }
-        
-        // REGLA 2: Al menos 1 opción debe ser correcta
-        // (puede haber varias correctas, eso es lo que distingue MULTIPLE de UNICA)
-        long correctaCount = opciones.stream()
-                .filter(o -> Boolean.TRUE.equals(o.getIsCorrecta()))
-                .count();
 
-        if (correctaCount < 1) {
-            throw new CuestionarioException(
-                "Una pregunta de MÚLTIPLE OPCIÓN debe tener al menos 1 opción correcta."
-            );
-        }
-        
-        // No todas pueden ser correctas
-        if (correctaCount == opciones.size()) {
-            throw new CuestionarioException(
-                "No es válido que todas las opciones sean correctas en MÚLTIPLE OPCIÓN. " +
-                "Debe haber al menos una opción incorrecta."
-            );
-        }
-		
 	}
 
 }

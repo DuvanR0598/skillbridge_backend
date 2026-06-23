@@ -78,6 +78,10 @@ public class SecurityConfig {
                     "/api-docs/**"
                 ).permitAll()
 
+                // Avatares e imágenes subidas — accesibles públicamente (se cargan
+                // desde etiquetas <img>, que no envían el token de autorización).
+                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+
                 // ── Cuestionarios ────────────────────────────────────
                 .requestMatchers(HttpMethod.POST,
                     "/cuestionario").hasAnyRole("ADMIN", "COORDINADOR")

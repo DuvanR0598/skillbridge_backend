@@ -68,7 +68,24 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                             if (existente.getAvatarUrl() == null) {
                                 existente.setAvatarUrl(usuarioInfo.getAvatarUrl());
                             }
-                            return usuarioRepository.save(existente);
+                            UsuarioEntity guardado = usuarioRepository.save(existente);
+
+                            // Sincronizar avatar de Google en usuario_perfil si aún no tiene uno
+                            if (usuarioInfo.getAvatarUrl() != null) {
+                                UsuarioPerfilEntity perfil = usuarioPerfilRepository
+                                        .findByUsuarioEntId(guardado.getId())
+                                        .orElseGet(() -> {
+                                            UsuarioPerfilEntity nuevo = UsuarioPerfilEntity.builder()
+                                                    .usuarioEnt(guardado).build();
+                                            return usuarioPerfilRepository.save(nuevo);
+                                        });
+                                if (perfil.getAvatarUrl() == null) {
+                                    perfil.setAvatarUrl(usuarioInfo.getAvatarUrl());
+                                    usuarioPerfilRepository.save(perfil);
+                                }
+                            }
+
+                            return guardado;
                         })
                         .orElseGet(() -> createNewGoogleUser(usuarioInfo))
                 );

@@ -21,9 +21,6 @@ public class OpcionPreguntaRequest {
 	@Size(max = 500, message = "El texto de la opción no puede superar 500 caracteres")
     private String texto;
 
-	@NotNull(message = "Debe indicar si la opción es correcta")
-    private Boolean isCorrecta;
-
     @NotNull(message = "El peso de la opción es obligatorio")
     @Min(value = 0, message = "El peso no puede ser negativo")
     private Integer peso;

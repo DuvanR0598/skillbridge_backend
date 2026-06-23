@@ -13,22 +13,11 @@ public class VerdaderoFalsoValidador implements PreguntaValidador {
 	public void validador(PreguntaRequest preguntaRequest) {
 		var opcion = preguntaRequest.getOpcionPreguntaRequest();
 		
-		// REGLA 1: Debe tener exactamente 2 opciones (Verdadero y Falso)
+		// REGLA ÚNICA: Debe tener exactamente 2 opciones (Verdadero y Falso)
+        // En soft skills no hay opción "correcta": cada opción aporta su peso.
         if (opcion == null || opcion.size() != 2) {
             throw new CuestionarioException(
                 "Una pregunta de tipo VERDADERO/FALSO debe tener exactamente 2 opciones."
-            );
-        }
-		
-        // REGLA 2: Exactamente 1 opción debe estar marcada como correcta
-        long correctoCount = opcion.stream()
-                .filter(o -> Boolean.TRUE.equals(o.getIsCorrecta()))
-                .count();
-
-        if (correctoCount != 1) {
-            throw new CuestionarioException(
-                "Una pregunta VERDADERO/FALSO debe tener exactamente 1 opción correcta. " +
-                "Se encontraron: " + correctoCount
             );
         }
 	}

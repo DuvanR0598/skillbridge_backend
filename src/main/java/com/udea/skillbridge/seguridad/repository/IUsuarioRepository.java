@@ -20,6 +20,12 @@ public interface IUsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
 	boolean existsByEmail(String email);
 
+	boolean existsByNumeroIdentificacion(String numeroIdentificacion);
+
+	/** Usuarios que tienen un rol dado (ej. todos los estudiantes). */
+	@Query("SELECT DISTINCT u FROM UsuarioEntity u JOIN u.roles r WHERE r.nombre = :rol")
+	java.util.List<UsuarioEntity> findByRol(TipoRol rol);
+
     @Modifying
     @Query("UPDATE UsuarioEntity u SET u.ultimoLoginAt = :ultimoLogin WHERE u.id = :idUsuario")
     void actualizarUltimoLogin(Long idUsuario, LocalDateTime ultimoLogin);

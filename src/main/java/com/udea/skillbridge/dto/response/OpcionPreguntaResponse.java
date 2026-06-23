@@ -8,7 +8,7 @@ import lombok.Setter;
 
 /**
  * Opción tal como la ve el estudiante.
- * SIN isCorrecta ni peso — esos son datos de evaluación, no de presentación.
+ * SIN peso — ese es un dato de evaluación, no de presentación.
  */
 
 @Getter

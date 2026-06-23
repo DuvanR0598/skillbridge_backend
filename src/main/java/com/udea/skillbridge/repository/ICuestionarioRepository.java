@@ -21,6 +21,9 @@ public interface ICuestionarioRepository extends JpaRepository<CuestionarioEntit
 	@Query("SELECT c FROM CuestionarioEntity c WHERE c.idCuestionario = :id " +
 		       "AND c.estadoCuestionario != 'ELIMINADO'")
 		Optional<CuestionarioEntity> findActivoById(@Param("id") Long id);
+
+	// El nombre es único: lo usamos para generar un nombre de copia que no choque.
+	boolean existsByNombre(String nombre);
    
     
     /**

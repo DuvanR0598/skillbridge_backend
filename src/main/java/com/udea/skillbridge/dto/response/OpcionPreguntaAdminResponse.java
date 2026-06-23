@@ -9,7 +9,8 @@ import lombok.Setter;
 /**
  * Opción tal como la ve un ADMIN/COORDINADOR.
  * A diferencia de {@link OpcionPreguntaResponse} (vista del estudiante),
- * SÍ incluye isCorrecta y peso, necesarios para gestionar el banco.
+ * SÍ incluye el peso, necesario para gestionar el banco.
+ * Las soft skills se miden por peso; no existe opción correcta/incorrecta.
  */
 @Getter
 @Setter
@@ -20,7 +21,6 @@ public class OpcionPreguntaAdminResponse {
 
     private Long idOpcion;
     private String texto;
-    private Boolean isCorrecta;
     private Integer peso;
     private Integer ordenVisualizacion;
 }

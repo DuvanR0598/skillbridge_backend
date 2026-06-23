@@ -47,6 +47,10 @@ public interface ICuestionarioMapper {
             target = "disponible",
             expression = "java(cuestionarioEnt.disponibleParaResponder())"
     )
+    @Mapping(
+            target = "programaObjetivoNombre",
+            expression = "java(cuestionarioEnt.getProgramaObjetivo() != null ? cuestionarioEnt.getProgramaObjetivo().getDisplayName() : null)"
+    )
 	CuestionarioResponse toResponse(CuestionarioEntity cuestionarioEnt);
     
     /**

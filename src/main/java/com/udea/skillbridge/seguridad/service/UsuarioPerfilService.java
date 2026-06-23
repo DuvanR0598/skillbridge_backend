@@ -68,6 +68,37 @@ public class UsuarioPerfilService {
 
         UsuarioPerfilEntity perfilEnt = findOrCreatePerfil(idUsuario);
 
+        // Si el perfil no tiene avatar (ej. Google no sincronizó) pero el usuario sí,
+        // copiar el avatar de la tabla usuarios al perfil.
+        if (perfilEnt.getAvatarUrl() == null && usuarioEnt.getAvatarUrl() != null) {
+            perfilEnt.setAvatarUrl(usuarioEnt.getAvatarUrl());
+        }
+
+        // Documento de identificación: solo se solicita a quienes aún no lo tienen
+        // (típicamente usuarios registrados con Google). Si ya tiene uno, no se
+        // permite cambiarlo desde aquí.
+        if (usuarioEnt.getNumeroIdentificacion() == null
+                && request.getNumeroIdentificacion() != null
+                && !request.getNumeroIdentificacion().isBlank()) {
+
+            if (request.getTipoIdentificacion() == null) {
+                throw new BusinessException(
+                    "Debe indicar el tipo de identificación.", "IDENTIFICATION_TYPE_REQUIRED");
+            }
+
+            String numero = request.getNumeroIdentificacion().trim();
+            if (usuarioRepository.existsByNumeroIdentificacion(numero)) {
+                throw new BusinessException(
+                    "El número de identificación " + numero + " ya está registrado.",
+                    "IDENTIFICATION_ALREADY_EXISTS");
+            }
+
+            usuarioEnt.setTipoIdentificacion(request.getTipoIdentificacion());
+            usuarioEnt.setNumeroIdentificacion(numero);
+            usuarioRepository.save(usuarioEnt);
+            log.info("Documento de identificación asignado al usuario [{}]", idUsuario);
+        }
+
         // Validar fecha de nacimiento: no puede ser futura ni mayor a 100 años
         if (request.getFechaNacimiento() != null) {
         	validarFechaDeNacimiento(request.getFechaNacimiento());
@@ -116,11 +147,15 @@ public class UsuarioPerfilService {
             );
         }
 
-        // Eliminar avatar anterior si existe
-        if (perfilEnt.getAvatarUrl() != null) {
+        // Eliminar avatar anterior SOLO si es un archivo local (/uploads/...).
+        // Los usuarios de Google tienen una URL remota (https://...) que no es
+        // una ruta del sistema de archivos; intentar borrarla lanzaría
+        // InvalidPathException, así que en ese caso se omite el borrado.
+        String avatarAnterior = perfilEnt.getAvatarUrl();
+        if (avatarAnterior != null && avatarAnterior.startsWith("/uploads/")) {
             try {
                 Files.deleteIfExists(
-                    Path.of(perfilEnt.getAvatarUrl().replace("/uploads/", "uploads/"))
+                    Path.of(avatarAnterior.replace("/uploads/", "uploads/"))
                 );
             } catch (IOException ignored) { /* no crítico */ }
         }
@@ -166,6 +201,7 @@ public class UsuarioPerfilService {
         return Arrays.stream(ProgramaIngenieria.values())
                 .map(p -> ProgramaIngenieriaResponse.builder()
                         .value(p)
+                        .codigo(p.getCodigo())
                         .displayName(p.getDisplayName())
                         .build())
                 .toList();

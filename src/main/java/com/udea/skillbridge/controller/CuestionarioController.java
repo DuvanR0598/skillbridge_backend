@@ -52,7 +52,24 @@ public class CuestionarioController {
 				));
 	}
 	
-	// Listar todos los cuestionarios 
+	// Duplicar un cuestionario completo (preguntas + ramificaciones).
+	// La copia queda en BORRADOR, con id nuevo y el sufijo "COPIA" en el nombre.
+	@PostMapping("/{idCuestionario}/duplicar")
+	@PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
+	public ResponseEntity<ApiResponse<CuestionarioResponse>> duplicarCuestionario(
+			@PathVariable Long idCuestionario,
+			@AuthenticationPrincipal UsuarioEntity usuarioActual) {
+
+		String creadoPor = (usuarioActual.getNombre() + " " + usuarioActual.getApellido()).trim();
+
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(ApiResponse.ok(
+						cuestionarioService.duplicarCuestionario(idCuestionario, creadoPor),
+						"Cuestionario duplicado exitosamente"
+				));
+	}
+
+	// Listar todos los cuestionarios
 	@GetMapping("/listar_cuestionarios")
     public ResponseEntity<ApiResponse<List<CuestionarioResponse>>> listarAllCuestionarios() {
         return ResponseEntity.ok(ApiResponse.ok(cuestionarioService.listarAllCuestionarios()));
@@ -64,10 +81,12 @@ public class CuestionarioController {
 		return ResponseEntity.ok(ApiResponse.ok(cuestionarioService.findById(idCuestionario)));
 	}
 	
-	//Listar cuestionarios activos
+	//Listar cuestionarios activos (filtrados por programa si es estudiante)
 	@GetMapping("/listar_cuestionarios_activos")
-    public ResponseEntity<ApiResponse<List<CuestionarioResponse>>> listaCuestionariosActivos() {
-        return ResponseEntity.ok(ApiResponse.ok(cuestionarioService.listarCuestionariosActivos()));
+    public ResponseEntity<ApiResponse<List<CuestionarioResponse>>> listaCuestionariosActivos(
+            @AuthenticationPrincipal UsuarioEntity usuarioActual) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                cuestionarioService.listarCuestionariosActivos(usuarioActual)));
     }
 	
 	// Actualizar cuestionario, solo permitido en estado BORRADOR.
@@ -132,8 +151,8 @@ public class CuestionarioController {
 
     /**
      * Listar las preguntas de un cuestionario con detalle de admin
-     * (peso, obligatoria, opciones con isCorrecta/peso).
-     * Restringido a ADMIN/COORDINADOR — el estudiante NO debe ver respuestas correctas.
+     * (peso, obligatoria, opciones con su peso).
+     * Restringido a ADMIN/COORDINADOR — el estudiante NO debe ver los pesos.
      */
     @GetMapping("/{idCuestionario}/preguntas")
     @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")

@@ -34,7 +34,7 @@ public interface IPreguntaMapper {
 	
 	PreguntaResponse toResponse(PreguntaEntity response);
 
-	// Opción para la vista de admin (incluye isCorrecta y peso).
+	// Opción para la vista de admin (incluye el peso).
 	@Mapping(target = "idOpcion", source = "id")
 	OpcionPreguntaAdminResponse toOpcionAdmin(OpcionPreguntaEntity entity);
 

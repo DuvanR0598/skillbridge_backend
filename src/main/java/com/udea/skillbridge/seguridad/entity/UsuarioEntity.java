@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.udea.skillbridge.seguridad.enums.AuthProvider;
+import com.udea.skillbridge.seguridad.enums.TipoIdentificacion;
 import com.udea.skillbridge.seguridad.enums.TipoRol;
 
 import jakarta.persistence.CascadeType;
@@ -40,7 +41,8 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "usuarios", uniqueConstraints = { @UniqueConstraint(name = "uk_usuarios_email", columnNames = "email"),
-		@UniqueConstraint(name = "uk_id_usuarios_google", columnNames = "id_google") })
+		@UniqueConstraint(name = "uk_id_usuarios_google", columnNames = "id_google"),
+		@UniqueConstraint(name = "uk_usuarios_numero_identificacion", columnNames = "numero_identificacion") })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -50,9 +52,32 @@ public class UsuarioEntity implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Clave interna autoincremental (clave subrogada). NO es el documento del
+	 * usuario; sirve para las relaciones (FKs), el JWT, etc. El documento se
+	 * guarda aparte en {@link #numeroIdentificacion}.
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	// ── Documento de identificación ─────────────────────────────────
+
+	/**
+	 * Tipo de documento (CC, TI, CE, PA). Null en usuarios creados vía Google
+	 * que aún no lo han registrado.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo_identificacion", length = 5)
+	private TipoIdentificacion tipoIdentificacion;
+
+	/**
+	 * Número de identificación del usuario. ÚNICO: no pueden existir dos usuarios
+	 * con el mismo documento. Es String para soportar pasaportes/cédulas de
+	 * extranjería alfanuméricos.
+	 */
+	@Column(name = "numero_identificacion", length = 30)
+	private String numeroIdentificacion;
 
 	// ── Identidad ───────────────────────────────────────────────────
 

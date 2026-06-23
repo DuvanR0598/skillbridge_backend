@@ -196,23 +196,28 @@ public class MotorDePuntuacion {
         }
 
         return switch (preguntaEnt.getTipoPregunta()) {
-            // Para OPCION_UNICA y VERDADERO_FALSO: el máximo es el peso de la opción correcta
-            case OPCION_UNICA, VERDADERO_FALSO -> preguntaEnt.getOpcionPregunta().stream()
-                    .filter(o -> Boolean.TRUE.equals(o.getIsCorrecta()))
-                    .mapToInt(OpcionPreguntaEntity::getPeso)
-                    .sum();
-
-            // Para OPCION_MULTIPLE: suma de todas las opciones correctas
-            case OPCION_MULTIPLE -> preguntaEnt.getOpcionPregunta().stream()
-                    .filter(o -> Boolean.TRUE.equals(o.getIsCorrecta()))
-                    .mapToInt(OpcionPreguntaEntity::getPeso)
-                    .sum();
-
-            // Para LIKERT: el mayor peso disponible
-            case LIKERT -> preguntaEnt.getOpcionPregunta().stream()
+            // En soft skills no hay opción "correcta": el puntaje se mide por peso.
+            // El estudiante selecciona UNA opción → el máximo es el mayor peso disponible.
+            case OPCION_UNICA, VERDADERO_FALSO, LIKERT -> preguntaEnt.getOpcionPregunta().stream()
                     .mapToInt(OpcionPreguntaEntity::getPeso)
                     .max()
                     .orElse(0);
+
+            // Para OPCION_MULTIPLE el estudiante puede elegir varias opciones.
+            // El máximo es la suma de los N pesos más altos, donde N = maxOpciones
+            // (si no se definió límite, se suman todos los pesos).
+            case OPCION_MULTIPLE -> {
+                var pesosOrdenados = preguntaEnt.getOpcionPregunta().stream()
+                        .mapToInt(OpcionPreguntaEntity::getPeso)
+                        .boxed()
+                        .sorted(java.util.Comparator.reverseOrder())
+                        .toList();
+                Integer maxOpciones = preguntaEnt.getMaxOpciones();
+                int limite = (maxOpciones != null && maxOpciones > 0)
+                        ? Math.min(maxOpciones, pesosOrdenados.size())
+                        : pesosOrdenados.size();
+                yield pesosOrdenados.stream().limit(limite).mapToInt(Integer::intValue).sum();
+            }
 
             default -> 0;
         };

@@ -67,7 +67,7 @@ public class UsuarioPerfilEntity {
     // ── Información académica ───────────────────────────────────────
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "programa_ingenieria", length = 50)
+    @Column(name = "programa_ingenieria", length = 60)
     private ProgramaIngenieria programaIngenieria;
 
     /**

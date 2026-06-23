@@ -32,6 +32,7 @@ public class UsuarioPerfilResponse {
 	// Información académica
 	private ProgramaIngenieria programaIngenieria;
 	private String visualizacionProgramaIngenieria; // "Ingeniería de Sistemas"
+	private String codigoProgramaIngenieria;        // código oficial, ej. "504"
 	private Integer semestreAcademico;
 
 	// Completitud

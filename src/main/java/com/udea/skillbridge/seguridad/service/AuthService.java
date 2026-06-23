@@ -58,6 +58,14 @@ public class AuthService {
             );
         }
 
+        // El número de identificación es único: no puede repetirse entre usuarios.
+        if (userRepository.existsByNumeroIdentificacion(request.getNumeroIdentificacion())) {
+            throw new BusinessException(
+                "El número de identificación " + request.getNumeroIdentificacion() + " ya está registrado.",
+                "IDENTIFICATION_ALREADY_EXISTS"
+            );
+        }
+
         // Por defecto todo registro es ESTUDIANTE
         RolEntity rolEstudiante = roleRepository.findByNombre(TipoRol.ROLE_ESTUDIANTE)
                 .orElseThrow(() -> new IllegalStateException(
@@ -65,6 +73,8 @@ public class AuthService {
                 ));
 
         UsuarioEntity usuarioEnt = UsuarioEntity.builder()
+                .tipoIdentificacion(request.getTipoIdentificacion())
+                .numeroIdentificacion(request.getNumeroIdentificacion().trim())
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
                 .email(request.getEmail().toLowerCase().trim())

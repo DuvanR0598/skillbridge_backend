@@ -37,6 +37,10 @@ import com.udea.skillbridge.repository.ICondicionPreguntaRepository;
 import com.udea.skillbridge.repository.ICuestionarioRepository;
 import com.udea.skillbridge.repository.IPreguntaCuestionarioRepository;
 import com.udea.skillbridge.repository.IPreguntaRepository;
+import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
+import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+import com.udea.skillbridge.seguridad.enums.TipoRol;
+import com.udea.skillbridge.seguridad.repository.IUsuarioPerfilRepository;
 import com.udea.skillbridge.service.ICuestionarioService;
 
 import lombok.RequiredArgsConstructor;
@@ -52,6 +56,7 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	private final IPreguntaRepository preguntaRepository;
 	private final IPreguntaCuestionarioRepository pqRepository;
 	private final ICondicionPreguntaRepository condicionPreguntaRepository;
+	private final IUsuarioPerfilRepository usuarioPerfilRepository;
 
 	// *****************************************
 	// CREAR CUESTIONARIO
@@ -64,7 +69,74 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 		cuestionarioEnt.setCreadoPor(creadoPor);
 		return cuestionarioMapper.toResponse(cuestionarioRepository.save(cuestionarioEnt));
 	}
-	
+
+	// *****************************************
+	// DUPLICAR CUESTIONARIO
+	// *****************************************
+
+	@Override
+	@Transactional
+	public CuestionarioResponse duplicarCuestionario(Long idCuestionario, String creadoPor) {
+		// 1. Buscar el cuestionario origen (cualquier estado salvo ELIMINADO)
+		CuestionarioEntity origen = findActivoById(idCuestionario);
+
+		// 2. Crear la copia con la misma configuración, pero en BORRADOR,
+		//    con id nuevo y nombre único con sufijo "COPIA".
+		CuestionarioEntity copia = CuestionarioEntity.builder()
+				.nombre(generarNombreCopia(origen.getNombre()))
+				.objetivo(origen.getObjetivo())
+				.instrucciones(origen.getInstrucciones())
+				.estadoCuestionario(EstadoCuestionario.BORRADOR)
+				.ordenAleatorio(origen.getOrdenAleatorio())
+				.fechaInicio(origen.getFechaInicio())
+				.fechaFin(origen.getFechaFin())
+				.tiempoLimiteMinutos(origen.getTiempoLimiteMinutos())
+				.creadoPor(creadoPor)
+				.build();
+
+		CuestionarioEntity copiaGuardada = cuestionarioRepository.save(copia);
+		Long nuevoId = copiaGuardada.getIdCuestionario();
+
+		// 3. Copiar las preguntas asociadas (tabla intermedia). Las preguntas
+		//    del banco se comparten; solo se duplica la relación con el cuestionario.
+		List<PreguntaCuestionarioEntity> nuevasRelaciones = origen.getPreguntasCuestionario().stream()
+				.map(pq -> PreguntaCuestionarioEntity.builder()
+						.id(new PreguntaCuestionarioEntity.IdPreguntaCuestionario(
+								nuevoId, pq.getPreguntaEnt().getIdPregunta()))
+						.cuestionarioEnt(copiaGuardada)
+						.preguntaEnt(pq.getPreguntaEnt())
+						.obligatoria(pq.getObligatoria())
+						.peso(pq.getPeso())
+						.isCondicional(pq.getIsCondicional())
+						.build())
+				.toList();
+		pqRepository.saveAll(nuevasRelaciones);
+
+		// 4. Copiar las condiciones de ramificación. Trigger/target/opción
+		//    apuntan a las mismas preguntas/opciones (compartidas); solo cambia
+		//    el cuestionario al que pertenece la condición.
+		List<CondicionPreguntaEntity> condicionesOrigen =
+				condicionPreguntaRepository.findByCuestionarioEntIdCuestionario(idCuestionario);
+
+		if (!condicionesOrigen.isEmpty()) {
+			List<CondicionPreguntaEntity> nuevasCondiciones = condicionesOrigen.stream()
+					.map(c -> CondicionPreguntaEntity.builder()
+							.cuestionarioEnt(copiaGuardada)
+							.triggerPregunta(c.getTriggerPregunta())
+							.triggerOpcion(c.getTriggerOpcion())
+							.targetPregunta(c.getTargetPregunta())
+							.build())
+					.toList();
+			condicionPreguntaRepository.saveAll(nuevasCondiciones);
+		}
+
+		log.info("Cuestionario [{}] duplicado como [{}] ({} preguntas, {} condiciones) por {}",
+				idCuestionario, nuevoId, nuevasRelaciones.size(), condicionesOrigen.size(), creadoPor);
+
+		// 5. Devolver la copia recién creada (se re-lee para calcular totalPreguntas).
+		return findById(nuevoId);
+	}
+
 	// *****************************************
 	// LISTAR
 	// *****************************************
@@ -83,9 +155,29 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	}
 
 	@Override
-	public List<CuestionarioResponse> listarCuestionariosActivos() {
-		return cuestionarioRepository.findAllActivos()
-				.stream()
+	@Transactional(readOnly = true)
+	public List<CuestionarioResponse> listarCuestionariosActivos(UsuarioEntity usuario) {
+		List<CuestionarioEntity> activos = cuestionarioRepository.findAllActivos();
+
+		// Para ADMIN/COORDINADOR: ven todos los cuestionarios (los gestionan).
+		boolean esGestor = usuario != null
+				&& (usuario.hasRole(TipoRol.ROLE_ADMIN) || usuario.hasRole(TipoRol.ROLE_COORDINADOR));
+
+		if (!esGestor && usuario != null) {
+			// Para un ESTUDIANTE: solo los generales (programaObjetivo null) o los
+			// dirigidos a SU programa académico.
+			ProgramaIngenieria programaEstudiante = usuarioPerfilRepository
+					.findByUsuarioEntId(usuario.getId())
+					.map(p -> p.getProgramaIngenieria())
+					.orElse(null);
+
+			activos = activos.stream()
+					.filter(c -> c.getProgramaObjetivo() == null
+							|| c.getProgramaObjetivo().equals(programaEstudiante))
+					.toList();
+		}
+
+		return activos.stream()
 				.map(cuestionarioMapper::toResponse)
 				.toList();
 	}
@@ -122,6 +214,9 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 		// Solo editable en BORRADOR
 		validarEditable(cuestionarioEnt, "modificar la configuración de");
 		cuestionarioMapper.actualizarCuestionarioRequest(cuestionarioEnt, request);
+		// El programa objetivo se aplica siempre (incluido null = general), ya que
+		// el mapper de patch ignora los nulls y aquí sí queremos poder limpiarlo.
+		cuestionarioEnt.setProgramaObjetivo(request.getProgramaObjetivo());
 	    return cuestionarioMapper.toResponse(cuestionarioRepository.save(cuestionarioEnt));
 	}
 	
@@ -261,7 +356,6 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 				.map(o -> OpcionPreguntaAdminResponse.builder()
 						.idOpcion(o.getId())
 						.texto(o.getTexto())
-						.isCorrecta(o.getIsCorrecta())
 						.peso(o.getPeso())
 						.ordenVisualizacion(o.getOrdenVisualizacion())
 						.build())
@@ -412,6 +506,22 @@ public class CuestionarioServiceImpl implements ICuestionarioService{
 	public CuestionarioEntity findActivoById(Long idCuestionario) {
 		return cuestionarioRepository.findActivoById(idCuestionario)
 				.orElseThrow(() -> new ResourceNotFoundException("Cuestionario", idCuestionario));
+	}
+
+	/**
+	 * Genera un nombre único para la copia. Como 'nombre' es único en BD,
+	 * si "X COPIA" ya existe se prueba "X COPIA (2)", "X COPIA (3)", etc.
+	 */
+	private String generarNombreCopia(String nombreOriginal) {
+		String base = nombreOriginal + " COPIA";
+		if (!cuestionarioRepository.existsByNombre(base)) {
+			return base;
+		}
+		int n = 2;
+		while (cuestionarioRepository.existsByNombre(base + " (" + n + ")")) {
+			n++;
+		}
+		return base + " (" + n + ")";
 	}
 	
 	private void validarEditable(CuestionarioEntity cuestionario, String accion) {

@@ -34,16 +34,7 @@ public class OpcionPreguntaEntity {
 	
 	@Column(nullable = false)
     private String texto;
-	
-	/**
-     * ¿Es la opción correcta?
-     * Para TRUE_FALSE: solo una es correcta.
-     * Para MULTIPLE_CHOICE: varias pueden ser correctas.
-     * Para DESCRIPTION: siempre null.
-     */
-    @Column(name = "is_correcta")
-    private Boolean isCorrecta;
-    
+
     // Peso de esta opción específica (para scoring)
     @Column(nullable = false)
     @Builder.Default

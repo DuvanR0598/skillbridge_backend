@@ -19,7 +19,8 @@ import lombok.Setter;
 @Builder
 public class ProgramaIngenieriaResponse {
 	
-    private ProgramaIngenieria value;       // valor para el request
+    private ProgramaIngenieria value;       // valor (enum) para el request
+    private String codigo;                  // código oficial del programa (ej. "504")
     private String displayName;             // texto para mostrar al usuario
 
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.udea.skillbridge.enums.EstadoCuestionario;
+import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -73,6 +74,15 @@ public class CuestionarioEntity {
 	// Tiempo límite para responder, en minutos. null = sin límite.
 	@Column(name = "tiempo_limite_minutos")
 	private Integer tiempoLimiteMinutos;
+
+	/**
+	 * Programa de ingeniería al que va dirigido el cuestionario.
+	 * null = general (visible para TODOS los estudiantes).
+	 * Si tiene valor, solo lo verán los estudiantes de ese programa.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(name = "programa_objetivo", length = 60)
+	private ProgramaIngenieria programaObjetivo;
 
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)

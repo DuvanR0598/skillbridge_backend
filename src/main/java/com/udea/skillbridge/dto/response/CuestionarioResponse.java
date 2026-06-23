@@ -3,6 +3,7 @@ package com.udea.skillbridge.dto.response;
 import java.time.LocalDateTime;
 
 import com.udea.skillbridge.enums.EstadoCuestionario;
+import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,4 +36,8 @@ public class CuestionarioResponse {
 
 	// Tiempo límite para responder, en minutos. null = sin límite.
 	private Integer tiempoLimiteMinutos;
+
+	// Programa objetivo. null = general (todos los estudiantes).
+	private ProgramaIngenieria programaObjetivo;
+	private String programaObjetivoNombre; // displayName, ej. "Ingeniería de Sistemas" (null = "General")
 }

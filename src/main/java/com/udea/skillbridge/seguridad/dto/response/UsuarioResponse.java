@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.udea.skillbridge.seguridad.enums.AuthProvider;
+import com.udea.skillbridge.seguridad.enums.TipoIdentificacion;
 import com.udea.skillbridge.seguridad.enums.TipoRol;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +22,10 @@ import lombok.Setter;
 public class UsuarioResponse {
 	
     private Long id;
+
+    private TipoIdentificacion tipoIdentificacion;
+    private String visualizacionTipoIdentificacion; // "Cédula de Ciudadanía"
+    private String numeroIdentificacion;
 
     @JsonProperty("firstName")
     private String nombre;

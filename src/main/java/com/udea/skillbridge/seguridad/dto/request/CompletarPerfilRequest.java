@@ -5,10 +5,12 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.udea.skillbridge.seguridad.enums.Genero;
 import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+import com.udea.skillbridge.seguridad.enums.TipoIdentificacion;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +30,17 @@ import lombok.Setter;
 @Builder
 public class CompletarPerfilRequest {
 	
+	// ── Identificación (solo para usuarios sin documento, ej. Google) ──
+
+    private TipoIdentificacion tipoIdentificacion;
+
+    @Pattern(
+        regexp = "^[a-zA-Z0-9]*$",
+        message = "El número de identificación solo puede contener letras y números"
+    )
+    @Size(max = 30, message = "El número de identificación no puede superar 30 caracteres")
+    private String numeroIdentificacion;
+
 	// ── Información personal ────────────────────────────────────────
 
     @Past(message = "La fecha de nacimiento debe ser una fecha pasada")

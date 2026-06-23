@@ -12,12 +12,20 @@ import com.udea.skillbridge.dto.response.PreguntaDeCuestionarioResponse;
 public interface ICuestionarioService {
 	
 	CuestionarioResponse crearCuestionario (CuestionarioRequest cuestionarioRequest, String creadoPor);
+
+	/**
+	 * Duplica un cuestionario completo (sin importar su estado): copia su
+	 * configuración, sus preguntas asociadas y sus condiciones de ramificación.
+	 * La copia se crea con un id nuevo, en estado BORRADOR y con el sufijo
+	 * "COPIA" en el nombre.
+	 */
+	CuestionarioResponse duplicarCuestionario(Long idCuestionario, String creadoPor);
 	
 	CuestionarioResponse findById (Long idCuestionario);
 	
 	List<CuestionarioResponse> listarAllCuestionarios();
 	
-	List<CuestionarioResponse> listarCuestionariosActivos();
+	List<CuestionarioResponse> listarCuestionariosActivos(com.udea.skillbridge.seguridad.entity.UsuarioEntity usuario);
 	
 	CuestionarioResponse actualizarCuestionario(Long id, ActualizarCuestionarioRequest request);
 	

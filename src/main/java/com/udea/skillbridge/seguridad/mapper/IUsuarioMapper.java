@@ -15,6 +15,10 @@ public interface IUsuarioMapper {
 
 	@Mapping(target = "roles",    expression = "java(mapRoles(usuarioEnt))")
 	@Mapping(target = "permisos", expression = "java(mapPermisos(usuarioEnt))")
+	@Mapping(
+		target = "visualizacionTipoIdentificacion",
+		expression = "java(usuarioEnt.getTipoIdentificacion() != null ? usuarioEnt.getTipoIdentificacion().getDisplayName() : null)"
+	)
 	UsuarioResponse toResponse(UsuarioEntity usuarioEnt);
 
 	default Set<TipoRol> mapRoles(UsuarioEntity usuarioEnt) {

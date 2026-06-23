@@ -23,6 +23,10 @@ public interface IUsuarioPerfilMapper {
         expression = "java(perfil.getProgramaIngenieria() != null ? perfil.getProgramaIngenieria().getDisplayName() : null)"
     )
     @Mapping(
+        target = "codigoProgramaIngenieria",
+        expression = "java(perfil.getProgramaIngenieria() != null ? perfil.getProgramaIngenieria().getCodigo() : null)"
+    )
+    @Mapping(
         target = "perfilCompleto",
         expression = "java(perfil.isCompleto())"
     )

@@ -1,12 +1,19 @@
 package com.udea.skillbridge.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.udea.skillbridge.common.exception.BusinessException;
 import com.udea.skillbridge.common.exception.ResourceNotFoundException;
@@ -17,10 +24,12 @@ import com.udea.skillbridge.dto.response.PreguntaResponse;
 import com.udea.skillbridge.entity.DimensionEntity;
 import com.udea.skillbridge.entity.OpcionPreguntaEntity;
 import com.udea.skillbridge.entity.PreguntaEntity;
+import com.udea.skillbridge.enums.SkillTipo;
 import com.udea.skillbridge.enums.TipoPregunta;
 import com.udea.skillbridge.mapper.IPreguntaMapper;
 import com.udea.skillbridge.repository.IDimensionRepository;
 import com.udea.skillbridge.repository.IPreguntaRepository;
+import com.udea.skillbridge.repository.PreguntaSpec;
 import com.udea.skillbridge.service.IPreguntaService;
 import com.udea.skillbridge.validation.OpcionOrdenValidador;
 import com.udea.skillbridge.validation.PreguntaValidadorFactory;
@@ -39,6 +48,81 @@ public class PreguntaServiceImpl implements IPreguntaService {
 	private final IPreguntaMapper preguntaMapper;
 	private final IDimensionRepository dimensionRepository;
 	
+	// *****************************************
+    //  SUBIR IMAGEN DE LA PREGUNTA
+    // *****************************************
+
+	@Override
+	public String subirImagen(MultipartFile file) {
+		validarArchivoDeImagen(file);
+
+		String filename = UUID.randomUUID() + getExtension(file);
+		Path uploadDir = Path.of("uploads", "preguntas");
+
+		try {
+			Files.createDirectories(uploadDir);
+			Files.copy(file.getInputStream(), uploadDir.resolve(filename),
+					StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException ex) {
+			throw new BusinessException(
+					"Error al guardar la imagen. Intente nuevamente.", "IMAGE_UPLOAD_FAILED");
+		}
+
+		String url = "/uploads/preguntas/" + filename;
+		log.info("Imagen de pregunta guardada en {}", url);
+		return url;
+	}
+
+	private void validarArchivoDeImagen(MultipartFile file) {
+		if (file == null || file.isEmpty()) {
+			throw new BusinessException("El archivo de imagen no puede estar vacío.", "IMAGE_EMPTY");
+		}
+		String contentType = file.getContentType();
+		if (contentType == null
+				|| !(contentType.equals("image/jpeg")
+					|| contentType.equals("image/png")
+					|| contentType.equals("image/webp"))) {
+			throw new BusinessException(
+					"Formato no permitido. Usa JPEG, PNG o WebP.", "INVALID_IMAGE_FORMAT");
+		}
+		long maxSizeBytes = 5L * 1024 * 1024; // 5 MB
+		if (file.getSize() > maxSizeBytes) {
+			throw new BusinessException("La imagen no puede superar 5 MB.", "IMAGE_TOO_LARGE");
+		}
+	}
+
+	private String getExtension(MultipartFile file) {
+		String original = file.getOriginalFilename();
+		if (original != null && original.contains(".")) {
+			return original.substring(original.lastIndexOf('.'));
+		}
+		// Por defecto según el tipo
+		String ct = file.getContentType();
+		if ("image/png".equals(ct)) return ".png";
+		if ("image/webp".equals(ct)) return ".webp";
+		return ".jpg";
+	}
+
+	@Override
+	public PreguntaResponse actualizarImagen(Long idPregunta, String imagenUrl) {
+		PreguntaEntity pregunta = findEntityById(idPregunta);
+		String anterior = pregunta.getImagenUrl();
+		String nueva = (imagenUrl != null && !imagenUrl.isBlank()) ? imagenUrl.trim() : null;
+
+		// Borrar el archivo local anterior si cambió o se quitó.
+		if (anterior != null && anterior.startsWith("/uploads/preguntas/")
+				&& !anterior.equals(nueva)) {
+			try {
+				Files.deleteIfExists(Path.of(anterior.replace("/uploads/", "uploads/")));
+			} catch (IOException ignored) { /* no crítico */ }
+		}
+
+		pregunta.setImagenUrl(nueva);
+		PreguntaEntity guardar = preguntaRepository.save(pregunta);
+		log.info("Imagen de la pregunta [{}] actualizada → {}", idPregunta, nueva);
+		return preguntaMapper.toResponse(guardar);
+	}
+
 	// *****************************************
     //  CREAR PREGUNTA
     // *****************************************
@@ -121,15 +205,14 @@ public class PreguntaServiceImpl implements IPreguntaService {
     // *****************************************
 
 	@Override
-	public PaginaResponse<PreguntaResponse> listarPaginado(int page, int size, TipoPregunta tipoPregunta, String texto) {
-		// Más recientes primero (id descendente)
+	public PaginaResponse<PreguntaResponse> listarPaginado(int page, int size, TipoPregunta tipoPregunta, String texto, SkillTipo skill, Long idDimension) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "idPregunta"));
-
-		// Normalizar el texto: vacío o en blanco → sin filtro
-		String textoFiltro = (texto != null && !texto.isBlank()) ? texto.trim() : null;
-
-		Page<PreguntaEntity> pagina = preguntaRepository.buscar(tipoPregunta, textoFiltro, pageable);
-
+		Specification<PreguntaEntity> spec = Specification
+				.where(PreguntaSpec.porTipo(tipoPregunta))
+				.and(PreguntaSpec.porTexto(texto))
+				.and(PreguntaSpec.porSkill(skill))
+				.and(PreguntaSpec.porDimension(idDimension));
+		Page<PreguntaEntity> pagina = preguntaRepository.findAll(spec, pageable);
 		return PaginaResponse.of(pagina.map(preguntaMapper::toResponse));
 	}
 	

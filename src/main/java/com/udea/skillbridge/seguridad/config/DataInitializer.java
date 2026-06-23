@@ -15,6 +15,7 @@ import com.udea.skillbridge.seguridad.entity.PermisoEntity;
 import com.udea.skillbridge.seguridad.entity.RolEntity;
 import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
 import com.udea.skillbridge.seguridad.enums.AuthProvider;
+import com.udea.skillbridge.seguridad.enums.TipoIdentificacion;
 import com.udea.skillbridge.seguridad.enums.TipoPermiso;
 import com.udea.skillbridge.seguridad.enums.TipoRol;
 import com.udea.skillbridge.seguridad.repository.IRolRepository;
@@ -129,8 +130,10 @@ public class DataInitializer implements CommandLineRunner {
                 .orElseThrow();
 
         UsuarioEntity admin = UsuarioEntity.builder()
+                .tipoIdentificacion(TipoIdentificacion.CC)
+                .numeroIdentificacion("0000000000")
                 .nombre("Admin")
-                .apellido("SkillBridge") 
+                .apellido("SkillBridge")
                 .email("admin@skillbridge.edu.co")
                 .passwordHash(passwordEncoder.encode("Admin123!"))
                 .authProvider(AuthProvider.LOCAL)

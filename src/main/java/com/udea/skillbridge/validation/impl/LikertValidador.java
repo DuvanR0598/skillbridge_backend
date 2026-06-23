@@ -25,17 +25,6 @@ public class LikertValidador implements PreguntaValidador {
             );
         }
 		
-        // REGLA 2: En Likert no hay respuesta "correcta", es una escala de acuerdo
-        boolean anyCorrecta = opciones.stream()
-                .anyMatch(o -> Boolean.TRUE.equals(o.getIsCorrecta()));
-
-        if (anyCorrecta) {
-            throw new CuestionarioException(
-                "Las preguntas de tipo LIKERT son escalas de actitud y no tienen " +
-                "opciones correctas. Asegúrese que isCorrecta sea false en todas las opciones."
-            );
-        }
-		
 	}
 
 }
