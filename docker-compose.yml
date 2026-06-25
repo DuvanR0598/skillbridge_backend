@@ -1,0 +1,52 @@
+# Compose para desarrollo local: base de datos PostgreSQL + backend.
+# Con `docker compose up` se levantan ambos; el backend se conecta a la BD por
+# la red interna (host `postgres`, puerto 5432) — sin depender del puerto del host.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: skillbridge-postgres
+    environment:
+      POSTGRES_DB: skill_bridge
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    # Se publica en el host en 5433 para no chocar con un PostgreSQL nativo
+    # que pudiera estar usando el 5432. Dentro de la red de compose el puerto
+    # interno sigue siendo 5432 (así lo usa el backend).
+    ports:
+      - "5433:5432"
+    volumes:
+      - skillbridge_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d skill_bridge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: skillbridge-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Conexión a la BD por la RED INTERNA de compose (nombre de servicio).
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/skill_bridge
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      # Secretos (en local valen dummies; en la nube se inyectan los reales).
+      JWT_SECRET_KEY: ZHVtbXktdGVzdC1zZWNyZXQta2V5LWZvci1qdW5pdC1hdC1sZWFzdC0zMi1ieXRlcw==
+      GOOGLE_CLIENT_ID: dummy-client-id
+      GOOGLE_CLIENT_SECRET: dummy-client-secret
+      PORT: "8083"
+      # Orígenes CORS permitidos (coma-separados). En la nube añadir el dominio
+      # del frontend, ej: http://localhost:4200,https://mi-frontend.netlify.app
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:4200
+    ports:
+      - "8083:8083"
+    volumes:
+      # Persiste las imágenes/avatares subidos entre reinicios del contenedor.
+      - skillbridge_uploads:/app/uploads
+
+volumes:
+  skillbridge_pgdata:
+  skillbridge_uploads:

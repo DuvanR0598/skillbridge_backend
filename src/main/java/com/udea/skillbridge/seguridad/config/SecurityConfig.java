@@ -42,6 +42,15 @@ public class SecurityConfig {
     private final OAuth2AuthenticationSuccessHandler oAuth2SuccessHandler;
     private final JwtAuthenticationEntryPoint jwtAuthEntryPoint;
 
+    /**
+     * Orígenes permitidos para CORS (separados por coma). Configurable por la
+     * variable de entorno APP_CORS_ALLOWED_ORIGINS. Por defecto, el dev server
+     * de Angular. En producción se añade el dominio del frontend desplegado, ej:
+     * APP_CORS_ALLOWED_ORIGINS=http://localhost:4200,https://mi-frontend.netlify.app
+     */
+    @org.springframework.beans.factory.annotation.Value("${app.cors.allowed-origins:http://localhost:4200}")
+    private String allowedOrigins;
+
     @Bean
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -213,10 +222,14 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // En dev: cualquier origen local
-        config.setAllowedOrigins(List.of(
-            "http://localhost:4200"   // Angular dev server
-        ));
+        // Orígenes permitidos: configurables por env var (lista separada por comas).
+        // Dev por defecto: http://localhost:4200. Prod: añadir el dominio del frontend.
+        config.setAllowedOrigins(
+            java.util.Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(o -> !o.isBlank())
+                .toList()
+        );
 
         config.setAllowedMethods(List.of(
             "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"

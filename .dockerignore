@@ -1,0 +1,22 @@
+# Artefactos de build (se generan dentro del contenedor)
+target/
+
+# Configuración de IDE / STS
+.settings/
+.project
+.classpath
+.factorypath
+bin/
+
+# Archivos subidos en local (no deben ir a la imagen)
+uploads/
+
+# Git y varios
+.git/
+.gitignore
+*.log
+
+# El compose y docs no son necesarios dentro de la imagen
+docker-compose.yml
+README.md
+HELP.md
