@@ -1,0 +1,885 @@
+2026-07-06 18:57:13,485 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2026-07-06 18:57:13,506 INFO o.a.j.JMeter: Loading user properties from: C:\apache-jmeter-5.6.3\bin\user.properties
+2026-07-06 18:57:13,507 INFO o.a.j.JMeter: Loading system properties from: C:\apache-jmeter-5.6.3\bin\system.properties
+2026-07-06 18:57:13,507 INFO o.a.j.JMeter: Setting JMeter property: threads=250
+2026-07-06 18:57:13,507 INFO o.a.j.JMeter: Setting JMeter property: rampup=60
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: Version 5.6.3
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: java.version=17.0.14
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: os.name=Windows 11
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: os.arch=amd64
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: os.version=10.0
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: file.encoding=Cp1252
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: java.awt.headless=true
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: Max memory     =1073741824
+2026-07-06 18:57:13,512 INFO o.a.j.JMeter: Available Processors =16
+2026-07-06 18:57:13,520 INFO o.a.j.JMeter: Default Locale=English (EN)
+2026-07-06 18:57:13,521 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2026-07-06 18:57:13,521 INFO o.a.j.JMeter: JMeterHome=C:\apache-jmeter-5.6.3
+2026-07-06 18:57:13,521 INFO o.a.j.JMeter: user.dir  =C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest
+2026-07-06 18:57:13,521 INFO o.a.j.JMeter: PWD       =C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest
+2026-07-06 18:57:18,476 INFO o.a.j.JMeter: IP: 192.168.56.1 Name: DESKTOP-UE52KVG FullName: DESKTOP-UE52KVG
+2026-07-06 18:57:18,486 INFO o.a.j.JMeter: Setting property 'jmeter.reportgenerator.outputdir' to:'C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest\rep250'
+2026-07-06 18:57:18,487 INFO o.a.j.s.FileServer: Default base='C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest'
+2026-07-06 18:57:18,489 INFO o.a.j.s.FileServer: Set new base='C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest'
+2026-07-06 18:57:18,669 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2026-07-06 18:57:18,694 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2026-07-06 18:57:18,697 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2026-07-06 18:57:18,701 INFO o.a.j.s.SaveService: Loading file: examen.jmx
+2026-07-06 18:57:18,751 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-07-06 18:57:18,751 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-07-06 18:57:18,751 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-07-06 18:57:18,751 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-07-06 18:57:18,751 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2026-07-06 18:57:18,751 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2026-07-06 18:57:18,792 INFO o.a.j.JMeter: Creating summariser <summary>
+2026-07-06 18:57:18,796 INFO o.a.j.r.d.ReportGenerator: ReportGenerator will use for Parsing the separator: ','
+2026-07-06 18:57:18,796 INFO o.a.j.r.d.ReportGenerator: Will generate report at end of test from  results file: r250.jtl
+2026-07-06 18:57:18,796 INFO o.a.j.r.d.ReportGenerator: Reading report generator properties from: C:\apache-jmeter-5.6.3\bin\reportgenerator.properties
+2026-07-06 18:57:18,797 INFO o.a.j.r.d.ReportGenerator: Merging with JMeter properties
+2026-07-06 18:57:18,800 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.temp_dir' not found, using default value 'temp' instead.
+2026-07-06 18:57:18,803 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.apdex_per_transaction' not found, using default value 'null' instead.
+2026-07-06 18:57:18,803 INFO o.a.j.r.c.ReportGeneratorConfiguration: apdex_per_transaction is empty, not APDEX per transaction customization
+2026-07-06 18:57:18,803 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.sample_filter' not found, using default value 'null' instead.
+2026-07-06 18:57:18,803 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.report_title' not found, using default value 'null' instead.
+2026-07-06 18:57:18,803 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.start_date' not found, using default value 'null' instead.
+2026-07-06 18:57:18,803 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.end_date' not found, using default value 'null' instead.
+2026-07-06 18:57:18,803 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.date_format' not found, using default value 'null' instead.
+2026-07-06 18:57:18,804 INFO o.a.j.r.c.ReportGeneratorConfiguration: Will use date range start date: null, end date: null
+2026-07-06 18:57:18,806 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.totalTPS.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,806 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.activeThreadsOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,806 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.timeVsThreads.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,807 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.responseTimeDistribution.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,807 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.transactionsPerSecond.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,807 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.responseTimePercentiles.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,807 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.responseTimePercentilesOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,807 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.responseTimesOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,807 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.connectTimeOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,807 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.graph.latenciesOverTime.exclude_controllers' not found, using default value 'false' instead.
+2026-07-06 18:57:18,808 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.json.filters_only_sample_series' not found, using default value 'true' instead.
+2026-07-06 18:57:18,808 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.json.series_filter' not found, using default value '' instead.
+2026-07-06 18:57:18,808 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.json.show_controllers_only' not found, using default value 'false' instead.
+2026-07-06 18:57:18,808 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.html.filters_only_sample_series' not found, using default value 'true' instead.
+2026-07-06 18:57:18,808 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.html.series_filter' not found, using default value '' instead.
+2026-07-06 18:57:18,808 INFO o.a.j.r.c.ReportGeneratorConfiguration: Property 'jmeter.reportgenerator.exporter.html.show_controllers_only' not found, using default value 'false' instead.
+2026-07-06 18:57:18,818 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2026-07-06 18:57:18,819 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-07-06 18:57:18,819 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-07-06 18:57:18,824 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2026-07-06 18:57:18,824 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2026-07-06 18:57:18,900 INFO o.a.j.JMeter: Running test (1783382238900)
+2026-07-06 18:57:18,913 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Estudiantes en examen
+2026-07-06 18:57:18,914 INFO o.a.j.e.StandardJMeterEngine: Starting 250 threads for group Estudiantes en examen.
+2026-07-06 18:57:18,914 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-07-06 18:57:18,914 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=250 ramp-up=60 delayedStart=false
+2026-07-06 18:57:19,064 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2026-07-06 18:57:19,065 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2026-07-06 18:57:19,082 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-1
+2026-07-06 18:57:19,085 INFO o.a.j.s.FileServer: Stored: usuarios.csv
+2026-07-06 18:57:19,146 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = DESKTOP-UE52KVG
+2026-07-06 18:57:19,162 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2026-07-06 18:57:19,165 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2026-07-06 18:57:19,165 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
+2026-07-06 18:57:19,165 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2026-07-06 18:57:19,165 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2026-07-06 18:57:19,318 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-2
+2026-07-06 18:57:19,555 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-3
+2026-07-06 18:57:19,796 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-4
+2026-07-06 18:57:20,031 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-5
+2026-07-06 18:57:20,269 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-6
+2026-07-06 18:57:20,508 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-7
+2026-07-06 18:57:20,750 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-8
+2026-07-06 18:57:20,989 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-9
+2026-07-06 18:57:21,222 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-10
+2026-07-06 18:57:21,463 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-11
+2026-07-06 18:57:21,704 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-12
+2026-07-06 18:57:21,947 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-13
+2026-07-06 18:57:22,186 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-14
+2026-07-06 18:57:22,424 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-15
+2026-07-06 18:57:22,661 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-16
+2026-07-06 18:57:22,900 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-17
+2026-07-06 18:57:23,143 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-18
+2026-07-06 18:57:23,383 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-19
+2026-07-06 18:57:23,614 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-20
+2026-07-06 18:57:23,861 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-21
+2026-07-06 18:57:24,095 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-22
+2026-07-06 18:57:24,336 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-23
+2026-07-06 18:57:24,575 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-24
+2026-07-06 18:57:24,817 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-25
+2026-07-06 18:57:25,054 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-26
+2026-07-06 18:57:25,296 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-27
+2026-07-06 18:57:25,535 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-28
+2026-07-06 18:57:25,773 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-29
+2026-07-06 18:57:26,013 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-30
+2026-07-06 18:57:26,252 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-31
+2026-07-06 18:57:26,494 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-32
+2026-07-06 18:57:26,733 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-33
+2026-07-06 18:57:26,965 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-34
+2026-07-06 18:57:27,211 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-35
+2026-07-06 18:57:27,449 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-36
+2026-07-06 18:57:27,688 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-37
+2026-07-06 18:57:27,922 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-38
+2026-07-06 18:57:28,169 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-39
+2026-07-06 18:57:28,408 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-40
+2026-07-06 18:57:28,646 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-41
+2026-07-06 18:57:28,887 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-42
+2026-07-06 18:57:29,124 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-43
+2026-07-06 18:57:29,366 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-44
+2026-07-06 18:57:29,596 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-45
+2026-07-06 18:57:29,846 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-46
+2026-07-06 18:57:30,045 INFO o.a.j.r.Summariser: summary +    239 in 00:00:11 =   21.4/s Avg:    73 Min:     6 Max:   965 Err:     0 (0.00%) Active: 46 Started: 46 Finished: 0
+2026-07-06 18:57:30,086 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-47
+2026-07-06 18:57:30,321 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-48
+2026-07-06 18:57:30,559 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-49
+2026-07-06 18:57:30,794 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-50
+2026-07-06 18:57:31,031 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-51
+2026-07-06 18:57:31,284 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-52
+2026-07-06 18:57:31,520 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-53
+2026-07-06 18:57:31,763 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-54
+2026-07-06 18:57:31,997 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-55
+2026-07-06 18:57:32,235 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-56
+2026-07-06 18:57:32,472 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-57
+2026-07-06 18:57:32,699 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-58
+2026-07-06 18:57:32,947 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-59
+2026-07-06 18:57:33,188 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-60
+2026-07-06 18:57:33,418 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-61
+2026-07-06 18:57:33,671 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-62
+2026-07-06 18:57:33,908 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-63
+2026-07-06 18:57:34,147 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-64
+2026-07-06 18:57:34,389 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-65
+2026-07-06 18:57:34,630 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-66
+2026-07-06 18:57:34,861 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-67
+2026-07-06 18:57:35,102 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-68
+2026-07-06 18:57:35,338 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-69
+2026-07-06 18:57:35,581 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-70
+2026-07-06 18:57:35,824 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-71
+2026-07-06 18:57:36,063 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-72
+2026-07-06 18:57:36,303 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-73
+2026-07-06 18:57:36,533 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-74
+2026-07-06 18:57:36,776 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-75
+2026-07-06 18:57:37,016 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-76
+2026-07-06 18:57:37,263 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-77
+2026-07-06 18:57:37,503 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-78
+2026-07-06 18:57:37,742 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-79
+2026-07-06 18:57:37,978 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-80
+2026-07-06 18:57:38,082 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-7
+2026-07-06 18:57:38,082 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-7
+2026-07-06 18:57:38,182 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-4
+2026-07-06 18:57:38,182 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-4
+2026-07-06 18:57:38,220 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-81
+2026-07-06 18:57:38,460 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-82
+2026-07-06 18:57:38,698 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-83
+2026-07-06 18:57:38,939 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-84
+2026-07-06 18:57:39,179 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-85
+2026-07-06 18:57:39,351 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-1
+2026-07-06 18:57:39,351 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-1
+2026-07-06 18:57:39,420 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-86
+2026-07-06 18:57:39,515 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-6
+2026-07-06 18:57:39,515 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-6
+2026-07-06 18:57:39,656 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-87
+2026-07-06 18:57:39,896 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-88
+2026-07-06 18:57:40,133 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-89
+2026-07-06 18:57:40,232 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-12
+2026-07-06 18:57:40,232 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-12
+2026-07-06 18:57:40,370 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-90
+2026-07-06 18:57:40,465 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-24
+2026-07-06 18:57:40,465 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-24
+2026-07-06 18:57:40,615 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-91
+2026-07-06 18:57:40,853 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-92
+2026-07-06 18:57:40,974 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-13
+2026-07-06 18:57:40,974 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-13
+2026-07-06 18:57:41,010 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-5
+2026-07-06 18:57:41,010 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-5
+2026-07-06 18:57:41,033 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-2
+2026-07-06 18:57:41,033 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-2
+2026-07-06 18:57:41,035 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-9
+2026-07-06 18:57:41,035 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-9
+2026-07-06 18:57:41,092 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-93
+2026-07-06 18:57:41,328 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-94
+2026-07-06 18:57:41,521 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-18
+2026-07-06 18:57:41,521 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-18
+2026-07-06 18:57:41,569 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-95
+2026-07-06 18:57:41,623 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-11
+2026-07-06 18:57:41,623 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-8
+2026-07-06 18:57:41,623 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-11
+2026-07-06 18:57:41,623 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-8
+2026-07-06 18:57:41,785 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-17
+2026-07-06 18:57:41,785 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-17
+2026-07-06 18:57:41,809 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-96
+2026-07-06 18:57:42,047 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-97
+2026-07-06 18:57:42,290 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-98
+2026-07-06 18:57:42,469 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-3
+2026-07-06 18:57:42,469 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-3
+2026-07-06 18:57:42,530 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-99
+2026-07-06 18:57:42,543 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-30
+2026-07-06 18:57:42,543 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-30
+2026-07-06 18:57:42,744 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-26
+2026-07-06 18:57:42,744 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-26
+2026-07-06 18:57:42,766 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-100
+2026-07-06 18:57:42,795 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-23
+2026-07-06 18:57:42,795 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-23
+2026-07-06 18:57:42,894 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-19
+2026-07-06 18:57:42,894 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-19
+2026-07-06 18:57:42,945 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-15
+2026-07-06 18:57:42,945 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-15
+2026-07-06 18:57:43,007 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-101
+2026-07-06 18:57:43,159 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-14
+2026-07-06 18:57:43,159 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-14
+2026-07-06 18:57:43,249 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-102
+2026-07-06 18:57:43,386 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-20
+2026-07-06 18:57:43,386 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-20
+2026-07-06 18:57:43,486 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-103
+2026-07-06 18:57:43,724 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-104
+2026-07-06 18:57:43,763 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-21
+2026-07-06 18:57:43,763 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-21
+2026-07-06 18:57:43,964 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-105
+2026-07-06 18:57:44,014 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-16
+2026-07-06 18:57:44,015 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-16
+2026-07-06 18:57:44,204 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-106
+2026-07-06 18:57:44,377 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-10
+2026-07-06 18:57:44,377 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-10
+2026-07-06 18:57:44,441 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-107
+2026-07-06 18:57:44,682 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-108
+2026-07-06 18:57:44,711 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-27
+2026-07-06 18:57:44,711 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-27
+2026-07-06 18:57:44,859 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-29
+2026-07-06 18:57:44,859 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-29
+2026-07-06 18:57:44,919 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-109
+2026-07-06 18:57:44,931 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-32
+2026-07-06 18:57:44,931 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-32
+2026-07-06 18:57:44,947 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-22
+2026-07-06 18:57:44,947 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-22
+2026-07-06 18:57:45,165 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-110
+2026-07-06 18:57:45,401 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-111
+2026-07-06 18:57:45,636 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-112
+2026-07-06 18:57:45,713 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-33
+2026-07-06 18:57:45,713 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-33
+2026-07-06 18:57:45,810 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-28
+2026-07-06 18:57:45,810 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-28
+2026-07-06 18:57:45,875 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-113
+2026-07-06 18:57:46,109 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-114
+2026-07-06 18:57:46,260 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-43
+2026-07-06 18:57:46,260 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-43
+2026-07-06 18:57:46,355 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-115
+2026-07-06 18:57:46,600 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-116
+2026-07-06 18:57:46,674 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-35
+2026-07-06 18:57:46,674 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-35
+2026-07-06 18:57:46,773 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-48
+2026-07-06 18:57:46,773 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-48
+2026-07-06 18:57:46,829 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-117
+2026-07-06 18:57:47,070 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-36
+2026-07-06 18:57:47,070 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-36
+2026-07-06 18:57:47,073 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-118
+2026-07-06 18:57:47,270 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-25
+2026-07-06 18:57:47,270 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-25
+2026-07-06 18:57:47,315 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-119
+2026-07-06 18:57:47,556 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-120
+2026-07-06 18:57:47,665 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-39
+2026-07-06 18:57:47,665 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-39
+2026-07-06 18:57:47,790 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-121
+2026-07-06 18:57:48,037 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-122
+2026-07-06 18:57:48,272 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-123
+2026-07-06 18:57:48,507 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-124
+2026-07-06 18:57:48,541 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-41
+2026-07-06 18:57:48,541 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-41
+2026-07-06 18:57:48,748 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-125
+2026-07-06 18:57:48,989 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-126
+2026-07-06 18:57:49,184 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-37
+2026-07-06 18:57:49,184 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-37
+2026-07-06 18:57:49,190 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-31
+2026-07-06 18:57:49,190 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-31
+2026-07-06 18:57:49,198 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-42
+2026-07-06 18:57:49,198 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-42
+2026-07-06 18:57:49,201 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-54
+2026-07-06 18:57:49,201 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-54
+2026-07-06 18:57:49,206 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-49
+2026-07-06 18:57:49,206 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-49
+2026-07-06 18:57:49,222 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-127
+2026-07-06 18:57:49,425 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-34
+2026-07-06 18:57:49,425 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-45
+2026-07-06 18:57:49,425 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-34
+2026-07-06 18:57:49,425 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-45
+2026-07-06 18:57:49,459 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-50
+2026-07-06 18:57:49,459 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-50
+2026-07-06 18:57:49,469 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-128
+2026-07-06 18:57:49,707 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-129
+2026-07-06 18:57:49,953 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-130
+2026-07-06 18:57:50,015 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-46
+2026-07-06 18:57:50,015 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-46
+2026-07-06 18:57:50,109 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-40
+2026-07-06 18:57:50,109 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-40
+2026-07-06 18:57:50,192 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-131
+2026-07-06 18:57:50,427 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-132
+2026-07-06 18:57:50,549 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-47
+2026-07-06 18:57:50,549 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-47
+2026-07-06 18:57:50,671 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-133
+2026-07-06 18:57:50,812 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-44
+2026-07-06 18:57:50,812 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-44
+2026-07-06 18:57:50,905 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-134
+2026-07-06 18:57:51,071 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-67
+2026-07-06 18:57:51,071 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-67
+2026-07-06 18:57:51,145 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-135
+2026-07-06 18:57:51,389 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-136
+2026-07-06 18:57:51,607 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-38
+2026-07-06 18:57:51,607 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-38
+2026-07-06 18:57:51,617 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-137
+2026-07-06 18:57:51,854 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-55
+2026-07-06 18:57:51,855 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-55
+2026-07-06 18:57:51,866 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-138
+2026-07-06 18:57:52,105 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-139
+2026-07-06 18:57:52,249 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-64
+2026-07-06 18:57:52,250 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-64
+2026-07-06 18:57:52,345 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-140
+2026-07-06 18:57:52,370 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-53
+2026-07-06 18:57:52,370 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-53
+2026-07-06 18:57:52,587 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-141
+2026-07-06 18:57:52,757 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-52
+2026-07-06 18:57:52,757 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-52
+2026-07-06 18:57:52,817 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-142
+2026-07-06 18:57:53,063 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-143
+2026-07-06 18:57:53,294 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-144
+2026-07-06 18:57:53,538 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-145
+2026-07-06 18:57:53,671 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-56
+2026-07-06 18:57:53,671 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-56
+2026-07-06 18:57:53,763 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-58
+2026-07-06 18:57:53,763 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-58
+2026-07-06 18:57:53,777 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-146
+2026-07-06 18:57:53,845 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-57
+2026-07-06 18:57:53,845 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-57
+2026-07-06 18:57:54,022 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-147
+2026-07-06 18:57:54,043 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-62
+2026-07-06 18:57:54,043 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-62
+2026-07-06 18:57:54,262 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-148
+2026-07-06 18:57:54,319 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-63
+2026-07-06 18:57:54,319 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-63
+2026-07-06 18:57:54,484 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-60
+2026-07-06 18:57:54,484 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-60
+2026-07-06 18:57:54,497 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-149
+2026-07-06 18:57:54,520 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-51
+2026-07-06 18:57:54,520 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-51
+2026-07-06 18:57:54,742 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-150
+2026-07-06 18:57:54,814 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-61
+2026-07-06 18:57:54,814 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-61
+2026-07-06 18:57:54,859 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-68
+2026-07-06 18:57:54,859 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-68
+2026-07-06 18:57:54,981 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-151
+2026-07-06 18:57:55,143 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-65
+2026-07-06 18:57:55,143 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-65
+2026-07-06 18:57:55,219 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-152
+2026-07-06 18:57:55,285 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-74
+2026-07-06 18:57:55,285 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-74
+2026-07-06 18:57:55,463 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-153
+2026-07-06 18:57:55,502 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-59
+2026-07-06 18:57:55,502 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-59
+2026-07-06 18:57:55,700 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-154
+2026-07-06 18:57:55,934 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-155
+2026-07-06 18:57:55,961 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-82
+2026-07-06 18:57:55,961 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-82
+2026-07-06 18:57:56,181 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-156
+2026-07-06 18:57:56,351 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-66
+2026-07-06 18:57:56,351 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-66
+2026-07-06 18:57:56,397 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-70
+2026-07-06 18:57:56,398 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-70
+2026-07-06 18:57:56,413 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-157
+2026-07-06 18:57:56,460 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-73
+2026-07-06 18:57:56,460 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-73
+2026-07-06 18:57:56,491 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-69
+2026-07-06 18:57:56,491 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-69
+2026-07-06 18:57:56,651 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-158
+2026-07-06 18:57:56,886 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-159
+2026-07-06 18:57:57,131 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-160
+2026-07-06 18:57:57,159 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-75
+2026-07-06 18:57:57,159 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-75
+2026-07-06 18:57:57,262 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-79
+2026-07-06 18:57:57,262 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-79
+2026-07-06 18:57:57,291 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-81
+2026-07-06 18:57:57,291 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-81
+2026-07-06 18:57:57,373 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-161
+2026-07-06 18:57:57,606 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-162
+2026-07-06 18:57:57,784 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-85
+2026-07-06 18:57:57,784 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-85
+2026-07-06 18:57:57,848 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-163
+2026-07-06 18:57:58,076 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-76
+2026-07-06 18:57:58,076 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-76
+2026-07-06 18:57:58,084 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-164
+2026-07-06 18:57:58,107 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-87
+2026-07-06 18:57:58,107 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-87
+2026-07-06 18:57:58,319 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-165
+2026-07-06 18:57:58,568 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-166
+2026-07-06 18:57:58,590 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-83
+2026-07-06 18:57:58,591 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-83
+2026-07-06 18:57:58,706 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-91
+2026-07-06 18:57:58,706 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-91
+2026-07-06 18:57:58,748 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-88
+2026-07-06 18:57:58,748 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-88
+2026-07-06 18:57:58,784 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-72
+2026-07-06 18:57:58,784 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-72
+2026-07-06 18:57:58,810 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-167
+2026-07-06 18:57:59,044 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-168
+2026-07-06 18:57:59,047 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-89
+2026-07-06 18:57:59,047 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-89
+2026-07-06 18:57:59,280 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-169
+2026-07-06 18:57:59,529 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-170
+2026-07-06 18:57:59,595 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-86
+2026-07-06 18:57:59,595 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-86
+2026-07-06 18:57:59,618 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-78
+2026-07-06 18:57:59,618 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-78
+2026-07-06 18:57:59,758 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-171
+2026-07-06 18:57:59,809 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-80
+2026-07-06 18:57:59,809 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-80
+2026-07-06 18:57:59,892 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-92
+2026-07-06 18:57:59,892 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-92
+2026-07-06 18:57:59,951 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-77
+2026-07-06 18:57:59,951 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-77
+2026-07-06 18:58:00,006 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-172
+2026-07-06 18:58:00,011 INFO o.a.j.r.Summariser: summary +   1602 in 00:00:30 =   53.5/s Avg:    28 Min:     4 Max:   312 Err:     0 (0.00%) Active: 83 Started: 172 Finished: 89
+2026-07-06 18:58:00,011 INFO o.a.j.r.Summariser: summary =   1841 in 00:00:41 =   44.8/s Avg:    34 Min:     4 Max:   965 Err:     0 (0.00%)
+2026-07-06 18:58:00,243 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-173
+2026-07-06 18:58:00,481 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-174
+2026-07-06 18:58:00,726 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-175
+2026-07-06 18:58:00,967 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-176
+2026-07-06 18:58:01,178 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-103
+2026-07-06 18:58:01,178 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-103
+2026-07-06 18:58:01,201 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-177
+2026-07-06 18:58:01,440 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-178
+2026-07-06 18:58:01,471 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-93
+2026-07-06 18:58:01,471 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-93
+2026-07-06 18:58:01,680 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-179
+2026-07-06 18:58:01,739 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-96
+2026-07-06 18:58:01,739 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-96
+2026-07-06 18:58:01,922 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-180
+2026-07-06 18:58:02,028 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-97
+2026-07-06 18:58:02,028 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-97
+2026-07-06 18:58:02,155 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-181
+2026-07-06 18:58:02,215 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-84
+2026-07-06 18:58:02,215 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-84
+2026-07-06 18:58:02,398 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-182
+2026-07-06 18:58:02,644 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-183
+2026-07-06 18:58:02,708 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-95
+2026-07-06 18:58:02,708 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-95
+2026-07-06 18:58:02,719 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-71
+2026-07-06 18:58:02,719 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-71
+2026-07-06 18:58:02,765 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-90
+2026-07-06 18:58:02,765 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-90
+2026-07-06 18:58:02,878 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-184
+2026-07-06 18:58:03,113 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-185
+2026-07-06 18:58:03,248 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-94
+2026-07-06 18:58:03,248 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-94
+2026-07-06 18:58:03,356 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-186
+2026-07-06 18:58:03,436 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-106
+2026-07-06 18:58:03,436 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-106
+2026-07-06 18:58:03,599 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-187
+2026-07-06 18:58:03,778 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-98
+2026-07-06 18:58:03,778 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-98
+2026-07-06 18:58:03,833 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-188
+2026-07-06 18:58:03,914 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-100
+2026-07-06 18:58:03,915 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-100
+2026-07-06 18:58:04,071 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-189
+2026-07-06 18:58:04,129 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-102
+2026-07-06 18:58:04,129 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-102
+2026-07-06 18:58:04,217 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-111
+2026-07-06 18:58:04,217 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-111
+2026-07-06 18:58:04,291 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-105
+2026-07-06 18:58:04,291 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-105
+2026-07-06 18:58:04,317 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-190
+2026-07-06 18:58:04,559 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-191
+2026-07-06 18:58:04,647 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-112
+2026-07-06 18:58:04,647 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-112
+2026-07-06 18:58:04,799 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-192
+2026-07-06 18:58:04,819 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-101
+2026-07-06 18:58:04,819 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-101
+2026-07-06 18:58:04,895 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-120
+2026-07-06 18:58:04,895 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-120
+2026-07-06 18:58:05,027 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-193
+2026-07-06 18:58:05,066 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-99
+2026-07-06 18:58:05,066 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-99
+2026-07-06 18:58:05,221 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-107
+2026-07-06 18:58:05,221 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-107
+2026-07-06 18:58:05,268 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-194
+2026-07-06 18:58:05,329 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-104
+2026-07-06 18:58:05,329 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-104
+2026-07-06 18:58:05,347 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-113
+2026-07-06 18:58:05,347 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-113
+2026-07-06 18:58:05,510 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-195
+2026-07-06 18:58:05,596 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-119
+2026-07-06 18:58:05,596 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-119
+2026-07-06 18:58:05,754 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-110
+2026-07-06 18:58:05,754 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-110
+2026-07-06 18:58:05,758 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-196
+2026-07-06 18:58:05,828 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-108
+2026-07-06 18:58:05,829 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-108
+2026-07-06 18:58:05,992 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-197
+2026-07-06 18:58:06,233 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-198
+2026-07-06 18:58:06,248 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-124
+2026-07-06 18:58:06,248 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-124
+2026-07-06 18:58:06,292 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-117
+2026-07-06 18:58:06,292 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-117
+2026-07-06 18:58:06,475 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-199
+2026-07-06 18:58:06,496 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-118
+2026-07-06 18:58:06,496 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-118
+2026-07-06 18:58:06,666 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-114
+2026-07-06 18:58:06,666 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-114
+2026-07-06 18:58:06,716 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-200
+2026-07-06 18:58:06,772 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-115
+2026-07-06 18:58:06,772 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-115
+2026-07-06 18:58:06,953 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-201
+2026-07-06 18:58:07,195 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-202
+2026-07-06 18:58:07,245 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-127
+2026-07-06 18:58:07,245 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-127
+2026-07-06 18:58:07,434 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-203
+2026-07-06 18:58:07,670 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-204
+2026-07-06 18:58:07,837 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-116
+2026-07-06 18:58:07,837 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-116
+2026-07-06 18:58:07,877 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-122
+2026-07-06 18:58:07,877 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-122
+2026-07-06 18:58:07,895 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-133
+2026-07-06 18:58:07,896 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-133
+2026-07-06 18:58:07,913 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-205
+2026-07-06 18:58:08,115 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-128
+2026-07-06 18:58:08,115 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-128
+2026-07-06 18:58:08,153 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-206
+2026-07-06 18:58:08,389 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-207
+2026-07-06 18:58:08,536 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-109
+2026-07-06 18:58:08,536 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-109
+2026-07-06 18:58:08,584 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-132
+2026-07-06 18:58:08,584 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-132
+2026-07-06 18:58:08,632 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-208
+2026-07-06 18:58:08,863 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-209
+2026-07-06 18:58:09,111 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-210
+2026-07-06 18:58:09,350 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-211
+2026-07-06 18:58:09,489 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-134
+2026-07-06 18:58:09,489 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-134
+2026-07-06 18:58:09,585 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-212
+2026-07-06 18:58:09,824 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-213
+2026-07-06 18:58:09,835 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-121
+2026-07-06 18:58:09,835 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-121
+2026-07-06 18:58:10,058 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-214
+2026-07-06 18:58:10,096 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-142
+2026-07-06 18:58:10,096 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-142
+2026-07-06 18:58:10,306 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-215
+2026-07-06 18:58:10,541 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-216
+2026-07-06 18:58:10,620 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-126
+2026-07-06 18:58:10,620 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-126
+2026-07-06 18:58:10,702 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-131
+2026-07-06 18:58:10,702 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-131
+2026-07-06 18:58:10,785 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-217
+2026-07-06 18:58:10,995 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-135
+2026-07-06 18:58:10,995 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-135
+2026-07-06 18:58:11,025 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-218
+2026-07-06 18:58:11,156 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-129
+2026-07-06 18:58:11,156 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-129
+2026-07-06 18:58:11,263 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-219
+2026-07-06 18:58:11,314 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-137
+2026-07-06 18:58:11,314 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-137
+2026-07-06 18:58:11,503 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-220
+2026-07-06 18:58:11,687 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-125
+2026-07-06 18:58:11,687 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-125
+2026-07-06 18:58:11,744 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-221
+2026-07-06 18:58:11,982 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-222
+2026-07-06 18:58:12,111 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-140
+2026-07-06 18:58:12,111 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-140
+2026-07-06 18:58:12,225 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-223
+2026-07-06 18:58:12,269 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-138
+2026-07-06 18:58:12,269 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-138
+2026-07-06 18:58:12,300 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-123
+2026-07-06 18:58:12,300 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-123
+2026-07-06 18:58:12,449 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-130
+2026-07-06 18:58:12,449 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-130
+2026-07-06 18:58:12,454 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-224
+2026-07-06 18:58:12,639 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-150
+2026-07-06 18:58:12,639 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-150
+2026-07-06 18:58:12,701 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-225
+2026-07-06 18:58:12,763 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-151
+2026-07-06 18:58:12,763 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-151
+2026-07-06 18:58:12,886 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-139
+2026-07-06 18:58:12,886 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-139
+2026-07-06 18:58:12,937 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-226
+2026-07-06 18:58:13,183 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-227
+2026-07-06 18:58:13,315 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-143
+2026-07-06 18:58:13,315 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-143
+2026-07-06 18:58:13,422 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-228
+2026-07-06 18:58:13,446 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-154
+2026-07-06 18:58:13,446 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-154
+2026-07-06 18:58:13,474 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-136
+2026-07-06 18:58:13,474 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-136
+2026-07-06 18:58:13,663 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-229
+2026-07-06 18:58:13,785 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-147
+2026-07-06 18:58:13,785 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-147
+2026-07-06 18:58:13,896 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-230
+2026-07-06 18:58:13,905 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-148
+2026-07-06 18:58:13,905 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-148
+2026-07-06 18:58:14,005 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-146
+2026-07-06 18:58:14,005 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-146
+2026-07-06 18:58:14,141 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-231
+2026-07-06 18:58:14,236 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-141
+2026-07-06 18:58:14,236 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-141
+2026-07-06 18:58:14,379 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-232
+2026-07-06 18:58:14,525 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-144
+2026-07-06 18:58:14,525 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-144
+2026-07-06 18:58:14,614 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-233
+2026-07-06 18:58:14,719 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-152
+2026-07-06 18:58:14,719 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-152
+2026-07-06 18:58:14,854 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-234
+2026-07-06 18:58:14,901 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-156
+2026-07-06 18:58:14,901 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-156
+2026-07-06 18:58:15,094 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-235
+2026-07-06 18:58:15,107 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-161
+2026-07-06 18:58:15,107 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-161
+2026-07-06 18:58:15,236 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-145
+2026-07-06 18:58:15,236 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-145
+2026-07-06 18:58:15,325 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-157
+2026-07-06 18:58:15,325 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-157
+2026-07-06 18:58:15,339 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-236
+2026-07-06 18:58:15,580 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-237
+2026-07-06 18:58:15,812 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-238
+2026-07-06 18:58:16,058 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-239
+2026-07-06 18:58:16,238 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-164
+2026-07-06 18:58:16,238 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-164
+2026-07-06 18:58:16,284 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-160
+2026-07-06 18:58:16,284 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-160
+2026-07-06 18:58:16,296 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-240
+2026-07-06 18:58:16,535 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-241
+2026-07-06 18:58:16,769 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-242
+2026-07-06 18:58:17,015 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-243
+2026-07-06 18:58:17,138 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-149
+2026-07-06 18:58:17,138 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-149
+2026-07-06 18:58:17,250 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-244
+2026-07-06 18:58:17,401 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-163
+2026-07-06 18:58:17,401 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-163
+2026-07-06 18:58:17,463 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-162
+2026-07-06 18:58:17,463 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-162
+2026-07-06 18:58:17,486 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-159
+2026-07-06 18:58:17,486 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-159
+2026-07-06 18:58:17,494 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-245
+2026-07-06 18:58:17,732 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-246
+2026-07-06 18:58:17,967 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-247
+2026-07-06 18:58:18,020 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-165
+2026-07-06 18:58:18,020 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-165
+2026-07-06 18:58:18,083 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-168
+2026-07-06 18:58:18,083 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-168
+2026-07-06 18:58:18,212 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-248
+2026-07-06 18:58:18,218 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-155
+2026-07-06 18:58:18,218 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-155
+2026-07-06 18:58:18,328 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-153
+2026-07-06 18:58:18,328 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-153
+2026-07-06 18:58:18,452 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-249
+2026-07-06 18:58:18,692 INFO o.a.j.t.JMeterThread: Thread started: Estudiantes en examen 1-250
+2026-07-06 18:58:19,426 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-158
+2026-07-06 18:58:19,426 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-158
+2026-07-06 18:58:19,668 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-167
+2026-07-06 18:58:19,668 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-167
+2026-07-06 18:58:20,394 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-169
+2026-07-06 18:58:20,394 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-169
+2026-07-06 18:58:20,580 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-182
+2026-07-06 18:58:20,580 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-182
+2026-07-06 18:58:20,649 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-175
+2026-07-06 18:58:20,649 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-175
+2026-07-06 18:58:20,850 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-166
+2026-07-06 18:58:20,850 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-166
+2026-07-06 18:58:20,904 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-172
+2026-07-06 18:58:20,904 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-172
+2026-07-06 18:58:21,831 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-194
+2026-07-06 18:58:21,831 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-194
+2026-07-06 18:58:21,907 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-178
+2026-07-06 18:58:21,908 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-178
+2026-07-06 18:58:21,965 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-183
+2026-07-06 18:58:21,965 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-183
+2026-07-06 18:58:22,006 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-195
+2026-07-06 18:58:22,006 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-195
+2026-07-06 18:58:22,104 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-189
+2026-07-06 18:58:22,104 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-189
+2026-07-06 18:58:22,168 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-181
+2026-07-06 18:58:22,168 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-181
+2026-07-06 18:58:22,336 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-177
+2026-07-06 18:58:22,336 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-179
+2026-07-06 18:58:22,337 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-177
+2026-07-06 18:58:22,337 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-179
+2026-07-06 18:58:22,539 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-180
+2026-07-06 18:58:22,539 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-180
+2026-07-06 18:58:22,856 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-170
+2026-07-06 18:58:22,856 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-170
+2026-07-06 18:58:22,972 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-173
+2026-07-06 18:58:22,972 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-173
+2026-07-06 18:58:23,057 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-174
+2026-07-06 18:58:23,057 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-174
+2026-07-06 18:58:23,111 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-202
+2026-07-06 18:58:23,111 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-202
+2026-07-06 18:58:23,314 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-176
+2026-07-06 18:58:23,314 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-176
+2026-07-06 18:58:23,624 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-171
+2026-07-06 18:58:23,624 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-171
+2026-07-06 18:58:25,310 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-192
+2026-07-06 18:58:25,310 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-188
+2026-07-06 18:58:25,310 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-192
+2026-07-06 18:58:25,310 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-188
+2026-07-06 18:58:25,349 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-185
+2026-07-06 18:58:25,349 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-185
+2026-07-06 18:58:25,569 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-201
+2026-07-06 18:58:25,569 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-201
+2026-07-06 18:58:25,704 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-187
+2026-07-06 18:58:25,704 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-187
+2026-07-06 18:58:25,870 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-193
+2026-07-06 18:58:25,870 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-193
+2026-07-06 18:58:25,923 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-184
+2026-07-06 18:58:25,923 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-184
+2026-07-06 18:58:25,992 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-200
+2026-07-06 18:58:25,992 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-200
+2026-07-06 18:58:26,867 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-198
+2026-07-06 18:58:26,867 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-198
+2026-07-06 18:58:26,904 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-186
+2026-07-06 18:58:26,904 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-186
+2026-07-06 18:58:27,072 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-205
+2026-07-06 18:58:27,072 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-205
+2026-07-06 18:58:27,078 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-221
+2026-07-06 18:58:27,078 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-221
+2026-07-06 18:58:27,105 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-199
+2026-07-06 18:58:27,105 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-199
+2026-07-06 18:58:27,120 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-191
+2026-07-06 18:58:27,120 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-191
+2026-07-06 18:58:27,185 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-190
+2026-07-06 18:58:27,185 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-190
+2026-07-06 18:58:27,188 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-206
+2026-07-06 18:58:27,188 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-206
+2026-07-06 18:58:27,646 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-196
+2026-07-06 18:58:27,646 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-196
+2026-07-06 18:58:28,534 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-204
+2026-07-06 18:58:28,534 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-204
+2026-07-06 18:58:28,784 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-203
+2026-07-06 18:58:28,784 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-203
+2026-07-06 18:58:28,874 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-219
+2026-07-06 18:58:28,874 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-219
+2026-07-06 18:58:29,064 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-216
+2026-07-06 18:58:29,065 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-216
+2026-07-06 18:58:29,138 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-207
+2026-07-06 18:58:29,138 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-207
+2026-07-06 18:58:29,346 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-208
+2026-07-06 18:58:29,346 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-208
+2026-07-06 18:58:29,771 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-197
+2026-07-06 18:58:29,771 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-197
+2026-07-06 18:58:30,111 INFO o.a.j.r.Summariser: summary +   1502 in 00:00:30 =   49.9/s Avg:    21 Min:     4 Max:   300 Err:    12 (0.80%) Active: 39 Started: 250 Finished: 211
+2026-07-06 18:58:30,111 INFO o.a.j.r.Summariser: summary =   3343 in 00:01:11 =   46.9/s Avg:    28 Min:     4 Max:   965 Err:    12 (0.36%)
+2026-07-06 18:58:30,128 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-209
+2026-07-06 18:58:30,128 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-209
+2026-07-06 18:58:30,149 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-214
+2026-07-06 18:58:30,149 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-214
+2026-07-06 18:58:30,257 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-210
+2026-07-06 18:58:30,258 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-210
+2026-07-06 18:58:30,891 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-222
+2026-07-06 18:58:30,891 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-222
+2026-07-06 18:58:31,356 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-218
+2026-07-06 18:58:31,356 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-218
+2026-07-06 18:58:31,444 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-212
+2026-07-06 18:58:31,444 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-212
+2026-07-06 18:58:31,521 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-215
+2026-07-06 18:58:31,521 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-215
+2026-07-06 18:58:31,657 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-220
+2026-07-06 18:58:31,657 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-220
+2026-07-06 18:58:32,199 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-224
+2026-07-06 18:58:32,199 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-224
+2026-07-06 18:58:32,390 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-229
+2026-07-06 18:58:32,390 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-229
+2026-07-06 18:58:32,499 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-211
+2026-07-06 18:58:32,500 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-211
+2026-07-06 18:58:33,158 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-213
+2026-07-06 18:58:33,158 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-213
+2026-07-06 18:58:33,470 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-225
+2026-07-06 18:58:33,470 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-225
+2026-07-06 18:58:33,915 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-232
+2026-07-06 18:58:33,915 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-232
+2026-07-06 18:58:33,949 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-217
+2026-07-06 18:58:33,949 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-217
+2026-07-06 18:58:34,307 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-239
+2026-07-06 18:58:34,307 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-239
+2026-07-06 18:58:34,396 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-230
+2026-07-06 18:58:34,397 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-230
+2026-07-06 18:58:34,416 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-233
+2026-07-06 18:58:34,416 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-233
+2026-07-06 18:58:34,595 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-226
+2026-07-06 18:58:34,595 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-226
+2026-07-06 18:58:34,659 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-223
+2026-07-06 18:58:34,659 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-223
+2026-07-06 18:58:35,032 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-234
+2026-07-06 18:58:35,032 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-234
+2026-07-06 18:58:35,153 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-242
+2026-07-06 18:58:35,153 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-242
+2026-07-06 18:58:35,796 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-227
+2026-07-06 18:58:35,796 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-227
+2026-07-06 18:58:35,847 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-228
+2026-07-06 18:58:35,848 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-228
+2026-07-06 18:58:36,305 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-248
+2026-07-06 18:58:36,305 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-248
+2026-07-06 18:58:36,610 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-238
+2026-07-06 18:58:36,611 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-238
+2026-07-06 18:58:36,991 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-245
+2026-07-06 18:58:36,992 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-245
+2026-07-06 18:58:37,009 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-250
+2026-07-06 18:58:37,009 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-250
+2026-07-06 18:58:37,280 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-235
+2026-07-06 18:58:37,280 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-235
+2026-07-06 18:58:37,337 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-237
+2026-07-06 18:58:37,337 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-237
+2026-07-06 18:58:37,491 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-249
+2026-07-06 18:58:37,493 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-249
+2026-07-06 18:58:37,689 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-231
+2026-07-06 18:58:37,689 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-231
+2026-07-06 18:58:38,430 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-244
+2026-07-06 18:58:38,430 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-244
+2026-07-06 18:58:38,640 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-240
+2026-07-06 18:58:38,640 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-240
+2026-07-06 18:58:38,873 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-236
+2026-07-06 18:58:38,873 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-236
+2026-07-06 18:58:39,948 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-241
+2026-07-06 18:58:39,948 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-241
+2026-07-06 18:58:40,201 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-247
+2026-07-06 18:58:40,201 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-247
+2026-07-06 18:58:40,316 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-243
+2026-07-06 18:58:40,316 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-243
+2026-07-06 18:58:41,947 INFO o.a.j.t.JMeterThread: Thread is done: Estudiantes en examen 1-246
+2026-07-06 18:58:41,947 INFO o.a.j.t.JMeterThread: Thread finished: Estudiantes en examen 1-246
+2026-07-06 18:58:41,948 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2026-07-06 18:58:41,948 INFO o.a.j.s.FileServer: Close: usuarios.csv
+2026-07-06 18:58:41,949 INFO o.a.j.r.Summariser: summary +    157 in 00:00:12 =   13.3/s Avg:     8 Min:     4 Max:    18 Err:     0 (0.00%) Active: 0 Started: 250 Finished: 250
+2026-07-06 18:58:41,949 INFO o.a.j.r.Summariser: summary =   3500 in 00:01:23 =   42.1/s Avg:    27 Min:     4 Max:   965 Err:    12 (0.34%)
+2026-07-06 18:58:41,949 INFO o.a.j.JMeter: Generating Dashboard
+2026-07-06 18:58:41,949 INFO o.a.j.r.d.ReportGenerator: Flushing result collector before report Generation
+2026-07-06 18:58:41,959 INFO o.a.j.r.p.NormalizerSampleConsumer: Using format, 'ms', to parse timeStamp field
+2026-07-06 18:58:42,239 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.AggregateConsumer#stopProducing(): beginDate produced 0 samples
+2026-07-06 18:58:42,239 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.AggregateConsumer#stopProducing(): endDate produced 0 samples
+2026-07-06 18:58:42,249 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.ApdexSummaryConsumer#stopProducing(): apdexSummary produced 0 samples
+2026-07-06 18:58:42,249 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.RequestsSummaryConsumer#stopProducing(): requestsSummary produced 0 samples
+2026-07-06 18:58:42,264 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.StatisticsSummaryConsumer#stopProducing(): statisticsSummary produced 0 samples
+2026-07-06 18:58:42,266 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.Top5ErrorsBySamplerConsumer#stopProducing(): top5ErrorsBySampler produced 0 samples
+2026-07-06 18:58:42,266 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.ErrorsSummaryConsumer#stopProducing(): errorsSummary produced 0 samples
+2026-07-06 18:58:42,266 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.HitsPerSecondGraphConsumer#stopProducing(): hitsPerSecond produced 0 samples
+2026-07-06 18:58:42,344 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.LatencyVSRequestGraphConsumer#stopProducing(): latencyVsRequest produced 0 samples
+2026-07-06 18:58:42,345 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.SyntheticResponseTimeDistributionGraphConsumer#stopProducing(): syntheticResponseTimeDistribution produced 0 samples
+2026-07-06 18:58:42,346 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.BytesThroughputGraphConsumer#stopProducing(): bytesThroughputOverTime produced 0 samples
+2026-07-06 18:58:42,346 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.CodesPerSecondGraphConsumer#stopProducing(): codesPerSecond produced 0 samples
+2026-07-06 18:58:42,371 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimeVSRequestGraphConsumer#stopProducing(): responseTimeVsRequest produced 0 samples
+2026-07-06 18:58:42,373 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.FilterConsumer#stopProducing(): startIntervalControlerFilter produced 24500 samples
+2026-07-06 18:58:42,374 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.TotalTPSGraphConsumer#stopProducing(): totalTPS produced 0 samples
+2026-07-06 18:58:42,374 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ActiveThreadsGraphConsumer#stopProducing(): activeThreadsOverTime produced 0 samples
+2026-07-06 18:58:42,374 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.TimeVSThreadGraphConsumer#stopProducing(): timeVsThreads produced 0 samples
+2026-07-06 18:58:42,375 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimeDistributionGraphConsumer#stopProducing(): responseTimeDistribution produced 0 samples
+2026-07-06 18:58:42,375 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.TransactionsPerSecondGraphConsumer#stopProducing(): transactionsPerSecond produced 0 samples
+2026-07-06 18:58:42,375 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimePercentilesGraphConsumer#stopProducing(): responseTimePercentiles produced 0 samples
+2026-07-06 18:58:42,377 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimePercentilesOverTimeGraphConsumer#stopProducing(): responseTimePercentilesOverTime produced 0 samples
+2026-07-06 18:58:42,377 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ResponseTimeOverTimeGraphConsumer#stopProducing(): responseTimesOverTime produced 0 samples
+2026-07-06 18:58:42,377 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.ConnectTimeOverTimeGraphConsumer#stopProducing(): connectTimeOverTime produced 0 samples
+2026-07-06 18:58:42,377 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.graph.impl.LatencyOverTimeGraphConsumer#stopProducing(): latenciesOverTime produced 0 samples
+2026-07-06 18:58:42,378 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.FilterConsumer#stopProducing(): nameFilter produced 52500 samples
+2026-07-06 18:58:42,378 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.FilterConsumer#stopProducing(): dateRangeFilter produced 10500 samples
+2026-07-06 18:58:42,378 INFO o.a.j.r.p.AbstractSampleConsumer: class org.apache.jmeter.report.processor.NormalizerSampleConsumer#stopProducing(): normalizer produced 3500 samples
+2026-07-06 18:58:42,379 INFO o.a.j.r.p.CsvFileSampleSource: produce(): 3500 samples produced in 398ms on channel 0
+2026-07-06 18:58:42,379 INFO o.a.j.r.d.ReportGenerator: Exporting data using exporter:'json' of className:'org.apache.jmeter.report.dashboard.JsonExporter'
+2026-07-06 18:58:42,521 INFO o.a.j.r.d.JsonExporter: Found data for consumer statisticsSummary in context
+2026-07-06 18:58:42,521 INFO o.a.j.r.d.JsonExporter: Creating statistics for overall
+2026-07-06 18:58:42,521 INFO o.a.j.r.d.JsonExporter: Creating statistics for other transactions
+2026-07-06 18:58:42,522 INFO o.a.j.r.d.JsonExporter: Checking output folder
+2026-07-06 18:58:42,523 INFO o.a.j.r.d.JsonExporter: Writing statistics JSON to C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest\rep250\statistics.json
+2026-07-06 18:58:42,562 INFO o.a.j.r.d.ReportGenerator: Exporting data using exporter:'html' of className:'org.apache.jmeter.report.dashboard.HtmlTemplateExporter'
+2026-07-06 18:58:42,565 INFO o.a.j.r.d.HtmlTemplateExporter: Will generate dashboard in folder: C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest\rep250
+2026-07-06 18:58:42,704 INFO o.a.j.r.d.HtmlTemplateExporter: Report will be generated in: C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest\rep250, creating folder structure
+2026-07-06 18:58:42,707 INFO o.a.j.r.d.TemplateVisitor: Copying folder from 'C:\apache-jmeter-5.6.3\bin\report-template' to 'C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest\rep250', got message: C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest\rep250, found non empty folder with following content [C:\Users\User\Documents\ProyectosSTS\skillbridge_backend\loadtest\rep250\statistics.json], will be ignored
+2026-07-06 18:58:43,014 INFO o.a.j.JMeter: Dashboard generated

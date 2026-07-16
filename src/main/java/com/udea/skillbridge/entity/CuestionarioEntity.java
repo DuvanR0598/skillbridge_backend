@@ -49,9 +49,10 @@ public class CuestionarioEntity {
 	@Column(nullable = false, unique = true)
 	private String nombre; // Nombre del cuestionario
 
+	@Column(name = "objetivo", length = 500)
 	private String objetivo; // Finalidad u objetivo
 	
-	@Column(name = "instrucciones", columnDefinition = "TEXT")
+	@Column(name = "instrucciones", columnDefinition = "TEXT", length = 1000)
 	private String instrucciones;
 
 	@Enumerated(EnumType.STRING)

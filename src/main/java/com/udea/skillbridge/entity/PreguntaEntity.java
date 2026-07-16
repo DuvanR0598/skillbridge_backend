@@ -46,12 +46,13 @@ public class PreguntaEntity {
     @Column(name = "tipo_pregunta", nullable = false, length = 30)
     private TipoPregunta tipoPregunta;
 	
-	@Column(name = "texto", nullable = false)
+	@Column(name = "texto", nullable = false, length = 1000)
     private String texto;                     // Texto de la pregunta
 	
 	@Column(name = "imagen_url")
     private String imagenUrl;                // URL de imagen opcional
     
+	@Column(name = "ayuda", length = 300)
     private String ayuda;                  // Texto de ayuda para el estudiante
     
     @Column(name = "max_opciones")
