@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 810" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="ah4" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5A6B60"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="480" height="810" fill="#FFFFFF"/>
+  <text x="240" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A5C38">Flujo de presentación del examen</text>
+
+  <!-- Start -->
+  <ellipse cx="240" cy="62" rx="80" ry="22" fill="#1A5C38"/>
+  <text x="240" y="67" text-anchor="middle" font-size="13" fill="#FFFFFF">Inicio (estudiante)</text>
+
+  <!-- steps -->
+  <g font-size="13" fill="#24312A">
+    <rect x="110" y="104" width="260" height="46" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="240" y="132" text-anchor="middle">Listar cuestionarios activos</text>
+
+    <rect x="110" y="180" width="260" height="46" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="240" y="208" text-anchor="middle">Entregar cuestionario</text>
+
+    <rect x="110" y="256" width="260" height="46" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="240" y="284" text-anchor="middle">Iniciar evaluación (PRE_TEST)</text>
+
+    <rect x="110" y="332" width="260" height="46" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="240" y="360" text-anchor="middle">Responder pregunta</text>
+  </g>
+
+  <!-- decision -->
+  <polygon points="240,410 360,462 240,514 120,462" fill="#FBF7F1" stroke="#C77D2E"/>
+  <text x="240" y="458" text-anchor="middle" font-size="12" fill="#24312A">¿Quedan</text>
+  <text x="240" y="474" text-anchor="middle" font-size="12" fill="#24312A">preguntas?</text>
+
+  <!-- continue -->
+  <g font-size="13" fill="#24312A">
+    <rect x="110" y="548" width="260" height="46" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="240" y="576" text-anchor="middle">Completar evaluación</text>
+
+    <rect x="110" y="624" width="260" height="46" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="240" y="652" text-anchor="middle">Motor de puntuación</text>
+
+    <rect x="110" y="700" width="260" height="46" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="240" y="722" text-anchor="middle">Resultado + plan de</text>
+    <text x="240" y="738" text-anchor="middle">fortalecimiento</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#5A6B60" stroke-width="1.5" fill="none">
+    <line x1="240" y1="84"  x2="240" y2="104" marker-end="url(#ah4)"/>
+    <line x1="240" y1="150" x2="240" y2="180" marker-end="url(#ah4)"/>
+    <line x1="240" y1="226" x2="240" y2="256" marker-end="url(#ah4)"/>
+    <line x1="240" y1="302" x2="240" y2="332" marker-end="url(#ah4)"/>
+    <line x1="240" y1="378" x2="240" y2="410" marker-end="url(#ah4)"/>
+    <!-- No: down to completar -->
+    <line x1="240" y1="514" x2="240" y2="548" marker-end="url(#ah4)"/>
+    <line x1="240" y1="594" x2="240" y2="624" marker-end="url(#ah4)"/>
+    <line x1="240" y1="670" x2="240" y2="700" marker-end="url(#ah4)"/>
+    <!-- Si loop back to Responder pregunta -->
+    <path d="M120,462 L48,462 L48,355 L110,355" marker-end="url(#ah4)"/>
+  </g>
+  <text x="255" y="534" font-size="12" fill="#B06A1E">No</text>
+  <text x="60" y="452" font-size="12" fill="#B06A1E">Sí (× 10)</text>
+</svg>

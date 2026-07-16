@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 560" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="ah3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5A6B60"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="780" height="560" fill="#FFFFFF"/>
+  <text x="390" y="34" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A5C38">Arquitectura por capas del backend</text>
+
+  <!-- central layers -->
+  <g>
+    <rect x="110" y="60"  width="300" height="56" rx="8" fill="#DCEbe1" stroke="#1A5C38"/>
+    <text x="260" y="93" text-anchor="middle" font-size="14" fill="#24312A">Cliente — Angular (SPA)</text>
+
+    <rect x="110" y="140" width="300" height="56" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="260" y="173" text-anchor="middle" font-size="14" fill="#24312A">Controlador REST</text>
+
+    <rect x="110" y="220" width="300" height="56" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="260" y="253" text-anchor="middle" font-size="14" fill="#24312A">Servicio (interfaz + implementación)</text>
+
+    <rect x="110" y="300" width="300" height="56" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="260" y="333" text-anchor="middle" font-size="14" fill="#24312A">Repositorio (Spring Data JPA)</text>
+
+    <rect x="110" y="380" width="300" height="56" rx="8" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="260" y="413" text-anchor="middle" font-size="14" fill="#24312A">Entidad (JPA)</text>
+
+    <rect x="110" y="460" width="300" height="56" rx="8" fill="#F4F6F5" stroke="#B8C2BC"/>
+    <text x="260" y="493" text-anchor="middle" font-size="14" fill="#24312A">PostgreSQL</text>
+  </g>
+  <!-- arrows down -->
+  <g stroke="#5A6B60" stroke-width="1.5">
+    <line x1="260" y1="116" x2="260" y2="140" marker-end="url(#ah3)"/>
+    <line x1="260" y1="196" x2="260" y2="220" marker-end="url(#ah3)"/>
+    <line x1="260" y1="276" x2="260" y2="300" marker-end="url(#ah3)"/>
+    <line x1="260" y1="356" x2="260" y2="380" marker-end="url(#ah3)"/>
+    <line x1="260" y1="436" x2="260" y2="460" marker-end="url(#ah3)"/>
+  </g>
+
+  <!-- cross-cutting panel -->
+  <rect x="470" y="140" width="270" height="376" rx="10" fill="#FBF7F1" stroke="#C77D2E" stroke-dasharray="5 4"/>
+  <text x="605" y="166" text-anchor="middle" font-size="13" font-weight="bold" fill="#B06A1E">Componentes transversales</text>
+  <g font-size="13" fill="#24312A">
+    <rect x="490" y="184" width="230" height="46" rx="6" fill="#FFFFFF" stroke="#D9C3A6"/>
+    <text x="605" y="212" text-anchor="middle">DTO + MapStruct</text>
+    <rect x="490" y="244" width="230" height="46" rx="6" fill="#FFFFFF" stroke="#D9C3A6"/>
+    <text x="605" y="272" text-anchor="middle">Validación (Strategy + Factory)</text>
+    <rect x="490" y="304" width="230" height="46" rx="6" fill="#FFFFFF" stroke="#D9C3A6"/>
+    <text x="605" y="332" text-anchor="middle">Motor de puntuación</text>
+    <rect x="490" y="364" width="230" height="46" rx="6" fill="#FFFFFF" stroke="#D9C3A6"/>
+    <text x="605" y="392" text-anchor="middle">Seguridad (JWT + OAuth 2.0)</text>
+    <rect x="490" y="424" width="230" height="46" rx="6" fill="#FFFFFF" stroke="#D9C3A6"/>
+    <text x="605" y="452" text-anchor="middle">Respuesta uniforme (ApiResponse)</text>
+  </g>
+</svg>

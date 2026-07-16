@@ -114,6 +114,7 @@ public class PuntuacionMatrixEntity {
      * Descripción del nivel: qué puede hacer el estudiante en este nivel.
      * Ej: "Analiza información desde diferentes perspectivas, relaciona conceptos..."
      */
+    @Column(name = "descripcion", length = 1000)
     private String descripcion;
     
     /**

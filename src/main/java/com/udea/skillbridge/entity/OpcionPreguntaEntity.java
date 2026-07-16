@@ -32,7 +32,7 @@ public class OpcionPreguntaEntity {
     @JoinColumn(name = "id_pregunta", nullable = false)
     private PreguntaEntity preguntaEnt;
 	
-	@Column(nullable = false)
+	@Column(nullable = false , length = 1000)
     private String texto;
 
     // Peso de esta opción específica (para scoring)

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 610" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="950" height="610" fill="#FFFFFF"/>
+  <text x="475" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A5C38">Modelo entidad-relación (simplificado)</text>
+  <text x="475" y="46" text-anchor="middle" font-size="11" fill="#5A6B60">1 : uno · * : muchos</text>
+
+  <!-- relationship lines (drawn first, under boxes) -->
+  <g stroke="#8A9890" stroke-width="1.3" fill="none">
+    <line x1="130" y1="122" x2="130" y2="176"/>            <!-- usuario-perfil -->
+    <path d="M40,95 L18,95 L18,311 L40,311"/>              <!-- usuario-rol -->
+    <line x1="470" y1="122" x2="470" y2="176"/>            <!-- cuestionario-pregunta -->
+    <line x1="470" y1="230" x2="470" y2="284"/>            <!-- pregunta-opcion -->
+    <path d="M380,203 L360,203 L360,419 L380,419"/>        <!-- pregunta-condicion -->
+    <line x1="560" y1="95" x2="720" y2="95"/>              <!-- cuestionario-evaluacion -->
+    <path d="M130,68 L130,52 L810,52 L810,68"/>            <!-- usuario-evaluacion -->
+    <line x1="810" y1="122" x2="810" y2="176"/>            <!-- evaluacion-detalle -->
+    <path d="M900,95 L924,95 L924,311 L900,311"/>          <!-- evaluacion-resultado -->
+    <line x1="810" y1="338" x2="810" y2="392"/>            <!-- matriz-resultado -->
+    <path d="M720,311 L700,311 L700,527 L720,527"/>        <!-- resultado-plan -->
+  </g>
+  <!-- cardinality labels -->
+  <g font-size="11" fill="#B06A1E">
+    <text x="136" y="140">1</text><text x="136" y="172">1</text>
+    <text x="8" y="90">*</text><text x="8" y="320">*</text>
+    <text x="476" y="140">1</text><text x="476" y="172">*</text>
+    <text x="476" y="248">1</text><text x="476" y="280">*</text>
+    <text x="348" y="198">1</text><text x="348" y="414">*</text>
+    <text x="600" y="88">1</text><text x="700" y="88">*</text>
+    <text x="150" y="64">1</text><text x="790" y="64">*</text>
+    <text x="816" y="146">1</text><text x="816" y="172">*</text>
+    <text x="912" y="90">1</text><text x="912" y="320">*</text>
+    <text x="816" y="360">1</text><text x="816" y="388">*</text>
+    <text x="690" y="306">1</text><text x="690" y="522">*</text>
+  </g>
+
+  <!-- ENTITY boxes -->
+  <!-- helper style: header teal, fields gray -->
+  <g>
+    <!-- col1 -->
+    <rect x="40" y="68" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="130" y="90" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">USUARIO</text>
+    <text x="130" y="110" text-anchor="middle" font-size="11" fill="#5A6B60">id · email · rol</text>
+
+    <rect x="40" y="176" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="130" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">USUARIO_PERFIL</text>
+    <text x="130" y="218" text-anchor="middle" font-size="11" fill="#5A6B60">programa · semestre</text>
+
+    <rect x="40" y="284" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="130" y="306" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">ROL</text>
+    <text x="130" y="326" text-anchor="middle" font-size="11" fill="#5A6B60">nombre · permisos</text>
+
+    <!-- col2 -->
+    <rect x="380" y="68" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="470" y="90" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">CUESTIONARIO</text>
+    <text x="470" y="110" text-anchor="middle" font-size="11" fill="#5A6B60">estado · programaObjetivo</text>
+
+    <rect x="380" y="176" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="470" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">PREGUNTA</text>
+    <text x="470" y="218" text-anchor="middle" font-size="11" fill="#5A6B60">tipo · dimensión</text>
+
+    <rect x="380" y="284" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="470" y="306" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">OPCION_PREGUNTA</text>
+    <text x="470" y="326" text-anchor="middle" font-size="11" fill="#5A6B60">texto · peso</text>
+
+    <rect x="380" y="392" width="180" height="54" rx="6" fill="#F4F6F5" stroke="#B8C2BC"/>
+    <text x="470" y="414" text-anchor="middle" font-size="13" font-weight="bold" fill="#3A6B50">CONDICION_PREGUNTA</text>
+    <text x="470" y="434" text-anchor="middle" font-size="11" fill="#5A6B60">ramificación</text>
+
+    <!-- col3 -->
+    <rect x="720" y="68" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="810" y="90" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">EVALUACION_ESTUD.</text>
+    <text x="810" y="110" text-anchor="middle" font-size="11" fill="#5A6B60">fase · estado · intento</text>
+
+    <rect x="720" y="176" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="810" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">DETALLE_RESPUESTA</text>
+    <text x="810" y="218" text-anchor="middle" font-size="11" fill="#5A6B60">opciones seleccionadas</text>
+
+    <rect x="720" y="284" width="180" height="54" rx="6" fill="#EAF2ED" stroke="#1A5C38"/>
+    <text x="810" y="306" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A5C38">PUNTUACION_RESULT.</text>
+    <text x="810" y="326" text-anchor="middle" font-size="11" fill="#5A6B60">puntaje · nivel</text>
+
+    <rect x="720" y="392" width="180" height="54" rx="6" fill="#F4F6F5" stroke="#B8C2BC"/>
+    <text x="810" y="414" text-anchor="middle" font-size="13" font-weight="bold" fill="#3A6B50">PUNTUACION_MATRIZ</text>
+    <text x="810" y="434" text-anchor="middle" font-size="11" fill="#5A6B60">rango · nivel · skill</text>
+
+    <rect x="720" y="500" width="180" height="54" rx="6" fill="#F4F6F5" stroke="#B8C2BC"/>
+    <text x="810" y="522" text-anchor="middle" font-size="13" font-weight="bold" fill="#3A6B50">PLAN_FORTALECIM.</text>
+    <text x="810" y="542" text-anchor="middle" font-size="11" fill="#5A6B60">descripción · recursos</text>
+  </g>
+</svg>
