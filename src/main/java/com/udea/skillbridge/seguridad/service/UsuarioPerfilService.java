@@ -19,10 +19,13 @@ import com.udea.skillbridge.common.exception.ResourceNotFoundException;
 import com.udea.skillbridge.seguridad.dto.request.CompletarPerfilRequest;
 import com.udea.skillbridge.seguridad.dto.response.EstadoPerfilResponse;
 import com.udea.skillbridge.seguridad.dto.response.ProgramaIngenieriaResponse;
+import com.udea.skillbridge.seguridad.dto.response.SedeResponse;
 import com.udea.skillbridge.seguridad.dto.response.UsuarioPerfilResponse;
 import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
 import com.udea.skillbridge.seguridad.entity.UsuarioPerfilEntity;
 import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+import com.udea.skillbridge.seguridad.enums.Sede;
+import com.udea.skillbridge.seguridad.enums.TipoRol;
 import com.udea.skillbridge.seguridad.mapper.IUsuarioPerfilMapper;
 import com.udea.skillbridge.seguridad.repository.IUsuarioPerfilRepository;
 import com.udea.skillbridge.seguridad.repository.IUsuarioRepository;
@@ -106,6 +109,16 @@ public class UsuarioPerfilService {
 
         // Aplicar los cambios (solo campos que llegan con valor)
         perfilMapper.updateFromRequest(perfilEnt, request);
+
+        // La sede es obligatoria para estudiantes, pero solo se exige cuando el
+        // request trae datos académicos (programa). Así, guardar información
+        // personal o el avatar no se bloquea por la sede.
+        if (usuarioEnt.hasRole(TipoRol.ROLE_ESTUDIANTE)
+                && request.getProgramaIngenieria() != null
+                && perfilEnt.getSede() == null) {
+            throw new BusinessException(
+                "La sede es obligatoria para estudiantes.", "SEDE_REQUIRED");
+        }
 
         UsuarioPerfilEntity guardar = perfilRepository.save(perfilEnt);
 
@@ -206,6 +219,15 @@ public class UsuarioPerfilService {
                         .build())
                 .toList();
     }
+
+    public List<SedeResponse> listaSedes() {
+        return Arrays.stream(Sede.values())
+                .map(s -> SedeResponse.builder()
+                        .value(s)
+                        .displayName(s.getDisplayName())
+                        .build())
+                .toList();
+    }
     
     
     // ── Metodos Privados ───────────────────────────────────────────────
@@ -282,6 +304,11 @@ public class UsuarioPerfilService {
         if (perfilEnt.getFechaNacimiento() == null)        missing.add("Fecha de nacimiento");
         if (perfilEnt.getProgramaIngenieria() == null)     missing.add("Programa de ingeniería");
         if (perfilEnt.getSemestreAcademico() == null)      missing.add("Semestre actual");
+        // La sede es obligatoria solo para estudiantes.
+        if (perfilEnt.getUsuarioEnt() != null
+                && perfilEnt.getUsuarioEnt().hasRole(TipoRol.ROLE_ESTUDIANTE)
+                && perfilEnt.getSede() == null)
+            missing.add("Sede");
         return missing;
     }
 

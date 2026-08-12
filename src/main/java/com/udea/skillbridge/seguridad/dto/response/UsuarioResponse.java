@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.udea.skillbridge.seguridad.enums.AuthProvider;
+import com.udea.skillbridge.seguridad.enums.Sede;
 import com.udea.skillbridge.seguridad.enums.TipoIdentificacion;
 import com.udea.skillbridge.seguridad.enums.TipoRol;
 
@@ -35,6 +36,10 @@ public class UsuarioResponse {
 
     private String email;
     private String avatarUrl;
+
+    // Sede/seccional del usuario (proviene del perfil).
+    private Sede sede;
+    private String sedeNombre;                       // displayName de la sede
     private AuthProvider authProvider;
 
     @JsonProperty("emailVerified")

@@ -60,6 +60,7 @@ public class UsuarioService {
     private EstudianteResumenResponse toEstudianteResumen(UsuarioEntity u) {
         UsuarioPerfilEntity perfil = u.getPerfil();
         var programa = perfil != null ? perfil.getProgramaIngenieria() : null;
+        var sede = perfil != null ? perfil.getSede() : null;
         return EstudianteResumenResponse.builder()
                 .idUsuario(u.getId())
                 .tipoIdentificacion(u.getTipoIdentificacion())
@@ -71,6 +72,8 @@ public class UsuarioService {
                 .programaNombre(programa != null ? programa.getDisplayName() : null)
                 .codigoPrograma(programa != null ? programa.getCodigo() : null)
                 .semestreAcademico(perfil != null ? perfil.getSemestreAcademico() : null)
+                .sede(sede)
+                .sedeNombre(sede != null ? sede.getDisplayName() : null)
                 .activado(u.getActivado())
                 .build();
     }

@@ -8,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.udea.skillbridge.seguridad.enums.Genero;
 import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+import com.udea.skillbridge.seguridad.enums.Sede;
+import com.udea.skillbridge.seguridad.enums.TipoRol;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -70,6 +72,12 @@ public class UsuarioPerfilEntity {
     @Column(name = "programa_ingenieria", length = 60)
     private ProgramaIngenieria programaIngenieria;
 
+    // Sede/seccional regional. Obligatoria para estudiantes (se valida en el
+    // servicio); nullable en BD por los perfiles ya existentes.
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sede", length = 40)
+    private Sede sede;
+
     /**
      * Semestre actual del estudiante (1 al 10).
      */
@@ -95,9 +103,16 @@ public class UsuarioPerfilEntity {
      *
      */
     public boolean isCompleto() {
-        return fechaNacimiento != null
+        boolean base = fechaNacimiento != null
             && programaIngenieria != null
             && semestreAcademico != null;
+        // Para estudiantes, la sede también es obligatoria.
+        return esEstudiante() ? base && sede != null : base;
+    }
+
+    /** ¿El dueño del perfil es estudiante? (los roles se cargan EAGER). */
+    private boolean esEstudiante() {
+        return usuarioEnt != null && usuarioEnt.hasRole(TipoRol.ROLE_ESTUDIANTE);
     }
     
     /**
@@ -105,7 +120,8 @@ public class UsuarioPerfilEntity {
      * Útil para la barra de progreso del frontend.
      */
     public int porcentajeCompleto() {
-        int total = 5; // número de campos opcionales + obligatorios que cuentan
+        boolean estudiante = esEstudiante();
+        int total = estudiante ? 6 : 5; // los estudiantes suman la sede
         int filled = 0;
 
         if (avatarUrl != null     && !avatarUrl.isBlank())       filled++;
@@ -113,6 +129,7 @@ public class UsuarioPerfilEntity {
         if (genero != null)                                      filled++;
         if (programaIngenieria != null)                          filled++;
         if (semestreAcademico != null)                           filled++;
+        if (estudiante && sede != null)                          filled++;
 
         return (int) Math.round((filled * 100.0) / total);
     }

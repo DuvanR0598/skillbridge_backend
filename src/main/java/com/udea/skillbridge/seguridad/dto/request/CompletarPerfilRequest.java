@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.udea.skillbridge.seguridad.enums.Genero;
 import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+import com.udea.skillbridge.seguridad.enums.Sede;
 import com.udea.skillbridge.seguridad.enums.TipoIdentificacion;
 
 import jakarta.validation.constraints.Max;
@@ -58,6 +59,10 @@ public class CompletarPerfilRequest {
 
     @JsonProperty("engineeringProgram")
     private ProgramaIngenieria programaIngenieria;
+
+    // Sede/seccional regional. Obligatoria para estudiantes (se valida en el servicio).
+    @JsonProperty("campus")
+    private Sede sede;
 
     @Min(value = 1, message = "El semestre mínimo es 1")
     @Max(value = 10, message = "El semestre máximo es 10")

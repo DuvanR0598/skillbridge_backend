@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.udea.skillbridge.seguridad.enums.Genero;
 import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+import com.udea.skillbridge.seguridad.enums.Sede;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,9 @@ public class UsuarioPerfilResponse {
 	private String visualizacionProgramaIngenieria; // "Ingeniería de Sistemas"
 	private String codigoProgramaIngenieria;        // código oficial, ej. "504"
 	private Integer semestreAcademico;
+
+	private Sede sede;
+	private String visualizacionSede;               // "Seccional Oriente (Carmen de Viboral)"
 
 	// Completitud
 	private boolean perfilCompleto;

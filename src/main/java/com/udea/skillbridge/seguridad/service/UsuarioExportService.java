@@ -39,7 +39,7 @@ public class UsuarioExportService {
     private static final String[] COLUMNAS = {
             "Tipo de identificación", "Número de identificación", "Nombres", "Apellidos",
             "Fecha de nacimiento", "Género", "Programa", "Código de programa", "Semestre",
-            "Correo electrónico", "Rol", "Estado"
+            "Sede", "Correo electrónico", "Rol", "Estado"
     };
 
     @Transactional(readOnly = true)
@@ -90,6 +90,9 @@ public class UsuarioExportService {
                 row.createCell(c++).setCellValue(
                         perfil != null && perfil.getSemestreAcademico() != null
                                 ? String.valueOf(perfil.getSemestreAcademico()) : "");
+                row.createCell(c++).setCellValue(
+                        perfil != null && perfil.getSede() != null
+                                ? perfil.getSede().getDisplayName() : "");
                 row.createCell(c++).setCellValue(nullSafe(u.getEmail()));
                 row.createCell(c++).setCellValue(rolesLabel(u));
                 row.createCell(c++).setCellValue(Boolean.TRUE.equals(u.getActivado()) ? "Activo" : "Inactivo");
@@ -115,7 +118,7 @@ public class UsuarioExportService {
 
     private static final String[] COLUMNAS_EST = {
             "Tipo de identificación", "Número de identificación", "Nombres", "Apellidos",
-            "Programa", "Código de programa", "Semestre", "Correo electrónico", "Estado"
+            "Programa", "Código de programa", "Semestre", "Sede", "Correo electrónico", "Estado"
     };
 
     /**
@@ -126,10 +129,11 @@ public class UsuarioExportService {
      * @param programa nombre del enum ProgramaIngenieria (null/"ALL" = todos)
      */
     @Transactional(readOnly = true)
-    public byte[] exportarEstudiantesXlsx(String search, String programa) {
+    public byte[] exportarEstudiantesXlsx(String search, String programa, String sede) {
         String term = normalizar(search);
         String[] palabras = term.isBlank() ? new String[0] : term.split("\\s+");
         boolean filtraPrograma = programa != null && !programa.isBlank() && !"ALL".equalsIgnoreCase(programa);
+        boolean filtraSede = sede != null && !sede.isBlank() && !"ALL".equalsIgnoreCase(sede);
 
         List<UsuarioEntity> estudiantes = usuarioRepository.findByRol(TipoRol.ROLE_ESTUDIANTE).stream()
                 .filter(u -> {
@@ -137,6 +141,11 @@ public class UsuarioExportService {
                     if (filtraPrograma) {
                         var prog = u.getPerfil() != null ? u.getPerfil().getProgramaIngenieria() : null;
                         if (prog == null || !prog.name().equals(programa)) return false;
+                    }
+                    // Filtro por sede
+                    if (filtraSede) {
+                        var s = u.getPerfil() != null ? u.getPerfil().getSede() : null;
+                        if (s == null || !s.name().equals(sede)) return false;
                     }
                     // Filtro por nombre (todas las palabras presentes)
                     if (palabras.length > 0) {
@@ -183,6 +192,9 @@ public class UsuarioExportService {
                 row.createCell(c++).setCellValue(
                         perfil != null && perfil.getSemestreAcademico() != null
                                 ? String.valueOf(perfil.getSemestreAcademico()) : "");
+                row.createCell(c++).setCellValue(
+                        perfil != null && perfil.getSede() != null
+                                ? perfil.getSede().getDisplayName() : "");
                 row.createCell(c++).setCellValue(nullSafe(u.getEmail()));
                 row.createCell(c++).setCellValue(Boolean.TRUE.equals(u.getActivado()) ? "Activo" : "Inactivo");
             }

@@ -153,9 +153,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,
                 	"/usuarios/*/perfil").hasAnyRole("ADMIN", "COORDINADOR")
 
-            	// Programas de ingeniería — endpoint público
+            	// Programas de ingeniería y sedes — endpoints públicos
             	.requestMatchers(HttpMethod.GET,
-            	    "/perfil/programas").permitAll()
+            	    "/perfil/programas", "/perfil/sedes").permitAll()
 
                 // Cualquier otro endpoint requiere autenticación
                 .anyRequest().authenticated()
