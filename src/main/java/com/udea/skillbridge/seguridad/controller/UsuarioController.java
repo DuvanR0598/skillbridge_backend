@@ -88,8 +88,9 @@ public class UsuarioController {
     @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
     public ResponseEntity<byte[]> exportarEstudiantes(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) String programa) {
-        byte[] archivo = userExportService.exportarEstudiantesXlsx(search, programa);
+            @RequestParam(required = false) String programa,
+            @RequestParam(required = false) String sede) {
+        byte[] archivo = userExportService.exportarEstudiantesXlsx(search, programa, sede);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"estudiantes.xlsx\"")
                 .contentType(MediaType.parseMediaType(

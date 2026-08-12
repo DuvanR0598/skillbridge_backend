@@ -19,6 +19,7 @@ import com.udea.skillbridge.common.response.ApiResponse;
 import com.udea.skillbridge.seguridad.dto.request.CompletarPerfilRequest;
 import com.udea.skillbridge.seguridad.dto.response.EstadoPerfilResponse;
 import com.udea.skillbridge.seguridad.dto.response.ProgramaIngenieriaResponse;
+import com.udea.skillbridge.seguridad.dto.response.SedeResponse;
 import com.udea.skillbridge.seguridad.dto.response.UsuarioPerfilResponse;
 import com.udea.skillbridge.seguridad.entity.UsuarioEntity;
 import com.udea.skillbridge.seguridad.service.UsuarioPerfilService;
@@ -103,6 +104,15 @@ public class UsuarioPerfilController {
     @GetMapping("/perfil/programas")
     public ResponseEntity<ApiResponse<List<ProgramaIngenieriaResponse>>> listaProgramas() {
         return ResponseEntity.ok(ApiResponse.ok(perfilService.listaProgramas()));
+    }
+
+    /**
+     * Lista de sedes y seccionales regionales disponibles.
+     * Endpoint público — el frontend lo usa para poblar el selector de sede.
+     */
+    @GetMapping("/perfil/sedes")
+    public ResponseEntity<ApiResponse<List<SedeResponse>>> listaSedes() {
+        return ResponseEntity.ok(ApiResponse.ok(perfilService.listaSedes()));
     }
 
 }

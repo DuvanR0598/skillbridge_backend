@@ -19,6 +19,14 @@ public interface IUsuarioMapper {
 		target = "visualizacionTipoIdentificacion",
 		expression = "java(usuarioEnt.getTipoIdentificacion() != null ? usuarioEnt.getTipoIdentificacion().getDisplayName() : null)"
 	)
+	@Mapping(
+		target = "sede",
+		expression = "java(usuarioEnt.getPerfil() != null ? usuarioEnt.getPerfil().getSede() : null)"
+	)
+	@Mapping(
+		target = "sedeNombre",
+		expression = "java(usuarioEnt.getPerfil() != null && usuarioEnt.getPerfil().getSede() != null ? usuarioEnt.getPerfil().getSede().getDisplayName() : null)"
+	)
 	UsuarioResponse toResponse(UsuarioEntity usuarioEnt);
 
 	default Set<TipoRol> mapRoles(UsuarioEntity usuarioEnt) {

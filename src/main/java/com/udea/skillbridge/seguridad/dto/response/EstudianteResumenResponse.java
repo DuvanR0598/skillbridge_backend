@@ -1,6 +1,7 @@
 package com.udea.skillbridge.seguridad.dto.response;
 
 import com.udea.skillbridge.seguridad.enums.ProgramaIngenieria;
+import com.udea.skillbridge.seguridad.enums.Sede;
 import com.udea.skillbridge.seguridad.enums.TipoIdentificacion;
 
 import lombok.AllArgsConstructor;
@@ -33,5 +34,9 @@ public class EstudianteResumenResponse {
     private String codigoPrograma;   // ej. "504"
 
     private Integer semestreAcademico;
+
+    private Sede sede;
+    private String sedeNombre;       // displayName, ej. "Seccional Oriente (Carmen de Viboral)"
+
     private Boolean activado;
 }
